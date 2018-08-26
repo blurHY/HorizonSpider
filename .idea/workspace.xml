@@ -1,0 +1,744 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="9773c7b4-34eb-401f-aee8-5606c8869f2c" name="Default Changelist" comment="" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/ZeronetSpider$ZiteList.coverage" NAME="ZiteList Coverage Results" MODIFIED="1535035840791" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DeepCrawl" />
+    <SUITE FILE_PATH="coverage/ZeronetSpider$NewZeronetSites.coverage" NAME="NewZeronetSites Coverage Results" MODIFIED="1535038302653" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DeepCrawl" />
+    <SUITE FILE_PATH="coverage/ZeronetSpider$0list.coverage" NAME="0list Coverage Results" MODIFIED="1535039151744" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DeepCrawl" />
+    <SUITE FILE_PATH="coverage/ZeronetSpider$Export.coverage" NAME="Export Coverage Results" MODIFIED="1535076490160" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ZeronetSpider$main.coverage" NAME="main Coverage Results" MODIFIED="1535249741808" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/SurfacePart" />
+    <SUITE FILE_PATH="coverage/ZeronetSpider$Crawler.coverage" NAME="Crawler Coverage Results" MODIFIED="1535124844893" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/SurfacePart" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="zeronetspider@localhost" type="feb32156:DbDataSourceImpl" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="zeronetspider@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="zeronetspider@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="zeronetspider: schema" type="c314c289:MysqlImplModel$Schema" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="zeronetspider@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="zeronetspider: schema" type="c314c289:MysqlImplModel$Schema" />
+        <item name="main: table" type="98d5ac3d:MysqlImplModel$Table" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="-1931853029">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.open.time.3" value="1" />
+          <entry key="project.opened" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="main" value="1" />
+          <entry key="py" value="14" />
+          <entry key="sql" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="Database Element" value="1" />
+          <entry key="Python" value="14" />
+          <entry key="Scratch" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="Python Console" value="441" />
+          <entry key="dummy" value="55" />
+          <entry key="py" value="2108" />
+          <entry key="txt" value="13" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="PLAIN_TEXT" value="68" />
+          <entry key="Python" value="2549" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/DeepCrawl/NewZeronetSites.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-25">
+              <caret line="8" column="32" selection-start-line="8" selection-start-column="32" selection-end-line="8" selection-end-column="32" />
+              <folding>
+                <element signature="e#0#14#0" expanded="true" />
+                <element signature="e#187#321#0" expanded="true" />
+                <element signature="e#359#1004#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/DeepCrawl/0list.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="447">
+              <caret line="29" column="30" selection-start-line="29" selection-start-column="30" selection-end-line="29" selection-end-column="30" />
+              <folding>
+                <element signature="e#0#14#0" expanded="true" />
+                <element signature="e#189#323#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SurfacePart/Database.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="298">
+              <caret line="105" selection-start-line="105" selection-end-line="105" />
+              <folding>
+                <element signature="e#0#21#0" expanded="true" />
+                <element signature="e#96#262#0" expanded="true" />
+                <element signature="e#1011#1046#0" expanded="true" />
+                <element signature="e#1477#2096#0" expanded="true" />
+                <element signature="e#2158#2835#0" expanded="true" />
+                <element signature="e#3140#3270#0" expanded="true" />
+                <element signature="e#5773#5963#0" expanded="true" />
+                <element signature="e#6014#6048#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Export.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="145">
+              <caret line="18" column="16" lean-forward="true" selection-start-line="18" selection-start-column="16" selection-end-line="18" selection-end-column="16" />
+              <folding>
+                <element signature="e#0#21#0" expanded="true" />
+                <element signature="e#69#699#0" expanded="true" />
+                <element signature="e#284#341#0" expanded="true" />
+                <marker date="1535263511189" expanded="true" signature="763:1564" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SurfacePart/Crawler.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="19">
+              <caret line="73" column="48" selection-start-line="73" selection-start-column="48" selection-end-line="73" selection-end-column="48" />
+              <folding>
+                <element signature="e#0#11#0" expanded="true" />
+                <element signature="e#302#647#0" expanded="true" />
+                <element signature="e#1896#1970#0" expanded="true" />
+                <element signature="e#5086#5088#0" expanded="true" />
+                <element signature="e#4904#5282#0" expanded="true" />
+                <element signature="e#5343#5655#0" expanded="true" />
+                <element signature="e#7116#7154#0" expanded="true" />
+                <marker date="1535248036745" expanded="true" signature="5314:5325" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SurfacePart/Browser.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="100">
+              <caret line="4" column="14" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
+              <folding>
+                <element signature="e#0#30#0" expanded="true" />
+                <element signature="e#159#662#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SurfacePart/Utils.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="600">
+              <caret line="24" selection-start-line="24" selection-end-line="24" />
+              <folding>
+                <element signature="e#0#32#0" expanded="true" />
+                <element signature="e#83#521#0" expanded="true" />
+                <element signature="e#551#620#0" expanded="true" />
+                <element signature="e#653#696#0" expanded="true" />
+                <element signature="e#738#850#0" expanded="true" />
+                <marker date="1535212879990" expanded="true" signature="648:653" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SurfacePart/main.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="129">
+              <caret line="41" column="43" selection-start-line="41" selection-start-column="43" selection-end-line="41" selection-end-column="43" />
+              <folding>
+                <element signature="e#17#46#0" expanded="true" />
+                <element signature="e#1474#2010#0" expanded="true" />
+                <element signature="e#2041#2825#0" expanded="true" />
+                <element signature="e#2080#2128#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SurfacePart/Store.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="376">
+              <caret line="22" selection-start-line="22" selection-end-line="22" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+                <element signature="e#1088#1267#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>title</find>
+      <find>process_link</find>
+      <find>iframe</find>
+      <find>store</find>
+      <find>page l</find>
+    </findStrings>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/DeepCrawl/main.py" />
+        <option value="$PROJECT_DIR$/DeepCrawl/ZiteList.py" />
+        <option value="$PROJECT_DIR$/DeepCrawl/ZeroSites.py" />
+        <option value="$PROJECT_DIR$/DeepCrawl/NewZeronetSites.py" />
+        <option value="$PROJECT_DIR$/DeepCrawl/0list.py" />
+        <option value="$PROJECT_DIR$/SurfacePart/main.py" />
+        <option value="$PROJECT_DIR$/SurfacePart/Store.py" />
+        <option value="$PROJECT_DIR$/SurfacePart/Utils.py" />
+        <option value="$PROJECT_DIR$/SurfacePart/Crawler.py" />
+        <option value="$PROJECT_DIR$/SurfacePart/Database.py" />
+        <option value="$PROJECT_DIR$/Export.py" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-8" />
+    <option name="width" value="1297" />
+    <option name="height" value="1410" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="ZeronetSpider" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ZeronetSpider" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ZeronetSpider" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ZeronetSpider" type="462c0819:PsiDirectoryNode" />
+              <item name="DeepCrawl" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ZeronetSpider" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ZeronetSpider" type="462c0819:PsiDirectoryNode" />
+              <item name="SurfacePart" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DatabaseDriversLRU" value="mysql" />
+    <property name="SearchEverywhereHistoryKey" value="filter&#9;null&#9;null" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="database.console.LAST_STATE" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="settings.editor.selected.configurable" value="database.main" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Python.main">
+    <configuration name="0list" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="ZeronetSpider" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/DeepCrawl" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/DeepCrawl/0list.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Crawler" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="ZeronetSpider" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/SurfacePart" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/SurfacePart/Crawler.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Export" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="ZeronetSpider" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Export.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="NewZeronetSites" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="ZeronetSpider" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/DeepCrawl" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/DeepCrawl/NewZeronetSites.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="ZeronetSpider" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/SurfacePart" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/SurfacePart/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.NewZeronetSites" />
+      <item itemvalue="Python.0list" />
+      <item itemvalue="Python.Export" />
+      <item itemvalue="Python.Crawler" />
+      <item itemvalue="Python.main" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.main" />
+        <item itemvalue="Python.Crawler" />
+        <item itemvalue="Python.Export" />
+        <item itemvalue="Python.0list" />
+        <item itemvalue="Python.NewZeronetSites" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9773c7b4-34eb-401f-aee8-5606c8869f2c" name="Default Changelist" comment="" />
+      <created>1535031798059</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1535031798059</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-7" y="-7" width="2062" height="1136" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Favorites" order="0" side_tool="true" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.13622755" />
+      <window_info anchor="bottom" id="Database Console" order="0" weight="0.32968128" />
+      <window_info anchor="bottom" id="Docker" order="1" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="2" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" order="3" />
+      <window_info anchor="bottom" id="Event Log" order="4" sideWeight="0.27882037" side_tool="true" weight="0.50842696" />
+      <window_info anchor="bottom" id="Terminal" order="5" sideWeight="0.5247989" weight="0.3286517" />
+      <window_info anchor="bottom" id="Message" order="6" />
+      <window_info anchor="bottom" id="Find" order="7" sideWeight="0.49865952" weight="0.3286517" />
+      <window_info anchor="bottom" id="Python Console" order="8" sideWeight="0.5435657" weight="0.39641434" />
+      <window_info anchor="bottom" id="Run" order="9" sideWeight="0.7211796" weight="0.35358566" />
+      <window_info active="true" anchor="bottom" id="Debug" order="10" sideWeight="0.691689" visible="true" weight="0.37848607" />
+      <window_info anchor="bottom" id="Cvs" order="11" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="12" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="13" weight="0.32954547" />
+      <window_info anchor="right" id="SciView" order="0" />
+      <window_info anchor="right" id="R Graphics" order="1" />
+      <window_info anchor="right" id="Database" order="2" sideWeight="0.49921507" weight="0.2369765" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="3" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="4" weight="0.25" />
+      <window_info anchor="right" id="R Packages" order="5" weight="0.32984033" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="6" weight="0.25" />
+      <window_info anchor="right" x="770" y="370" width="516" height="273" id="Structure" order="7" sideWeight="0.50078493" side_tool="true" weight="0.2369765" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="urls&#10;" />
+      </configuration>
+    </watches-manager>
+  </component>
+  <component name="debuggerHistoryManager">
+    <expressions id="evaluateCodeFragment">
+      <expression>
+        <expression-string>cursor.execute(query)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>insert into main(url,imgcount,title,state,priority) values ('1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz/?Home',0,'',0,2),('1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz/?Post:23:Title',0,'',0,2),('1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz/?Post:5:US+Sector+ETF%27s+-+Week+ending+March+2,+2018',0,'',0,2),('1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz/?Post:3:Crypto+Currency+ETHUSD+Expectation',0,'',0,2),('1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz/?Post:4:Bitcoin+Futures+Introduced',0,'',0,2),('1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz/?Post:6:Asia+Pacific+Country+ETF+-+Week+ending+March+2,+2018',0,'',0,2),('1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz/?Post:2:China+10+year+bond+yields',0,'',0,2),('1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz',0,'',0,2),('1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz/?Post:23:title',0,'',0,2), on duplicate key update url=values(url)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>cursor = self.db.cursor()</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>query=&quot;&quot;&quot;insert into main(url,imgcount,title,state,priority) values ('1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz/?Home',0,'',0,2),('1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz/?Post:23:Title',0,'',0,2),('1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz/?Post:5:US+Sector+ETF%27s+-+Week+ending+March+2,+2018',0,'',0,2),('1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz/?Post:3:Crypto+Currency+ETHUSD+Expectation',0,'',0,2),('1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz/?Post:4:Bitcoin+Futures+Introduced',0,'',0,2),('1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz/?Post:6:Asia+Pacific+Country+ETF+-+Week+ending+March+2,+2018',0,'',0,2),('1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz/?Post:2:China+10+year+bond+yields',0,'',0,2),('1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz',0,'',0,2),('1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz/?Post:23:title',0,'',0,2) on duplicate key update url=values(url) &quot;&quot;&quot;</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>self._error_traceback()</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>ie</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>value = &quot;('&quot;
+for url in urls:
+    value += escape_string(SurfacePart.Utils.shorted_url(url)) + stry  # ',0,'',0,{}),('
+value = value[:-2]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>urls</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>shorted_url(None,url)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+    </expressions>
+    <expressions id="setValue">
+      <expression>
+        <expression-string>'insert into main(url,imgcount,title,state,priority) values (\\'1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz/?Home\\',0,\\'\\',0,2),(\\'1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz/?Post:23:Title\\',0,\\'\\',0,2),(\\'1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz/?Post:5:US+Sector+ETF%27s+-+Week+ending+March+2,+2018\\',0,\\'\\',0,2),(\\'1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz/?Post:3:Crypto+Currency+ETHUSD+Expectation\\',0,\\'\\',0,2),(\\'1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz/?Post:4:Bitcoin+Futures+Introduced\\',0,\\'\\',0,2),(\\'1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz/?Post:6:Asia+Pacific+Country+ETF+-+Week+ending+March+2,+2018\\',0,\\'\\',0,2),(\\'1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz/?Post:2:China+10+year+bond+yields\\',0,\\'\\',0,2),(\\'1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz\\',0,\\'\\',0,2),(\\'1ChartHHGD7Lmzw4CeebsSCVkxNFbsKwTz/?Post:23:title\\',0,\\'\\',0,2) on duplicate key update url=values(url) '</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+    </expressions>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/DeepCrawl/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="3" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/28eed4b9-c656-4cf7-9960-ddaca80b9c90/console.sql">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="das://28eed4b9-c656-4cf7-9960-ddaca80b9c90/schema/zeronetspider/table/main">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DeepCrawl/ZeroSites.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="8" column="22" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydevd_bundle/pydevd_breakpoints.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="104" column="9" selection-start-line="104" selection-start-column="9" selection-end-line="104" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DeepCrawl/0list.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="447">
+          <caret line="29" column="30" selection-start-line="29" selection-start-column="30" selection-end-line="29" selection-end-column="30" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+            <element signature="e#189#323#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DeepCrawl/NewZeronetSites.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-25">
+          <caret line="8" column="32" selection-start-line="8" selection-start-column="32" selection-end-line="8" selection-end-column="32" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+            <element signature="e#187#321#0" expanded="true" />
+            <element signature="e#359#1004#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SurfacePart/Utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="600">
+          <caret line="24" selection-start-line="24" selection-end-line="24" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+            <element signature="e#83#521#0" expanded="true" />
+            <element signature="e#551#620#0" expanded="true" />
+            <element signature="e#653#696#0" expanded="true" />
+            <element signature="e#738#850#0" expanded="true" />
+            <marker date="1535212879990" expanded="true" signature="648:653" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Export.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="145">
+          <caret line="18" column="16" lean-forward="true" selection-start-line="18" selection-start-column="16" selection-end-line="18" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+            <element signature="e#69#699#0" expanded="true" />
+            <element signature="e#284#341#0" expanded="true" />
+            <marker date="1535263511189" expanded="true" signature="763:1564" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Program Files/Python36/Lib/site-packages/selenium/webdriver/remote/webdriver.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-350">
+          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+          <folding>
+            <element signature="e#825#838#0" expanded="true" />
+            <element signature="e#20195#20641#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SurfacePart/Browser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="4" column="14" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#30#0" expanded="true" />
+            <element signature="e#159#662#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SurfacePart/Crawler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19">
+          <caret line="73" column="48" selection-start-line="73" selection-start-column="48" selection-end-line="73" selection-end-column="48" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#302#647#0" expanded="true" />
+            <element signature="e#1896#1970#0" expanded="true" />
+            <element signature="e#5086#5088#0" expanded="true" />
+            <element signature="e#4904#5282#0" expanded="true" />
+            <element signature="e#5343#5655#0" expanded="true" />
+            <element signature="e#7116#7154#0" expanded="true" />
+            <marker date="1535248036745" expanded="true" signature="5314:5325" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SurfacePart/Store.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="376">
+          <caret line="22" selection-start-line="22" selection-end-line="22" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#1088#1267#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SurfacePart/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="129">
+          <caret line="41" column="43" selection-start-line="41" selection-start-column="43" selection-end-line="41" selection-end-column="43" />
+          <folding>
+            <element signature="e#17#46#0" expanded="true" />
+            <element signature="e#1474#2010#0" expanded="true" />
+            <element signature="e#2041#2825#0" expanded="true" />
+            <element signature="e#2080#2128#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SurfacePart/Database.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="298">
+          <caret line="105" selection-start-line="105" selection-end-line="105" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+            <element signature="e#96#262#0" expanded="true" />
+            <element signature="e#1011#1046#0" expanded="true" />
+            <element signature="e#1477#2096#0" expanded="true" />
+            <element signature="e#2158#2835#0" expanded="true" />
+            <element signature="e#3140#3270#0" expanded="true" />
+            <element signature="e#5773#5963#0" expanded="true" />
+            <element signature="e#6014#6048#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
