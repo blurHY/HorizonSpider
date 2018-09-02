@@ -1,0 +1,1 @@
+delete from main where not url regexp "^(1[A-Za-z0-9]{30,40}|[A-Z0-9a-z-._]+\.bit)(\/.*|$)"

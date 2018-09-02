@@ -2,7 +2,7 @@ from pymysql import *
 import traceback
 from Utils import *
 
-import SurfacePart.Utils
+import Utils
 
 
 class Database:
@@ -97,7 +97,7 @@ class Database:
             # value = "('" + stry.join(urls) + strx + ")"
             value = "('"
             for url in urls:
-                value += escape_string(SurfacePart.Utils.shorted_url(url)) + stry  # ',0,'',0,{}),('
+                value += escape_string(Utils.shorted_url(url)) + stry  # ',0,'',0,{}),('
             value = value[:-3]
             query = "insert into main(url,imgcount,title,state,priority) values {0}" \
                     " on duplicate key update url=values(url) " \

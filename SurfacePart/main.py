@@ -39,6 +39,9 @@ class ZeronetSpider:
         self.log.log("Priority Now is {}".format(priority))
         try:
             longurl = longer_url(url)
+            if not filter_link_before_crawl(longurl):
+                self.database.url_scraped(url)
+                return
             self.urldownloader.get(longurl)
             data = self.crawler.crawl_page(longurl)  # joined url
             if data:

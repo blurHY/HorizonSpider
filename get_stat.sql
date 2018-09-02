@@ -1,0 +1,1 @@
+select (select count(*) from main) as total,(select count(*) from main where state!=0) as crawled,(select count(*) from main where state=2) as success,(select count(*) from keywords) as keywords,(select count(*) from phrases) as phrases,(select count(*) from relationship) as relationship

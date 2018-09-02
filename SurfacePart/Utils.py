@@ -5,9 +5,11 @@ import re
 def process_link(base_url, link):
     retval = urljoin(base_url, link)
     retval = retval.strip()
-    retval = re.sub("^https?://127.0.0.1:[0-9]+", "http://127.0.0.1:43111", retval)
+    retval = re.sub(
+        "^https?://127.0.0.1:[0-9]+", "http://127.0.0.1:43111", retval)
     try:
-        match = re.match("^https?://127.0.0.1:43111/[^#]+", retval)  # 移除带id的链接，这些大多没什么用
+        # 移除带id的链接，这些大多没什么用
+        match = re.match("^https?://127.0.0.1:43111/[^#]+", retval)
         if match:
             retval = match[0]
     except:
@@ -23,6 +25,28 @@ def filter_link(link):
     return prefix
 
 
+def filter_link_before_crawl(link):
+    ext = ""
+    try:
+        ext = re.match(r"^.*\.([^\./]*)$", link).group(1)
+    except:
+        IsFile = False
+    else:
+        IsFile = True
+        if "htm" in ext or "bit" in ext:
+            IsFile = False
+
+    try:
+        re.match(
+            r"^http://127\.0\.0\.1:43111/Mail\.ZeroNetwork\.bit/\?to=[A-Za-z0-9]*$", link)[0]
+    except:
+        MailTo = False
+    else:
+        MailTo = True
+
+    return not (IsFile or MailTo)
+
+
 def longer_url(shorturl):
     return "http://127.0.0.1:43111/" + shorturl
 
@@ -32,3 +56,10 @@ def shorted_url(url):
         return re.sub("^http:\/\/127\.0\.0\.1:43111\/", "", url)
     except:
         return url
+
+
+def strip_url(url):
+    if url.endswith("/"):
+        return url[:-1]
+    return url
+

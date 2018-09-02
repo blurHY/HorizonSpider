@@ -11,8 +11,8 @@ from Utils import filter_link
 
 
 class Crawler:
-    wait_title = 3
-    wait_normal = 2
+    wait_title = 0
+    wait_normal = 0
     timeout = 20
 
     def __init__(self, main):
@@ -34,45 +34,46 @@ class Crawler:
             lastPeer = 0
             while True:
                 try:
-                    time.sleep(2)
-                    try:
-                        self.main.browser.switch_to.alert.dismiss()
-                    except:
-                        pass
-
                     self.main.browser.driver.switch_to.default_content()
-                    value1 = not self.main.browser.driver.find_element_by_css_selector(
-                        "div.loadingscreen").is_displayed()
+                    value1 = not self.main.browser.safe_operation(
+                        lambda: self.main.browser.driver.find_element_by_css_selector(
+                            "div.loadingscreen").is_displayed())
 
                     try:
-                        value5 = self.main.browser.driver.find_element_by_tag_name("iframe")
+                        value5 = self.main.browser.safe_operation(
+                            lambda: self.main.browser.driver.find_element_by_tag_name(
+                                "iframe"))
                     except:
                         value5 = False
                         value2 = False
                     else:
                         try:
-                            self.main.browser.driver.switch_to.frame(value5)
-                            value2 = self.main.browser.driver.execute_script("return document.body.innerText").strip()
-                            value2 = "Not Found" not in value2 and value2
+                            self.main.browser.driver.switch_to.default_content()
+                            self.main.browser.safe_operation(lambda: self.main.browser.driver.switch_to.frame(value5))
+                            value2 = self.main.browser.safe_operation(lambda: self.main.browser.driver.execute_script(
+                                "return document.body.innerText").strip())
                         except:
                             value2 = False
 
                     try:
                         nonlocal page_title
-                        page_title = self.main.browser.driver.title
+                        page_title = self.main.browser.safe_operation(lambda: self.main.browser.driver.title)
                         self.main.browser.driver.switch_to.default_content()
                         value3 = "loading" not in page_title.lower()
                     except:
                         value3 = False
 
                     nonlocal page_url
-                    page_url = self.main.browser.driver.current_url
-                    value4 = page_url == url
+                    page_url = self.main.browser.safe_operation(lambda: self.main.browser.driver.current_url)
+                    if "1GitLiXB6t5r8vuU2zC6a8GYj9ME6HMQ4t" in page_url:
+                        raise Exception("Gitcenter Repo Zite")
+                    value4 = strip_url(page_url) == strip_url(url)
 
                     value = value1 and value2 and value3 and value4 and value5
                     try:
-                        eles = self.main.browser.driver.find_elements_by_class_name(
-                            "console-line")
+                        eles = self.main.browser.safe_operation(
+                            lambda: self.main.browser.driver.find_elements_by_class_name(
+                                "console-line"))
                         status = eles[-1].text
                         peer = re.findall("[0-9]+", status)[0]
                         if "peer" not in str.lower(status):
@@ -95,35 +96,39 @@ class Crawler:
 
                 if time.time() > end_time:
                     break
+                time.sleep(2)
             raise Exception("WebDriverWait timed out")
 
         wait()
 
         self.main.log.log("Page Loaded")
         self.main.browser.driver.switch_to.default_content()
-        page_title = self.main.browser.driver.title
-        page_url = self.main.browser.driver.current_url
+        page_title = self.main.browser.safe_operation(lambda: self.main.browser.driver.title)
+        page_url = self.main.browser.safe_operation(lambda: self.main.browser.driver.current_url)
 
         if not filter_link(page_url):
             return None
 
-        self.grant()
+        self.main.browser.safe_operation(lambda: self.grant())
 
-        self.main.browser.driver.switch_to.frame(
-            self.main.browser.driver.find_element_by_tag_name("iframe"))
+        self.main.browser.safe_operation(lambda: self.main.browser.driver.switch_to.frame(
+            self.main.browser.driver.find_element_by_tag_name("iframe")))
 
         if re.match(
                 "http://127.0.0.1:43111/1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D/?",
                 page_url):
             return None
 
-        alltext = self.main.browser.driver.execute_script(
-            "return document.body.innerText")
+        alltext = self.main.browser.safe_operation(lambda: self.main.browser.driver.execute_script(
+            "return document.body.innerText"))
+
+
+        alltext_for_nlp = alltext[:1000]
 
         self.main.log.log("Analysing Content", "Info")
 
-        page_tags = self.get_tags(alltext)
-        page_phrases = self.get_phrases(alltext)
+        page_tags = self.get_tags(alltext_for_nlp)
+        page_phrases = self.get_phrases(alltext_for_nlp)
         page_img_count = self.get_image_count()
 
         self.main.log.log("Extracting links", "Info")
@@ -143,6 +148,7 @@ class Crawler:
             img_count=page_img_count,
             url=page_url,
             subpage_urls=all_links)
+
     #
     # def raise_limit_before_loaded(self):
     #     try:

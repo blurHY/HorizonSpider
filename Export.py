@@ -2,9 +2,9 @@ from pymysql import *
 import json
 
 
-def export_normal(filename):
+def export_normal(filename, cursor):
     db = connect(host="localhost", port=3308, user="root", passwd="123456", db="zeronetspider", charset="utf8mb4")
-    cur = db.cursor()
+    cur = db.cursor(cursor)
     cur.execute("SELECT * FROM zeronetspider.main")
     main = cur.fetchall()
     # cur.execute("SELECT * FROM zeronetspider.relationship")
@@ -13,35 +13,53 @@ def export_normal(filename):
     keywords = cur.fetchall()
     cur.execute("SELECT * FROM zeronetspider.phrases")
     phrases = cur.fetchall()
-    all = [main, None, keywords, phrases]
+    all = {"main": main, "keywords": keywords, "phrases": phrases}
     file = open(filename, "w", encoding="utf8")
-    json.dump(all, file, ensure_ascii=False,separators=(',',':'))
+    json.dump(all, file, ensure_ascii=False, separators=(',', ':'))
     file.close()
 
 
-# def export_normal_one_array(filename):
-#     db = connect(host="localhost", port=3308, user="root", passwd="123456", db="zeronetspider", charset="utf8mb4")
-#     cur = db.cursor()
-#     cur.execute("SELECT * FROM zeronetspider.main")
-#     items = list()
-#     main = cur.fetchall()
-#     for m in main:
-#         cur.execute("SELECT * FROM zeronetspider.keywords where pageid={0}".format(m[0]))
-#         keywords = cur.fetchall()
-#         cur.execute("SELECT * FROM zeronetspider.phrases where pageid={0}".format(m[0]))
-#         phrases = cur.fetchall()
-#         item = list(m)
-#         item.pop()
-#         item.pop()
-#         item.append(keywords)
-#         item.append(phrases)
-#         items.append(item)
-#
-#     file = open(filename, "w", encoding="utf8")
-#     json.dump(items, file, ensure_ascii=False)
-#     file.close()
+def export_relationship(filename, cursor):
+    db = connect(host="localhost", port=3308, user="root", passwd="123456", db="zeronetspider", charset="utf8mb4")
+    cur = db.cursor(cursor)
+    cur.execute("SELECT * FROM zeronetspider.relationship")
+    all = cur.fetchall()
+    file = open(filename, "w", encoding="utf8")
+    json.dump(all, file, ensure_ascii=False, separators=(',', ':'))
+    file.close()
 
 
-export_normal(".\\data_normal.json")
+def compress(filename):
+    import bz2
 
-# export_normal_one_array(".\\data.json")
+    try:
+        f_in = open(filename, 'rb')
+        f_out = bz2.open(filename + ".bz2", 'wb')
+        f_out.write(f_in.read())
+
+    except Exception as e:
+        print(e)
+
+
+def compress_gz(filename):
+    import gzip
+
+    try:
+        f_in = open(filename, 'rb')
+        f_out = gzip.open(filename + ".gz", 'wb')
+        f_out.write(f_in.read())
+
+    except Exception as e:
+        print(e)
+
+
+def horizon_normal():
+    filename = ".\\data_normal.json"
+    export_normal(filename, cursors.DictCursor)
+    compress_gz(filename)
+
+
+def horizon_relationship():
+    filename = ".\\data_relationship.json"
+    export_relationship(filename, cursors.DictCursor)
+    compress_gz(filename)
