@@ -34,11 +34,14 @@ class Crawler:
             lastPeer = 0
             while True:
                 try:
-                    self.main.browser.driver.switch_to.default_content()
-                    value1 = not self.main.browser.safe_operation(
-                        lambda: self.main.browser.driver.find_element_by_css_selector(
-                            "div.loadingscreen").is_displayed())
+                    self.main.browser.safe_operation(lambda: self.main.browser.driver.switch_to.default_content())
 
+                    try:
+                        value1 = not self.main.browser.safe_operation(
+                            lambda: self.main.browser.driver.find_element_by_css_selector(
+                                "div.loadingscreen").is_displayed())
+                    except:
+                        value1 = True
                     try:
                         value5 = self.main.browser.safe_operation(
                             lambda: self.main.browser.driver.find_element_by_tag_name(
@@ -57,9 +60,9 @@ class Crawler:
 
                     try:
                         nonlocal page_title
+                        self.main.browser.safe_operation(lambda: self.main.browser.driver.switch_to.default_content())
                         page_title = self.main.browser.safe_operation(lambda: self.main.browser.driver.title)
-                        self.main.browser.driver.switch_to.default_content()
-                        value3 = "loading" not in page_title.lower()
+                        value3 = "Loading" not in page_title
                     except:
                         value3 = False
 
@@ -121,7 +124,6 @@ class Crawler:
 
         alltext = self.main.browser.safe_operation(lambda: self.main.browser.driver.execute_script(
             "return document.body.innerText"))
-
 
         alltext_for_nlp = alltext[:1000]
 
