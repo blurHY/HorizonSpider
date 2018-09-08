@@ -18,12 +18,15 @@ class Browser:
         self.driver = webdriver.Chrome(chrome_options=options, desired_capabilities=caps)
         self.driver.set_page_load_timeout(120)
 
-    def safe_operation(self, func):
+    def safe_operation(self, func, times=0):
+        if times > 10:
+            raise Exception("Too many alerts")
         try:
             val = func()
+            self.driver.execute_script("alert=prompt=confirm=()=>{}")
         except UnexpectedAlertPresentException as e:
             self.driver.switch_to.alert.dismiss()
             print("dismiss alert")
-            return self.safe_operation(func)
+            return self.safe_operation(func, times + 1)
         else:
             return val

@@ -3,12 +3,15 @@ import time
 from rake_nltk import Rake
 import jieba.analyse
 from Utils import *
-import selenium
 from selenium.common.exceptions import *
 import re
+import stopit
 
 from Utils import filter_link
 
+
+class CrawlerException(Exception):
+    pass
 
 class Crawler:
     wait_title = 0
@@ -37,6 +40,15 @@ class Crawler:
                     self.main.browser.safe_operation(lambda: self.main.browser.driver.switch_to.default_content())
 
                     try:
+                        notfound = self.main.browser.safe_operation(
+                            lambda: self.main.browser.driver.find_element_by_xpath("/html/body/h1"))
+                    except:
+                        pass
+                    else:
+                        if notfound.text == "Not Found":
+                            raise CrawlerException("Domain doesn't exist")
+
+                    try:
                         value1 = not self.main.browser.safe_operation(
                             lambda: self.main.browser.driver.find_element_by_css_selector(
                                 "div.loadingscreen").is_displayed())
@@ -51,7 +63,8 @@ class Crawler:
                         value2 = False
                     else:
                         try:
-                            self.main.browser.driver.switch_to.default_content()
+                            self.main.browser.safe_operation(
+                                lambda: self.main.browser.driver.switch_to.default_content())
                             self.main.browser.safe_operation(lambda: self.main.browser.driver.switch_to.frame(value5))
                             value2 = self.main.browser.safe_operation(lambda: self.main.browser.driver.execute_script(
                                 "return document.body.innerText").strip())
@@ -59,17 +72,15 @@ class Crawler:
                             value2 = False
 
                     try:
-                        nonlocal page_title
                         self.main.browser.safe_operation(lambda: self.main.browser.driver.switch_to.default_content())
                         page_title = self.main.browser.safe_operation(lambda: self.main.browser.driver.title)
                         value3 = "Loading" not in page_title
                     except:
                         value3 = False
 
-                    nonlocal page_url
                     page_url = self.main.browser.safe_operation(lambda: self.main.browser.driver.current_url)
                     if "1GitLiXB6t5r8vuU2zC6a8GYj9ME6HMQ4t" in page_url:
-                        raise Exception("Gitcenter Repo Zite")
+                        raise CrawlerException("Gitcenter Repo Zite")
                     value4 = strip_url(page_url) == strip_url(url)
 
                     value = value1 and value2 and value3 and value4 and value5
@@ -80,7 +91,9 @@ class Crawler:
                         status = eles[-1].text
                         peer = re.findall("[0-9]+", status)[0]
                         if "peer" not in str.lower(status):
-                            raise Exception()
+                            raise CrawlerException()
+                    except CrawlerException:
+                        raise
                     except:
                         pass
                     else:
@@ -93,6 +106,8 @@ class Crawler:
 
                     if value:
                         return value
+                except CrawlerException:
+                    raise
                 except (NoSuchElementException,
                         ElementNotVisibleException) as e:
                     return True
@@ -100,12 +115,12 @@ class Crawler:
                 if time.time() > end_time:
                     break
                 time.sleep(2)
-            raise Exception("WebDriverWait timed out")
+            raise Exception("Timed out")
 
         wait()
 
         self.main.log.log("Page Loaded")
-        self.main.browser.driver.switch_to.default_content()
+        self.main.browser.safe_operation(lambda: self.main.browser.driver.switch_to.default_content())
         page_title = self.main.browser.safe_operation(lambda: self.main.browser.driver.title)
         page_url = self.main.browser.safe_operation(lambda: self.main.browser.driver.current_url)
 
@@ -184,8 +199,8 @@ class Crawler:
 
     def grant(self):
         try:
-            eles = self.main.browser.driver.find_elements_by_css_selector(
-                "a.button-Grant")
+            eles = self.main.browser.safe_operation(lambda: self.main.browser.driver.find_elements_by_css_selector(
+                "a.button-Grant"))
             for ele in eles:
                 ele.click()
         except:
@@ -193,8 +208,8 @@ class Crawler:
 
     def get_links_tag_a(self, base_url):
         try:
-            elements = self.main.browser.driver.find_elements_by_css_selector(
-                "a[href]")
+            elements = self.main.browser.safe_operation(lambda: self.main.browser.driver.find_elements_by_css_selector(
+                "a[href]"))
             links = set()
             for e in elements:
                 link = process_link(base_url, e.get_attribute("href"))
@@ -243,6 +258,6 @@ class Crawler:
     def get_image_count(self):
         try:
             return len(
-                self.main.browser.driver.find_elements_by_tag_name("img"))
+                self.main.browser.safe_operation(lambda: self.main.browser.driver.find_elements_by_tag_name("img")))
         except:
             return 0

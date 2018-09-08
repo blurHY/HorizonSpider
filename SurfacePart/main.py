@@ -13,6 +13,7 @@ import signal
 import traceback
 import threading
 from Utils import *
+from selenium.common.exceptions import *
 
 
 class ZeronetSpider:
@@ -25,8 +26,8 @@ class ZeronetSpider:
         self.database = Database(self)
         self.database2 = Database(self)
         self.urlmanager = Urlmanager(self)
-        self.urldownloader = Urldownloader(self)
         self.browser = Browser()
+        self.urldownloader = Urldownloader(self)
         self.store = Store(self)
         self.crawler = Crawler(self)
 
@@ -51,6 +52,8 @@ class ZeronetSpider:
                 self.database.url_scraped(url)
 
                 self.database.commit_or_rollback()
+        except UnexpectedAlertPresentException:
+            self.browser.safe_operation(lambda: None)
         except Exception as e:
             self.log.log(e, "Info")
             self.database.update_main_item(url, priority=priority + 1)  # 发生错误时降低优先级
