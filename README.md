@@ -1,3 +1,3 @@
-ZeronetSpiders for search engine horizon
+Spiders for search engine horizon
 
-For [Horizon](https://github.com/blurHY/Horizon)
+[Horizon](https://github.com/blurHY/Horizon)
