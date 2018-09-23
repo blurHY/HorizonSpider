@@ -10,11 +10,9 @@ class Browser:
                  'download.default_directory': 'NUL'}  # 指定下载路径
         caps = DesiredCapabilities().CHROME
         caps["pageLoadStrategy"] = "none"
-        # profile.setPreference("capability.policy.strict.Window.alert", "noAccess");
-        # profile.setPreference("capability.policy.strict.Window.confirm", "noAccess");
-        # profile.setPreference("capability.policy.strict.Window.prompt", "noAccess");
         options.add_experimental_option("prefs", prefs)
         options.add_argument("start-maximized")
+        options.add_argument("--headless")
         self.driver = webdriver.Chrome(chrome_options=options, desired_capabilities=caps)
         self.driver.set_page_load_timeout(120)
 

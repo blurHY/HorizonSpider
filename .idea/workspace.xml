@@ -2,19 +2,26 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9773c7b4-34eb-401f-aee8-5606c8869f2c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/DeepCrawl/SiteStatus.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DeepCrawl/ZeroHelloEnv.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DeepCrawl/ZeroWebsocket.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DeepCrawl/SiteStatus.py" beforeDir="false" afterPath="$PROJECT_DIR$/DeepCrawl/SiteStatus.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Export.py" beforeDir="false" afterPath="$PROJECT_DIR$/Export.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SurfacePart/Browser.py" beforeDir="false" afterPath="$PROJECT_DIR$/SurfacePart/Browser.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SurfacePart/Crawler.py" beforeDir="false" afterPath="$PROJECT_DIR$/SurfacePart/Crawler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SurfacePart/Database.py" beforeDir="false" afterPath="$PROJECT_DIR$/SurfacePart/Database.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SurfacePart/Log.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SurfacePart/Store.py" beforeDir="false" afterPath="$PROJECT_DIR$/SurfacePart/Store.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SurfacePart/Urldownloader.py" beforeDir="false" afterPath="$PROJECT_DIR$/SurfacePart/Urldownloader.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SurfacePart/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/SurfacePart/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Test/.pytest_cache/v/cache/nodeids" beforeDir="false" afterPath="$PROJECT_DIR$/Test/.pytest_cache/v/cache/nodeids" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Test/test_crawl.py" beforeDir="false" afterPath="$PROJECT_DIR$/testabc/t_crawl.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_normal.json.bz2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_normal.json.gz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_relationship.json" beforeDir="false" afterPath="$PROJECT_DIR$/data_relationship.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_relationship.json.gz" beforeDir="false" afterPath="$PROJECT_DIR$/data_relationship.json.gz" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_keywords.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_keywords.json.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_main.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_main.json.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_phrases.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_phrases.json.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_relationship.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_relationship.json.gz" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -29,7 +36,8 @@
     <SUITE FILE_PATH="coverage/ZeronetSpider$Test.coverage" NAME="Test Coverage Results" MODIFIED="1535863337812" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/ZeronetSpider$TestUtils.coverage" NAME="TestUtils Coverage Results" MODIFIED="1535852931172" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Test" />
     <SUITE FILE_PATH="coverage/ZeronetSpider$0list.coverage" NAME="0list Coverage Results" MODIFIED="1535039151744" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DeepCrawl" />
-    <SUITE FILE_PATH="coverage/ZeronetSpider$Export.coverage" NAME="Export Coverage Results" MODIFIED="1535869802179" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ZeronetSpider$Export.coverage" NAME="Export Coverage Results" MODIFIED="1536462337787" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ZeronetSpider$SiteStatus.coverage" NAME="SiteStatus Coverage Results" MODIFIED="1536992152818" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DeepCrawl" />
     <SUITE FILE_PATH="coverage/ZeronetSpider$pytest_in_test_utils_py.coverage" NAME="pytest in test_utils.py Coverage Results" MODIFIED="1535856228313" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Test" />
     <SUITE FILE_PATH="coverage/ZeronetSpider$Crawler.coverage" NAME="Crawler Coverage Results" MODIFIED="1535124844893" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/SurfacePart" />
     <SUITE FILE_PATH="coverage/ZeronetSpider$crawl.coverage" NAME="crawl Coverage Results" MODIFIED="1536144340056" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
@@ -39,7 +47,8 @@
     <SUITE FILE_PATH="coverage/ZeronetSpider$Twisted_Trial_for_TestUtils_TestUtils.coverage" NAME="Twisted Trial for TestUtils.TestUtils Coverage Results" MODIFIED="1535849576317" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Test" />
     <SUITE FILE_PATH="coverage/ZeronetSpider$test_crawl.coverage" NAME="test_crawl Coverage Results" MODIFIED="1536139272351" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Test" />
     <SUITE FILE_PATH="coverage/ZeronetSpider$pytest_in_t_crawl_py.coverage" NAME="pytest in t_crawl.py Coverage Results" MODIFIED="1536144360328" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Test" />
-    <SUITE FILE_PATH="coverage/ZeronetSpider$main.coverage" NAME="main Coverage Results" MODIFIED="1536336136359" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/SurfacePart" />
+    <SUITE FILE_PATH="coverage/ZeronetSpider$main.coverage" NAME="main Coverage Results" MODIFIED="1537541247877" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ZeronetSpider$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1537023265694" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="F:/Projects/_mine/zeroboard" />
   </component>
   <component name="DatabaseView">
     <option name="SHOW_INTERMEDIATE" value="true" />
@@ -82,110 +91,60 @@
     <session id="-1931853029">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="4" />
+          <entry key="project.closed" value="8" />
           <entry key="project.open.time.1" value="1" />
-          <entry key="project.open.time.11" value="1" />
-          <entry key="project.open.time.3" value="2" />
+          <entry key="project.open.time.10" value="1" />
+          <entry key="project.open.time.11" value="2" />
+          <entry key="project.open.time.3" value="3" />
           <entry key="project.open.time.6" value="1" />
-          <entry key="project.opened" value="5" />
+          <entry key="project.open.time.9" value="3" />
+          <entry key="project.opened" value="11" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="gitignore" value="1" />
+          <entry key="json" value="1" />
           <entry key="main" value="1" />
           <entry key="pstat" value="1" />
-          <entry key="py" value="57" />
+          <entry key="py" value="76" />
           <entry key="sql" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="Database Element" value="1" />
+          <entry key="JSON" value="1" />
           <entry key="PLAIN_TEXT" value="1" />
           <entry key="Profiler Session" value="1" />
-          <entry key="Python" value="57" />
+          <entry key="Python" value="76" />
           <entry key="Scratch" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="Python Console" value="1380" />
+          <entry key="Python Console" value="2689" />
           <entry key="dummy" value="91" />
           <entry key="gitignore" value="7" />
-          <entry key="py" value="5462" />
+          <entry key="py" value="7093" />
           <entry key="txt" value="13" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="111" />
-          <entry key="Python" value="6842" />
+          <entry key="Python" value="9782" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/SurfacePart/Crawler.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="188">
-              <caret line="121" selection-start-line="121" selection-end-line="121" />
-              <folding>
-                <element signature="e#0#11#0" expanded="true" />
-                <element signature="e#325#670#0" expanded="true" />
-                <element signature="e#765#4368#0" expanded="true" />
-                <element signature="e#3897#3971#0" expanded="true" />
-                <element signature="e#6523#6726#0" expanded="true" />
-                <element signature="e#6777#7155#0" expanded="true" />
-                <element signature="e#7216#7528#0" expanded="true" />
-                <element signature="e#8051#8107#0" expanded="true" />
-                <element signature="e#7633#7671#0" expanded="true" />
-                <element signature="e#7983#8390#0" expanded="true" />
-                <element signature="e#8431#8571#0" expanded="true" />
-                <marker date="1536336383619" expanded="true" signature="224:235" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://C:/Program Files/Python36/Lib/site-packages/stopit/threadstop.py">
+        <entry file="file://F:/Projects/_mine/zeroboard/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="525">
-              <caret line="67" column="37" selection-start-line="67" selection-start-column="37" selection-end-line="67" selection-end-column="37" />
-              <folding>
-                <element signature="e#2326#2602#1" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://C:/Program Files/Python36/Lib/site-packages/stopit/utils.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="703">
-              <caret line="133" column="62" selection-start-line="133" selection-start-column="62" selection-end-line="133" selection-end-column="62" />
-              <folding>
-                <element signature="e#3251#4328#1" expanded="true" />
-                <element signature="e#4423#4480#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SurfacePart/Utils.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="728">
-              <caret line="50" column="33" selection-start-line="50" selection-start-column="33" selection-end-line="50" selection-end-column="33" />
-              <folding>
-                <element signature="e#567#636#0" expanded="true" />
-                <element signature="e#679#1113#0" expanded="true" />
-                <element signature="e#1218#1318#0" expanded="true" />
-                <element signature="e#1345#1405#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="175">
+              <caret line="17" column="16" selection-start-line="17" selection-start-column="16" selection-end-line="17" selection-end-column="16" />
             </state>
           </provider>
         </entry>
@@ -193,12 +152,9 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/testabc/t_crawl.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="15" selection-start-line="15" selection-end-line="15" />
+            <state relative-caret-position="225">
+              <caret line="9" selection-start-line="9" selection-end-line="9" />
               <folding>
-                <element signature="e#167#282#0" expanded="true" />
-                <element signature="e#362#604#0" expanded="true" />
-                <element signature="e#388#537#0" expanded="true" />
                 <marker date="1536148937524" expanded="true" signature="212:217" ph="..." />
                 <marker date="1536148937524" expanded="true" signature="682:683" ph="..." />
                 <marker date="1536148937524" expanded="true" signature="682:687" ph="..." />
@@ -208,22 +164,17 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://C:/Program Files/Python36/Lib/site-packages/selenium/webdriver/remote/webdriver.py">
+        <entry file="file://$PROJECT_DIR$/SurfacePart/Database.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="100">
-              <caret line="684" column="12" selection-start-line="684" selection-start-column="12" selection-end-line="684" selection-end-column="12" />
+            <state relative-caret-position="275">
+              <caret line="16" column="21" lean-forward="true" selection-start-line="16" selection-start-column="21" selection-end-line="16" selection-end-column="21" />
               <folding>
-                <element signature="e#18338#18751#0" expanded="true" />
+                <element signature="e#0#21#0" expanded="true" />
+                <element signature="e#420#981#0" expanded="true" />
+                <element signature="e#3520#4325#0" expanded="true" />
+                <element signature="e#6809#7942#0" expanded="true" />
+                <marker date="1537108795382" expanded="true" signature="7955:7967" ph="..." />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://C:/Program Files/Python36/Lib/site-packages/multiprocess/process.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1630">
-              <caret line="262" column="26" selection-start-line="262" selection-start-column="26" selection-end-line="262" selection-end-column="26" />
             </state>
           </provider>
         </entry>
@@ -231,26 +182,89 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SurfacePart/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="56" column="30" lean-forward="true" selection-start-line="56" selection-start-column="30" selection-end-line="56" selection-end-column="30" />
+            <state relative-caret-position="176">
+              <caret line="74" column="22" lean-forward="true" selection-start-line="74" selection-start-column="22" selection-end-line="74" selection-end-column="22" />
               <folding>
                 <element signature="e#17#46#0" expanded="true" />
-                <element signature="e#409#739#0" expanded="true" />
-                <element signature="e#1667#2180#0" expanded="true" />
-                <element signature="e#2211#2490#0" expanded="true" />
+                <element signature="e#828#1684#0" expanded="true" />
+                <element signature="e#1713#2166#0" expanded="true" />
+                <element signature="e#2221#2269#0" expanded="true" />
+                <element signature="e#2537#2576#1" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SurfacePart/Urldownloader.py">
+        <entry file="file://$PROJECT_DIR$/SurfacePart/Crawler.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="175">
-              <caret line="7" selection-start-line="7" selection-end-line="7" />
+            <state relative-caret-position="376">
+              <caret line="28" column="45" lean-forward="true" selection-start-line="28" selection-start-column="45" selection-end-line="28" selection-end-column="45" />
               <folding>
-                <element signature="e#59#75#0" expanded="true" />
-                <element signature="e#109#244#0" expanded="true" />
+                <element signature="e#0#11#0" expanded="true" />
+                <element signature="e#732#6485#0" expanded="true" />
+                <element signature="e#799#4748#0" expanded="true" />
+                <marker date="1537077162439" expanded="true" signature="224:236" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/SurfacePart/Browser.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="155">
+              <caret line="10" column="39" lean-forward="true" selection-start-line="10" selection-start-column="39" selection-end-line="10" selection-end-column="39" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://C:/Program Files/Python36/Lib/site-packages/pymysql/cursors.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="25">
+              <caret line="115" column="8" selection-start-line="115" selection-start-column="8" selection-end-line="115" selection-end-column="8" />
+              <folding>
+                <element signature="e#3328#4074#0" expanded="true" />
+                <element signature="e#4125#4583#0" expanded="true" />
+                <element signature="e#4634#5214#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/DeepCrawl/NewZeronetSites.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="275">
+              <caret line="18" column="47" selection-start-line="18" selection-start-column="47" selection-end-line="18" selection-end-column="47" />
+              <folding>
+                <element signature="e#189#323#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/DeepCrawl/SiteStatus.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="150">
+              <caret line="12" column="20" selection-start-line="12" selection-start-column="20" selection-end-line="12" selection-end-column="20" />
+              <folding>
+                <element signature="e#0#32#0" expanded="true" />
+                <marker date="1536992143394" expanded="true" signature="187:248" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/DeepCrawl/ZeroHelloEnv.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="39" selection-start-column="39" selection-end-column="39" />
+              <folding>
+                <marker date="1536983194725" expanded="true" signature="61:66" ph="..." />
               </folding>
             </state>
           </provider>
@@ -267,8 +281,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>title</find>
-      <find>process_link</find>
       <find>iframe</find>
       <find>store</find>
       <find>page l</find>
@@ -291,7 +303,19 @@
       <find>driver.close</find>
       <find>url</find>
       <find>Exception</find>
+      <find>run--</find>
+      <find>self.main.log.log</find>
+      <find>se</find>
+      <find>self.log.log</find>
+      <find>, &quot;Info&quot;)</find>
+      <find>stop</find>
+      <find>'</find>
+      <find>prefer</find>
     </findStrings>
+    <replaceStrings>
+      <replace>print</replace>
+      <replace>)</replace>
+    </replaceStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -304,21 +328,24 @@
         <option value="$PROJECT_DIR$/DeepCrawl/ZeroSites.py" />
         <option value="$PROJECT_DIR$/DeepCrawl/NewZeronetSites.py" />
         <option value="$PROJECT_DIR$/DeepCrawl/0list.py" />
-        <option value="$PROJECT_DIR$/SurfacePart/Store.py" />
-        <option value="$PROJECT_DIR$/SurfacePart/Database.py" />
         <option value="$PROJECT_DIR$/SurfacePart/Utils.py" />
         <option value="$PROJECT_DIR$/Test/TestCrawl.py" />
         <option value="$PROJECT_DIR$/Test/TestUtils.py" />
         <option value="$PROJECT_DIR$/Test/__init__.py" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/DeepCrawl/SiteStatus.py" />
-        <option value="$PROJECT_DIR$/Export.py" />
         <option value="$PROJECT_DIR$/SurfacePart/Urldownloader.py" />
-        <option value="$PROJECT_DIR$/SurfacePart/main.py" />
         <option value="$PROJECT_DIR$/Test/test_crawl.py" />
         <option value="$PROJECT_DIR$/testabc/t_crawl.py" />
-        <option value="$PROJECT_DIR$/SurfacePart/Browser.py" />
+        <option value="$PROJECT_DIR$/SurfacePart/Store.py" />
+        <option value="$PROJECT_DIR$/DeepCrawl/ZeroWebsocket.py" />
+        <option value="$PROJECT_DIR$/DeepCrawl/ZeroHelloEnv.py" />
+        <option value="$PROJECT_DIR$/SurfacePart/main.py" />
+        <option value="$PROJECT_DIR$/DeepCrawl/SiteStatus.py" />
+        <option value="$PROJECT_DIR$/Export.py" />
+        <option value="F:/Projects/_mine/zeroboard/main.py" />
         <option value="$PROJECT_DIR$/SurfacePart/Crawler.py" />
+        <option value="$PROJECT_DIR$/SurfacePart/Database.py" />
+        <option value="$PROJECT_DIR$/SurfacePart/Browser.py" />
       </list>
     </option>
   </component>
@@ -328,9 +355,9 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="width" value="1265" />
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="1270" />
+    <option name="width" value="1298" />
     <option name="height" value="1410" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -358,7 +385,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -390,6 +416,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -397,7 +424,7 @@
     <property name="SearchEverywhereHistoryKey" value="filter&#9;null&#9;null" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="database.console.LAST_STATE" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/testabc/t_crawl.py" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="configurable.group.editor" />
@@ -442,7 +469,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="TestUtils" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="SiteStatus" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="ZeronetSpider" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -450,12 +477,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Test" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/DeepCrawl" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="F:\ZeronetSpider\Test\test_utils.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/DeepCrawl/SiteStatus.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -486,6 +513,28 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="main (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="ZeronetSpider" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../Projects/_mine/zeroboard" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../Projects/_mine/zeroboard/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="ZeronetSpider" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -494,7 +543,7 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/SurfacePart" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
@@ -549,17 +598,19 @@
     <list>
       <item itemvalue="Python.crawlTest" />
       <item itemvalue="Python tests.Test" />
-      <item itemvalue="Python.TestUtils" />
       <item itemvalue="Python.main" />
       <item itemvalue="Python.Export" />
       <item itemvalue="Python.test_crawl" />
+      <item itemvalue="Python.SiteStatus" />
+      <item itemvalue="Python.main (1)" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
-        <item itemvalue="Python.test_crawl" />
+        <item itemvalue="Python.main (1)" />
+        <item itemvalue="Python.SiteStatus" />
         <item itemvalue="Python.Export" />
-        <item itemvalue="Python.TestUtils" />
+        <item itemvalue="Python.test_crawl" />
       </list>
     </recent_temporary>
   </component>
@@ -609,21 +660,21 @@
     </history-entry>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-6" y="0" width="1012" height="1128" extended-state="0" />
+    <frame x="-7" y="-7" width="2062" height="1136" extended-state="7" />
     <layout>
       <window_info id="Favorites" order="0" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.38050315" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.096806385" />
       <window_info anchor="bottom" id="Database Console" order="0" weight="0.32968128" />
       <window_info anchor="bottom" id="Docker" order="1" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="2" />
-      <window_info anchor="bottom" id="Database Changes" order="3" weight="0.32901296" />
-      <window_info anchor="bottom" id="Event Log" order="4" sideWeight="0.28792414" side_tool="true" weight="0.63010967" />
-      <window_info anchor="bottom" id="Terminal" order="5" sideWeight="0.5247989" weight="0.08275174" />
+      <window_info anchor="bottom" id="Database Changes" order="3" weight="0.39095476" />
+      <window_info anchor="bottom" id="Event Log" order="4" sideWeight="0.35528943" side_tool="true" weight="0.53738785" />
+      <window_info anchor="bottom" id="Terminal" order="5" sideWeight="0.6447106" weight="0.53738785" />
       <window_info anchor="bottom" id="Message" order="6" />
-      <window_info anchor="bottom" id="Find" order="7" sideWeight="0.49865952" weight="0.3286517" />
-      <window_info anchor="bottom" id="Python Console" order="8" sideWeight="0.5435657" weight="0.62612164" />
-      <window_info anchor="bottom" id="Run" order="9" sideWeight="0.7211796" weight="0.31356785" />
-      <window_info active="true" anchor="bottom" id="Debug" order="10" sideWeight="0.7120758" visible="true" weight="0.51457286" />
+      <window_info anchor="bottom" id="Find" order="7" sideWeight="0.49750498" weight="0.32801595" />
+      <window_info anchor="bottom" id="Python Console" order="8" sideWeight="0.54291415" weight="0.3559322" />
+      <window_info active="true" anchor="bottom" id="Run" order="9" sideWeight="0.7205589" visible="true" weight="0.4217348" />
+      <window_info anchor="bottom" id="Debug" order="10" sideWeight="0.7120758" weight="0.4442211" />
       <window_info anchor="bottom" id="Cvs" order="11" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="12" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="13" weight="0.32954547" />
@@ -639,18 +690,18 @@
     </layout>
     <layout-to-restore>
       <window_info id="Favorites" order="0" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="1" weight="0.2897959" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.39938712" />
       <window_info anchor="bottom" id="Database Console" order="0" weight="0.32968128" />
       <window_info anchor="bottom" id="Docker" order="1" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="2" />
-      <window_info anchor="bottom" id="Database Changes" order="3" weight="0.32901296" />
+      <window_info anchor="bottom" id="Database Changes" order="3" weight="0.3918245" />
       <window_info anchor="bottom" id="Event Log" order="4" sideWeight="0.28792414" side_tool="true" weight="0.63010967" />
-      <window_info anchor="bottom" id="Terminal" order="5" sideWeight="0.5247989" weight="0.08275174" />
+      <window_info anchor="bottom" id="Terminal" order="5" sideWeight="0.5247989" weight="0.5423729" />
       <window_info anchor="bottom" id="Message" order="6" />
       <window_info anchor="bottom" id="Find" order="7" sideWeight="0.49865952" weight="0.3286517" />
-      <window_info anchor="bottom" id="Python Console" order="8" sideWeight="0.5435657" weight="0.39282152" />
-      <window_info anchor="bottom" id="Run" order="9" sideWeight="0.7211796" weight="0.34197408" />
-      <window_info anchor="bottom" id="Debug" order="10" sideWeight="0.7120758" visible="true" weight="0.20301507" />
+      <window_info anchor="bottom" id="Python Console" order="8" sideWeight="0.5435657" weight="0.3569292" />
+      <window_info anchor="bottom" id="Run" order="9" sideWeight="0.7211796" weight="0.31306082" />
+      <window_info active="true" anchor="bottom" id="Debug" order="10" sideWeight="0.7120758" visible="true" weight="0.4442211" />
       <window_info anchor="bottom" id="Cvs" order="11" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="12" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="13" weight="0.32954547" />
@@ -768,20 +819,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SurfacePart/Store.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="376">
-          <caret line="22" selection-start-line="22" selection-end-line="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DeepCrawl/NewZeronetSites.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="8" column="32" selection-start-line="8" selection-start-column="32" selection-end-line="8" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/DeepCrawl/ZeroSites.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="775">
@@ -796,17 +833,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SurfacePart/Database.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="18" column="8" selection-start-line="18" selection-start-column="8" selection-end-line="18" selection-end-column="8" />
-          <folding>
-            <element signature="e#442#1003#0" expanded="true" />
-            <element signature="e#2945#3748#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://C:/Program Files/Python36/Lib/site-packages/twisted/python/filepath.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="453">
@@ -818,9 +844,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="72">
           <caret line="1884" column="38" lean-forward="true" selection-start-line="1884" selection-start-column="38" selection-end-line="1884" selection-end-column="38" />
-          <folding>
-            <element signature="e#65082#65307#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -828,9 +851,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="114">
           <caret line="28" column="32" selection-start-line="28" selection-start-column="32" selection-end-line="28" selection-end-column="32" />
-          <folding>
-            <element signature="e#2620#5670#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -838,10 +858,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
           <caret line="7" column="33" selection-start-line="7" selection-start-column="33" selection-end-line="7" selection-end-column="33" />
-          <folding>
-            <element signature="e#117#121#0" expanded="true" />
-            <element signature="e#165#275#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -859,9 +875,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="217">
           <caret line="131" selection-start-line="131" selection-end-line="131" />
-          <folding>
-            <element signature="e#4641#4756#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -869,9 +882,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="200">
           <caret line="8" column="43" lean-forward="true" selection-start-line="8" selection-start-column="43" selection-end-line="8" selection-end-column="43" />
-          <folding>
-            <marker date="1535853358093" expanded="true" signature="84:89" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -882,26 +892,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DeepCrawl/SiteStatus.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://C:/Program Files/Python36/Lib/site-packages/pymysql/connections.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="172">
           <caret line="690" column="21" selection-start-line="690" selection-start-column="21" selection-end-line="690" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Export.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="7" selection-start-line="7" selection-end-line="7" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-            <element signature="e#811#1167#0" expanded="true" />
-            <element signature="e#1416#1601#0" expanded="true" />
-            <marker date="1535869796451" expanded="true" signature="1791:2010" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -916,13 +910,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="236">
           <caret line="348" column="36" selection-start-line="348" selection-start-column="32" selection-end-line="348" selection-end-column="36" />
-          <folding>
-            <element signature="e#7619#7769#0" expanded="true" />
-            <element signature="e#7830#8029#0" expanded="true" />
-            <element signature="e#11378#11687#0" expanded="true" />
-            <element signature="e#12094#13052#0" expanded="true" />
-            <element signature="e#12828#13006#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -933,19 +920,44 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://C:/Program Files/Python36/Lib/site-packages/stopit/threadstop.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="525">
+          <caret line="67" column="37" selection-start-line="67" selection-start-column="37" selection-end-line="67" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Program Files/Python36/Lib/site-packages/stopit/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1400">
+          <caret line="133" column="62" selection-start-line="133" selection-start-column="62" selection-end-line="133" selection-end-column="62" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://C:/Program Files/Python36/Lib/site-packages/selenium/webdriver/remote/webdriver.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
+        <state relative-caret-position="2750">
           <caret line="684" column="12" selection-start-line="684" selection-start-column="12" selection-end-line="684" selection-end-column="12" />
-          <folding>
-            <element signature="e#18338#18751#0" expanded="true" />
-          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Program Files/Python36/Lib/site-packages/multiprocess/process.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2550">
+          <caret line="262" column="26" selection-start-line="262" selection-start-column="26" selection-end-line="262" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Program Files/Python36/Lib/site-packages/IPython/core/interactiveshell.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="184">
+          <caret line="2960" selection-start-line="2960" selection-end-line="2960" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/SurfacePart/Utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="728">
+        <state relative-caret-position="325">
           <caret line="50" column="33" selection-start-line="50" selection-start-column="33" selection-end-line="50" selection-end-column="33" />
           <folding>
             <element signature="e#567#636#0" expanded="true" />
@@ -956,72 +968,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/Program Files/Python36/Lib/site-packages/stopit/utils.py">
+    <entry file="file://$PROJECT_DIR$/SurfacePart/Store.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="703">
-          <caret line="133" column="62" selection-start-line="133" selection-start-column="62" selection-end-line="133" selection-end-column="62" />
-          <folding>
-            <element signature="e#3251#4328#1" expanded="true" />
-            <element signature="e#4423#4480#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Program Files/Python36/Lib/site-packages/stopit/threadstop.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="525">
-          <caret line="67" column="37" selection-start-line="67" selection-start-column="37" selection-end-line="67" selection-end-column="37" />
-          <folding>
-            <element signature="e#2326#2602#1" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testabc/t_crawl.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="15" selection-start-line="15" selection-end-line="15" />
-          <folding>
-            <element signature="e#167#282#0" expanded="true" />
-            <element signature="e#362#604#0" expanded="true" />
-            <element signature="e#388#537#0" expanded="true" />
-            <marker date="1536148937524" expanded="true" signature="212:217" ph="..." />
-            <marker date="1536148937524" expanded="true" signature="682:683" ph="..." />
-            <marker date="1536148937524" expanded="true" signature="682:687" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SurfacePart/Browser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="6" column="23" lean-forward="true" selection-start-line="6" selection-start-column="23" selection-end-line="6" selection-end-column="23" />
-          <folding>
-            <element signature="e#0#30#0" expanded="true" />
-            <element signature="e#200#966#0" expanded="true" />
-            <element signature="e#252#368#0" expanded="true" />
-            <element signature="e#473#550#0" expanded="true" />
-            <element signature="e#1021#1421#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SurfacePart/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="56" column="30" lean-forward="true" selection-start-line="56" selection-start-column="30" selection-end-line="56" selection-end-column="30" />
-          <folding>
-            <element signature="e#17#46#0" expanded="true" />
-            <element signature="e#409#739#0" expanded="true" />
-            <element signature="e#1667#2180#0" expanded="true" />
-            <element signature="e#2211#2490#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="450">
+          <caret line="20" column="33" selection-start-line="20" selection-start-column="33" selection-end-line="20" selection-end-column="33" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/SurfacePart/Urldownloader.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
+        <state relative-caret-position="100">
           <caret line="7" selection-start-line="7" selection-end-line="7" />
           <folding>
             <element signature="e#59#75#0" expanded="true" />
@@ -1030,31 +986,183 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/Program Files/Python36/Lib/site-packages/multiprocess/process.py">
+    <entry file="file://$PROJECT_DIR$/DeepCrawl/ZeroWebsocket.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1630">
-          <caret line="262" column="26" selection-start-line="262" selection-start-column="26" selection-end-line="262" selection-end-column="26" />
+        <state relative-caret-position="450">
+          <caret line="18" column="35" selection-start-line="18" selection-start-column="35" selection-end-line="18" selection-end-column="35" />
+          <folding>
+            <element signature="e#0#16#0" expanded="true" />
+            <element signature="e#95#247#0" expanded="true" />
+            <element signature="e#273#284#0" expanded="true" />
+            <element signature="e#340#355#0" expanded="true" />
+            <element signature="e#419#621#0" expanded="true" />
+            <element signature="e#658#691#0" expanded="true" />
+            <element signature="e#735#1026#0" expanded="true" />
+            <element signature="e#1073#1106#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SurfacePart/Log.py" />
+    <entry file="file://C:/Program Files/Python36/Lib/urllib/request.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="213">
+          <caret line="1317" selection-start-line="1317" selection-end-line="1317" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Export.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="350">
+          <caret line="55" column="36" selection-start-line="55" selection-start-column="18" selection-end-line="55" selection-end-column="36" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://F:/Projects/_mine/zeroboard/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="17" column="16" selection-start-line="17" selection-start-column="16" selection-end-line="17" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testabc/t_crawl.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="9" selection-start-line="9" selection-end-line="9" />
+          <folding>
+            <marker date="1536148937524" expanded="true" signature="212:217" ph="..." />
+            <marker date="1536148937524" expanded="true" signature="682:683" ph="..." />
+            <marker date="1536148937524" expanded="true" signature="682:687" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DeepCrawl/NewZeronetSites.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="275">
+          <caret line="18" column="47" selection-start-line="18" selection-start-column="47" selection-end-line="18" selection-end-column="47" />
+          <folding>
+            <element signature="e#189#323#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DeepCrawl/SiteStatus.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="12" column="20" selection-start-line="12" selection-start-column="20" selection-end-line="12" selection-end-column="20" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+            <marker date="1536992143394" expanded="true" signature="187:248" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DeepCrawl/ZeroHelloEnv.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="39" selection-start-column="39" selection-end-column="39" />
+          <folding>
+            <marker date="1536983194725" expanded="true" signature="61:66" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Program Files/Python36/Lib/site-packages/pymysql/cursors.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="25">
+          <caret line="115" column="8" selection-start-line="115" selection-start-column="8" selection-end-line="115" selection-end-column="8" />
+          <folding>
+            <element signature="e#3328#4074#0" expanded="true" />
+            <element signature="e#4125#4583#0" expanded="true" />
+            <element signature="e#4634#5214#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SurfacePart/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="74" column="22" lean-forward="true" selection-start-line="74" selection-start-column="22" selection-end-line="74" selection-end-column="22" />
+          <folding>
+            <element signature="e#17#46#0" expanded="true" />
+            <element signature="e#828#1684#0" expanded="true" />
+            <element signature="e#1713#2166#0" expanded="true" />
+            <element signature="e#2221#2269#0" expanded="true" />
+            <element signature="e#2537#2576#1" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://F:/TEMP/Snakez-Framework/Snakez_/snakez.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="17" column="11" lean-forward="true" selection-start-line="17" selection-start-column="11" selection-end-line="17" selection-end-column="11" />
+          <folding>
+            <element signature="e#705#1622#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://F:/TEMP/Snakez-Framework/Snakez_/gestor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-328">
+          <caret line="60" column="14" lean-forward="true" selection-start-line="60" selection-start-column="14" selection-end-line="60" selection-end-column="14" />
+          <folding>
+            <element signature="e#120#934#0" expanded="true" />
+            <element signature="e#974#1640#0" expanded="true" />
+            <element signature="e#1687#2593#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://F:/TEMP/Snakez-Framework/Snakez_/templates.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="125">
+          <caret line="8" column="16" lean-forward="true" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
+          <folding>
+            <element signature="e#190#443#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://F:/ZeroNet/data/1TxcKUMehiMdwG1mRZZygUnD29F51jzrY/data/users/1JcHMiQxXHX9q3ZK2LF9rZjvg3MUtTpcK/data.json">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SurfacePart/Database.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="275">
+          <caret line="16" column="21" lean-forward="true" selection-start-line="16" selection-start-column="21" selection-end-line="16" selection-end-column="21" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+            <element signature="e#420#981#0" expanded="true" />
+            <element signature="e#3520#4325#0" expanded="true" />
+            <element signature="e#6809#7942#0" expanded="true" />
+            <marker date="1537108795382" expanded="true" signature="7955:7967" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/SurfacePart/Crawler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="188">
-          <caret line="121" selection-start-line="121" selection-end-line="121" />
+        <state relative-caret-position="376">
+          <caret line="28" column="45" lean-forward="true" selection-start-line="28" selection-start-column="45" selection-end-line="28" selection-end-column="45" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
-            <element signature="e#325#670#0" expanded="true" />
-            <element signature="e#765#4368#0" expanded="true" />
-            <element signature="e#3897#3971#0" expanded="true" />
-            <element signature="e#6523#6726#0" expanded="true" />
-            <element signature="e#6777#7155#0" expanded="true" />
-            <element signature="e#7216#7528#0" expanded="true" />
-            <element signature="e#8051#8107#0" expanded="true" />
-            <element signature="e#7633#7671#0" expanded="true" />
-            <element signature="e#7983#8390#0" expanded="true" />
-            <element signature="e#8431#8571#0" expanded="true" />
-            <marker date="1536336383619" expanded="true" signature="224:235" ph="..." />
+            <element signature="e#732#6485#0" expanded="true" />
+            <element signature="e#799#4748#0" expanded="true" />
+            <marker date="1537077162439" expanded="true" signature="224:236" ph="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SurfacePart/Browser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="155">
+          <caret line="10" column="39" lean-forward="true" selection-start-line="10" selection-start-column="39" selection-end-line="10" selection-end-column="39" />
         </state>
       </provider>
     </entry>

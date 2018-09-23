@@ -2,47 +2,42 @@ from pymysql import *
 import json
 
 
+# 25MB
+def spilit_export_compress(array, name, step):
+    x = 0
+    for index in range(0, len(array), step):
+        x += 1
+        current = array[index:index + step]
+        current = {name: current}
+        filename = ".\data_{0}{1}.json".format(name, x)
+        with open(filename, "w", encoding="utf8") as f:
+            json.dump(current, f, ensure_ascii=False, separators=(',', ':'))
+        compress_gz(filename)
+
+
 def export_normal(cursor):
     db = connect(host="localhost", port=3308, user="root", passwd="123456", db="zeronetspider", charset="utf8mb4")
     cur = db.cursor(cursor)
 
     cur.execute("SELECT * FROM zeronetspider.main")
     main = cur.fetchall()
-    main = {"main": main}
-    with open(".\data_main.json", "w", encoding="utf8") as f:
-        json.dump(main, f, ensure_ascii=False, separators=(',', ':'))
-    compress_gz(".\data_main.json")
+    spilit_export_compress(main, "main", 180000)
 
     cur.execute("SELECT * FROM zeronetspider.keywords")
     keywords = cur.fetchall()
-    keywords = {"keywords": keywords}
-    with open(".\data_keywords.json", "w", encoding="utf8") as f:
-        json.dump(keywords, f, ensure_ascii=False, separators=(',', ':'))
-    compress_gz(".\data_keywords.json")
+    spilit_export_compress(keywords, "keywords", 650000)
 
     cur.execute("SELECT * FROM zeronetspider.phrases")
     phrases = cur.fetchall()
-    phrases = {"phrases": phrases}
-    with open(".\data_phrases.json", "w", encoding="utf8") as f:
-        json.dump(phrases, f, ensure_ascii=False, separators=(',', ':'))
-    compress_gz(".\data_phrases.json")
+    spilit_export_compress(phrases, "phrases", 290000)
 
     cur.execute("SELECT * FROM zeronetspider.relationship")
     rela = cur.fetchall()
-    rela = {"relationship": rela}
-    with open(".\data_relationship.json", "w", encoding="utf8") as f:
-        json.dump(rela, f, ensure_ascii=False, separators=(',', ':'))
-    compress_gz(".\data_relationship.json")
+    spilit_export_compress(rela, "relationship", 800400)
 
-
-def export_relationship(filename, cursor):
-    db = connect(host="localhost", port=3308, user="root", passwd="123456", db="zeronetspider", charset="utf8mb4")
-    cur = db.cursor(cursor)
-    cur.execute("SELECT * FROM zeronetspider.relationship")
-    all = cur.fetchall()
-    file = open(filename, "w", encoding="utf8")
-    json.dump(all, file, ensure_ascii=False, separators=(',', ':'))
-    file.close()
+    cur.execute("Select * From zeronetspider.zite")
+    zites = cur.fetchall()
+    spilit_export_compress(zites, "zites", 4000)
 
 
 def compress_gz(filename):

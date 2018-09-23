@@ -2,7 +2,6 @@
 
 from Database import Database
 from Urlmanager import Urlmanager
-from Log import Log
 from Crawler import Crawler
 from Urldownloader import Urldownloader
 from Store import Store
@@ -21,8 +20,7 @@ class ZeronetSpider:
     allow_wait = False
 
     def __init__(self):
-        self.log = Log()
-        self.log.log("Initing", "Info")
+        print("Initing")
         self.database = Database(self)
         self.database2 = Database(self)
         self.urlmanager = Urlmanager(self)
@@ -32,12 +30,12 @@ class ZeronetSpider:
         self.crawler = Crawler(self)
 
     def quit(self):
-        self.log.log("Quit", "Info")
+        print("Quit")
         sys.exit()
 
     def crawl(self, url, priority):
         # 在父页面的优先级上加一
-        self.log.log("Priority Now is {}".format(priority))
+        print("Priority Now is {}".format(priority))
         try:
             longurl = longer_url(url)
             if not filter_link_before_crawl(longurl):
@@ -55,26 +53,26 @@ class ZeronetSpider:
         except UnexpectedAlertPresentException:
             self.browser.safe_operation(lambda: None)
         except Exception as e:
-            self.log.log(e, "Info")
+            print(e)
             self.database.update_main_item(url, priority=priority + 1)  # 发生错误时降低优先级
 
     def run(self):
-        self.log.log("Run---------", "Info")
+        print("Run---------")
         res = self.database.url_pop()
         if res is None:
-            self.log.log("Start crawling from ZeroHello", "Info")
+            print("Start crawling from ZeroHello")
 
-            self.log.log("Wait for syncing.", "Info")
+            print("Wait for syncing.")
             time.sleep(self.wait_sec)
 
             self.crawl("1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D", 0)
         else:
             getone, priority, id = res
-            self.log.log("Got url:{0} and its Priority is {1}".format(getone, priority), "Info")
+            print("Got url:{0} and its Priority is {1}".format(getone, priority))
             self.crawl(getone, priority)
 
     def start(self):
-        self.log.log("Start", "Info")
+        print("Start")
 
         # self.database.reset_scraping_but_not_success()
         # self.database.commit_or_rollback()
@@ -83,7 +81,7 @@ class ZeronetSpider:
             try:
                 self.run()
             except:
-                self.log.log(traceback.format_exc(), "Error")
+                print(traceback.format_exc(), "Error")
 
 
 if __name__ == '__main__':

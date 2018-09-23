@@ -13,7 +13,8 @@ class Store:
                                                       priority=priority)
         pageid = self.main.database.get_main_item_id(shorturl)
         self.main.database.add_keywords(pageid, keywords)
-        self.main.database.add_phrases(pageid, phrases)
+        if phrases:
+            self.main.database.add_phrases(pageid, phrases)
         subpage_ids = set()
 
         self.main.database.insert_or_update_blank_main_item_s(subpage_urls, subpage_priority)

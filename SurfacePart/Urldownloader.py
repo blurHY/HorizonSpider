@@ -4,4 +4,4 @@ class Urldownloader:
 
     def get(self, url):
         self.main.browser.safe_operation(lambda: self.main.browser.driver.get(url))
-        self.main.log.log("{0} loaded".format(url), "Info")
+        print("{0} loaded".format(url))

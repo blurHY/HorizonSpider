@@ -1,8 +1,6 @@
 from pymysql import *
 import traceback
-from Utils import *
-
-import Utils
+from SurfacePart.Utils import *
 
 
 class Database:
@@ -13,7 +11,7 @@ class Database:
                           charset="utf8mb4")
 
     def __del__(self):
-        self.main.log.log("Closing database connection", "Info")
+        print("Closing database connection")
         self.db.close()
 
     def url_pop(self):
@@ -23,6 +21,25 @@ class Database:
             cursor.execute(
                 "select url,priority,id from main where state=0 order by priority limit 1")
             res = cursor.fetchone()
+            if res:
+                cursor.execute(
+                    "update main set state=1 where id={}".format(res[2]))
+            cursor.close()
+            self.commit_or_rollback()
+            return res
+        except IntegrityError as ie:
+            self._error_info(ie)
+        except:
+            self._error_traceback()
+
+
+    def urls_pop(self):
+        try:
+            cursor = self.db.cursor()
+            self.db.ping()
+            cursor.execute(
+                "select url,priority,id from main where state=0 order by priority limit 100")
+            res = cursor.fetchall()
             if res:
                 cursor.execute(
                     "update main set state=1 where id={}".format(res[2]))
@@ -88,7 +105,7 @@ class Database:
 
     def insert_or_update_blank_main_item_s(self, urls, priority):
         try:
-            if len(urls)==0:
+            if len(urls) == 0:
                 return
             cursor = self.db.cursor()
             self.db.ping()
@@ -97,7 +114,7 @@ class Database:
             # value = "('" + stry.join(urls) + strx + ")"
             value = "('"
             for url in urls:
-                value += escape_string(Utils.shorted_url(url)) + stry  # ',0,'',0,{}),('
+                value += escape_string(shorted_url(url)) + stry  # ',0,'',0,{}),('
             value = value[:-3]
             query = "insert into main(url,imgcount,title,state,priority) values {0}" \
                     " on duplicate key update url=values(url) " \
@@ -167,10 +184,10 @@ class Database:
             self._error_traceback()
 
     def _error_traceback(self, e=None):
-        self.main.log.log(traceback.format_exc(), "Error")
+        print(traceback.format_exc(), "Error")
 
     def _error_info(self, e):
-        self.main.log.log(e, "Info")
+        print(e)
 
     # 成功返回True
     def commit_or_rollback(self):
@@ -183,11 +200,33 @@ class Database:
         else:
             return True
 
+    def site_status(self, objs):
+        try:
+            cursor = self.db.cursor()
+            self.db.ping()
+            cursor.execute("truncate zite")
+            for obj in objs:
+                cursor.execute(
+                    "insert ignore into zite values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                    (None, obj["content"].get("description"), obj["content"].get("cloned_from"),
+                     obj["content"].get("modified"),
+                     obj["content"].get("title"), obj["content"].get("zeronet_version"), obj["content"].get("includes"),
+                     obj["content"].get("files"), obj["content"].get("files_optional"), obj["peers"],
+                     obj["settings"].get("size"),
+                     obj["settings"].get("size_optional"), obj["content"].get("domain"),
+                     len(obj["content"].get("translate", [])),
+                     obj["content_updated"], obj.get("feed_follow_num"), obj["address"]))
+
+            cursor.close()
+            self.commit_or_rollback()
+        except IntegrityError as ie:
+            self._error_info(ie)
+        except:
+            self._error_traceback()
+
 
 class FakeMain:
-    def __init__(self):
-        from SurfacePart import Log
-        self.log = Log.Log()
+    pass
 
 
 if __name__ == '__main__':
