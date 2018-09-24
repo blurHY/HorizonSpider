@@ -1,6 +1,7 @@
 from pymysql import *
 import traceback
 from SurfacePart.Utils import *
+import time
 
 
 class Database:
@@ -16,6 +17,7 @@ class Database:
 
     def url_pop(self):
         try:
+            last = time.time()
             cursor = self.db.cursor()
             self.db.ping()
             cursor.execute(
@@ -26,12 +28,12 @@ class Database:
                     "update main set state=1 where id={}".format(res[2]))
             cursor.close()
             self.commit_or_rollback()
+            print(time.time() - last)
             return res
         except IntegrityError as ie:
             self._error_info(ie)
         except:
             self._error_traceback()
-
 
     def urls_pop(self):
         try:
