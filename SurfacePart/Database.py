@@ -4,6 +4,10 @@ from SurfacePart.Utils import *
 import time
 
 
+class RowDeletedException(Exception):
+    pass
+
+
 class Database:
 
     def __init__(self, main):
@@ -25,7 +29,7 @@ class Database:
             res = cursor.fetchone()
             if res:
                 cursor.execute(
-                    "update main set state=1 where id={}".format(res[2]))
+                    "update main set state=1 where id=%s", [res[2]])
             cursor.close()
             self.commit_or_rollback()
             print(time.time() - last)
@@ -44,7 +48,7 @@ class Database:
             res = cursor.fetchall()
             if res:
                 cursor.execute(
-                    "update main set state=1 where id={}".format(res[2]))
+                    "update main set state=1 where id=%s", [res[2]])
             cursor.close()
             self.commit_or_rollback()
             return res
@@ -53,8 +57,8 @@ class Database:
         except:
             self._error_traceback()
 
-    def url_scraped(self, url):
-        self.update_main_item(url, state=2)
+    def url_scraped(self, id):
+        self.update_main_item(id, state=2)
 
     def reset_scraping_but_not_success(self):
         try:
@@ -68,24 +72,30 @@ class Database:
         except:
             self._error_traceback()
 
-    def update_main_item(self, id_or_url, **kwargs):
+    def update_main_item(self, id_or_url, on_1062_del=False, **kwargs):
+        if type(id_or_url) == int:
+            clause = "id={}".format(id_or_url)
+        else:
+            clause = "url='{}'".format(escape_string(id_or_url))
+
         try:
             cursor = self.db.cursor()
             self.db.ping()
             eqs = ",".join("{0}='{1}'".format(
                 key, kwargs[key]) for key in kwargs.keys())
-            clause = ""
-            if type(id_or_url) == "int":
-                clause = "id={}".format(id_or_url)
-            else:
-                clause = "url='{}'".format(id_or_url)
             query = "update main set {0} where {1}".format(eqs, clause)
             cursor.execute(query)
-            cursor.close()
         except IntegrityError as ie:
+            if on_1062_del and ie.args[0] == 1062 and clause and id_or_url:
+                cursor.execute("delete from main where {}".format(clause))
+                print("deleted")
+                raise RowDeletedException()
+
             self._error_info(ie)
         except:
             self._error_traceback()
+        finally:
+            cursor.close()
 
     def insert_or_update_main_item(self, **kwargs):
         try:

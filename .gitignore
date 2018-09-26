@@ -1,4 +1,3 @@
-
-data_normal.json
 *.pyc
 .idea/*
+data_*

@@ -15,29 +15,43 @@ def spilit_export_compress(array, name, step):
         compress_gz(filename)
 
 
-def export_normal(cursor):
-    db = connect(host="localhost", port=3308, user="root", passwd="123456", db="zeronetspider", charset="utf8mb4")
-    cur = db.cursor(cursor)
+def export_normal(db):
+    cur = db.cursor(cursors.DictCursor)
 
+    print("export main")
     cur.execute("SELECT * FROM zeronetspider.main")
     main = cur.fetchall()
-    spilit_export_compress(main, "main", 180000)
+    spilit_export_compress(main, "main", 100000)
 
+    print("export keywords")
     cur.execute("SELECT * FROM zeronetspider.keywords")
     keywords = cur.fetchall()
     spilit_export_compress(keywords, "keywords", 650000)
 
+    print("export phrases")
     cur.execute("SELECT * FROM zeronetspider.phrases")
     phrases = cur.fetchall()
     spilit_export_compress(phrases, "phrases", 290000)
 
+    cur.close()
+
+
+def export_relationship(db):
+    cur = db.cursor()
+
+    print("export relationship")
     cur.execute("SELECT * FROM zeronetspider.relationship")
     rela = cur.fetchall()
-    spilit_export_compress(rela, "relationship", 800400)
 
-    cur.execute("Select * From zeronetspider.zite")
-    zites = cur.fetchall()
-    spilit_export_compress(zites, "zites", 4000)
+    for row in rela:
+        row[row[0]] = row[1]  # parent:sub
+        del row[0]
+        del row[1]
+
+    spilit_export_compress(rela, "relationship", 600400)
+
+    cur.close()
+
 
 
 def compress_gz(filename):
@@ -53,4 +67,6 @@ def compress_gz(filename):
 
 
 if __name__ == '__main__':
-    export_normal(cursors.DictCursor)
+    db = connect(host="localhost", port=3308, user="root", passwd="123456", db="zeronetspider", charset="utf8mb4")
+    export_normal(db)
+    export_relationship(db)

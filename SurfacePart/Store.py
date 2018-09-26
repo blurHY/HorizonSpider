@@ -6,8 +6,12 @@ class Store:
     def __init__(self, main):
         self.main = main
 
+    def urls_parse_domain(self, urls):
+        return [self.main.domain.url_domain_to_address(removeWrapperNonce(shorted_url(sburl))) for sburl in urls]
+
     def store_item(self, title, img_count, url, phrases, keywords, subpage_urls, priority, subpage_priority):
-        shorturl = shorted_url(url)
+        shorturl = self.main.domain.url_domain_to_address(removeWrapperNonce(shorted_url(url)))
+        print("Store " + shorturl)
         self.main.database.insert_or_update_main_item(url=shorturl, imgcount=img_count, title=title,
                                                       state=2,
                                                       priority=priority)
@@ -17,10 +21,10 @@ class Store:
             self.main.database.add_phrases(pageid, phrases)
         subpage_ids = set()
 
+        subpage_urls = self.urls_parse_domain(subpage_urls)
         self.main.database.insert_or_update_blank_main_item_s(subpage_urls, subpage_priority)
         for sburl in subpage_urls:
-            surl = shorted_url(sburl)
-            sub_id = self.main.database.get_main_item_id(surl)
+            sub_id = self.main.database.get_main_item_id(sburl)
             subpage_ids.add(sub_id)
 
         if subpage_ids:

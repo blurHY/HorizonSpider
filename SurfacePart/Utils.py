@@ -63,3 +63,6 @@ def strip_url(url):
         return url[:-1]
     return url
 
+
+def removeWrapperNonce(url):
+    return re.sub("[&?](wrapper_nonce=[A-Za-z0-9]+|wrapper=False)|index.html", "", url)
