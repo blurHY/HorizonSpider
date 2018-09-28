@@ -22,6 +22,10 @@ class DomainParse:
         else:
             raise DomainInvaildException()
 
+    def ParseDomain_OrRetAddr(self, url):
+        res = self.names.get(url)
+        return res if res else url
+
 
 class DomainInvaildException(Exception):
     pass
