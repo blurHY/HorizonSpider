@@ -1,0 +1,4 @@
+#!/bin/bash
+DIR=$(dirname "$0")
+export SSL_CERT_FILE=$DIR/../ssl/cert.pem
+$DIR/python2.7 "$@" 

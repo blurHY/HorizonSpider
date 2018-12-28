@@ -1,45 +1,46 @@
-# imachug/ThunderProxy
-import websocket
-import json
-
+import socket, websocket, sys, re, json
 
 class ZeroWebSocket(object):
-    def __init__(self, wrapper_key, ip="127.0.0.1", port=43110):
-        self.wrapper_key = wrapper_key
-        self.ws = websocket.create_connection("ws://{0}:{1}/Websocket?wrapper_key={2}".format(ip, port, wrapper_key))
-        self.next_id = 1
+	def __init__(self, wrapper_key, address="127.0.0.1:43110", secure=False):
+		try:
+			self.ws = websocket.create_connection("%s://%s/Websocket?wrapper_key=%s" % ("wss" if secure else "ws", address, wrapper_key))
+		except socket.error as e:
+			raise ZeroWebSocket.Error("Cannot open socket.")
 
-    def __enter__(self):
-        return self
+		self.next_id = 1000000
 
-    def __exit__(self, exc_type, exc_value, traceback):
-        self.ws.close()
+	def __enter__(self):
+		return self
+	def __exit__(self, exc_type, exc_value, traceback):
+		self.ws.close()
 
-    def __getattr__(self, cmd):
-        def proxy(*args, **kwargs):
-            self.async(cmd, *args, **kwargs)
+	def send(self, cmd, *args, **kwargs):
+		data = None
+		if len(args) == 0:
+			data = dict(cmd=cmd, params=kwargs, id=self.next_id)
+		elif len(kwargs) == 0:
+			data = dict(cmd=cmd, params=args, id=self.next_id)
+		else:
+			raise TypeError("Only args/kwargs alone are allowed in call to ZeroWebSocket")
 
-            while True:
-                response = self.recv()
-                if response["cmd"] == "response" and response["to"] == self.next_id:
-                    self.next_id += 1
-                    return response["result"]
+		self.ws.send(json.dumps(data))
 
-        return proxy
+		while True:
+			try:
+				response = json.loads(self.ws.recv())
+			except websocket.WebSocketConnectionClosedException:
+				raise ZeroWebSocket.Error("Connection terminated.")
 
-    def recv(self):
-        return json.loads(self.ws.recv())
+			if response["cmd"] == "response" and response["to"] == self.next_id:
+				self.next_id += 1
 
-    def async(self, cmd, *args, **kwargs):
-        data = None
-        if len(args) == 0:
-            data = dict(cmd=cmd, params=kwargs, id=self.next_id)
-        elif len(kwargs) == 0:
-            data = dict(cmd=cmd, params=args, id=self.next_id)
-        else:
-            raise TypeError("Only args/kwargs alone are allowed in call to ZeroWebSocket")
+				if response["result"] is not None and "error" in response["result"]:
+					raise ZeroWebSocket.Error(response["result"]["error"])
+				else:
+					return response["result"]
+			elif response["cmd"] == "error":
+				self.next_id += 1
+				raise ZeroWebSocket.Error(*map(lambda x: re.sub(r"<[^<]+?>", "", x), response["params"].split("<br>")))
 
-        self.ws.send(json.dumps(data))
-
-    def __call__(self, cmd, *args, **kwargs):
-        return self[cmd](*args, **kwargs)
+	class Error(Exception):
+		pass
