@@ -1,2 +1,5 @@
 psutil
 websocket
+jieba
+rake-nltk
+langdetect
