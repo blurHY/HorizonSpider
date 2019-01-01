@@ -14,7 +14,17 @@ from ZiteAnalyze import ZiteAnalyze
 
 logger.info("Horizon spider started")
 
-ZeroHelloKey = ZiteUtils.getWrapperkey("1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D")
+try:
+    ZeroHelloKey = ZiteUtils.getWrapperkey(
+        "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D")
+except:
+    logger.warn("ZeroHello has not been downloaded yet")
+    while True:
+        try:
+            ZeroHelloKey = ZiteUtils.getWrapperkey(
+                "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D")
+        except:
+            sleep(120)
 
 zSocket = ZeroWs(ZeroHelloKey)
 
