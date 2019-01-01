@@ -18,7 +18,7 @@ try:
     ZeroHelloKey = ZiteUtils.getWrapperkey(
         "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D")
 except:
-    logger.warn("ZeroHello has not been downloaded yet")
+    logger.warning("ZeroHello has not been downloaded yet")
     while True:
         try:
             ZeroHelloKey = ZiteUtils.getWrapperkey(
