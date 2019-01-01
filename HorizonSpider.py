@@ -15,9 +15,6 @@ from ZiteAnalyze import ZiteAnalyze
 
 logger.info("Horizon spider started")
 
-if platform.system() == "Linux":
-    ZeroInstance.ensureRunning()
-
 ZeroHelloKey = ZiteUtils.getWrapperkey("1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D")
 
 zSocket = ZeroWs(ZeroHelloKey)
