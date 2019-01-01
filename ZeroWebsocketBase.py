@@ -1,12 +1,15 @@
-import socket
-import websocket
-import sys
-import re
 import json
+import re
+import socket
+import sys
+
+import websocket
+
+from Config import *
 
 
 class ZeroWebSocketBase(object):
-    def __init__(self, wrapper_key, address="127.0.0.1:43110", secure=False):
+    def __init__(self, wrapper_key, address=ZeroNetAddr, secure=False):
         try:
             self.ws = websocket.create_connection(
                 "%s://%s/Websocket?wrapper_key=%s" % ("wss" if secure else "ws", address, wrapper_key))

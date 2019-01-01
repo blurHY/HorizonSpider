@@ -1,3 +1,5 @@
 testdata
 __pycache__
 .vscode
+horizon_data.db
+.log

@@ -62,6 +62,12 @@ class DataStorage:
             "INSERT OR REPLACE INTO site_runtime VALUES (?,?)", (sid, time()))
         return sid
 
+    def getSiteRuntimeData(self, site_id):
+        cur = self.conn.cursor()
+        cur.execute(
+            "SELECT last_crawl FROM site_runtime WHERE id=?", (site_id,))
+        return cur.fetchone()
+
     def updateSite(self, site_id, *args):
         cur = self.conn.cursor()
         cur.execute("UPDATE site SET (?,?,?,?,?,?,?,?,?,?,?) WHERE id=?",
@@ -100,3 +106,4 @@ class DataStorage:
 
 if __name__ == "__main__":
     ds = DataStorage()
+    print(ds.getSiteRuntimeData(1))

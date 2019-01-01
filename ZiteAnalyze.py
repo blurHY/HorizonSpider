@@ -9,6 +9,7 @@ from rake_nltk import Rake
 from langdetect import detect, lang_detect_exception
 
 from Config import *
+from ZeroName import ZeroName
 
 
 class ZiteAnalyze:
@@ -16,6 +17,7 @@ class ZiteAnalyze:
         mime_init()
         jieba.analyse.set_stop_words("./ChineseStopWords.txt")
         self.rake = Rake()
+        self.zeroName = ZeroName()
 
     def feedsFlatten(self, feeds):
         flat_feeds = []
@@ -58,6 +60,27 @@ class ZiteAnalyze:
             self.rake.extract_keywords_from_text(text)
             return self.rake.get_ranked_phrases()[:count]
 
+    def extractLinks_BitcoinAddr(self, text):
+        return re.findall("1[A-Za-z0-9]{25,34}", text)
+
+    def extractLinks_NameCoinDomain(self, text):
+        return re.findall("(?:.*?)([A-Za-z0-9_-]+\.bit)", text)
+
+    def extractLinks_auto(self, text):
+        bitc_addrs = self.extractLinks_BitcoinAddr(text)
+        namec_dms = self.extractLinks_NameCoinDomain(text)
+        resolved_dms = []
+        for n in namec_dms:
+            resolved_dms.append(self.zeroName.resolveDomain(n))
+        return set(bitc_addrs+resolved_dms)
+
+    def crawlLinksFeeds(self, feeds):  # Crawl all links
+        links = set()
+        for feed in feeds:
+            links |= self.extractLinks_auto(feed["body"])
+            links |= self.extractLinks_auto(feed["title"])
+        return links
+
     # Get most common 3 types of file with the count.For complex sites.
     # list_from_query : result of db query
     # Results ---
@@ -65,6 +88,7 @@ class ZiteAnalyze:
     # Zerotalk : [('image', 2)]
     # GIF Time : [('video', 7195)]
     # ZeroUp : [('application', 785), ('video', 742), ('audio', 1)]
+
     def optionalFileTypes(self, list_from_query):
         mime_types = []
         for element in list_from_query:
@@ -106,3 +130,7 @@ class ZiteAnalyze:
 
     def countSiteFiles(self, addr):  # Downloaded files
         return sum([len(files) for r, d, files in os.walk(DataDir + "\\" + addr)])
+
+
+if __name__ == "__main__":
+    za = ZiteAnalyze()
