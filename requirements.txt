@@ -6,3 +6,4 @@ rake-nltk
 langdetect
 loguru
 requests
+websocket-client
