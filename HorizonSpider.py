@@ -32,6 +32,8 @@ zSocket = ZeroWs(ZeroHelloKey)
 
 logger.info("Got wrapper key")
 
+zSocket.addZites(Initial_sites)
+
 ziteAnalyze = ZiteAnalyze()
 contentDb = ContentDb()
 sotrage = DataStorage()

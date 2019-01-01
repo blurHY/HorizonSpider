@@ -19,3 +19,6 @@ Skip_files = [
     "content.json"
 ]
 logger.add(".log", retention="10 Days")
+Initial_sites = [
+    "186THqMWuptrZxq1rxzpguAivK3Bs6z84o"
+]  # Start crawling from them

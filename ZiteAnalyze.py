@@ -6,6 +6,7 @@ from mimetypes import init as mime_init
 from mimetypes import types_map
 import jieba.analyse
 from rake_nltk import Rake
+import nltk
 from langdetect import detect, lang_detect_exception
 
 from Config import *
@@ -16,6 +17,8 @@ class ZiteAnalyze:
     def __init__(self):
         mime_init()
         jieba.analyse.set_stop_words("./ChineseStopWords.txt")
+        nltk.download("stopwords")
+        nltk.download("punkt")
         self.rake = Rake()
         self.zeroName = ZeroName()
 
