@@ -1,6 +1,7 @@
 import atexit
 import os
 import platform
+import requests
 from loguru import logger
 from json import dump
 from time import sleep, time
@@ -19,6 +20,7 @@ try:
         "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D")
 except:
     logger.warning("ZeroHello has not been downloaded yet")
+    requests.get(ZeroNetAddr+"/"+"1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D")
     while True:
         try:
             ZeroHelloKey = ZiteUtils.getWrapperkey(
