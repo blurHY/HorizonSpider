@@ -5,7 +5,6 @@ from loguru import logger
 from json import dump
 from time import sleep, time
 
-import ZeroInstance
 import ZiteUtils
 from Config import *
 from ContentDb import ContentDb
