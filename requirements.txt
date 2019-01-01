@@ -5,3 +5,4 @@ nltk
 rake-nltk
 langdetect
 loguru
+requests
