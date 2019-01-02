@@ -1,11 +1,15 @@
 import sqlite3
 from contextlib import closing
 from Config import *
+from loguru import logger
 
 
 class ContentDb:
+    DbPath = DataDir + "\\content.db"
+
     def __init__(self):
-        self.conn = sqlite3.connect(DataDir + "\\content.db")
+        logger.debug("Content Db path {}".format(self.DbPath))
+        self.conn = sqlite3.connect(self.DbPath)
 
     def getSiteOptionalFileCount(self, site_id):
         with closing(self.conn.cursor()) as c:

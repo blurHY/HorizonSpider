@@ -26,13 +26,16 @@ except:
             ZeroHelloKey = ZiteUtils.getWrapperkey(
                 "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D")
         except:
-            sleep(120)
+            logger.info("Not downloaded.Continue waiting.")
+            sleep(60)
 
 zSocket = ZeroWs(ZeroHelloKey)
 
-logger.info("Got wrapper key")
+logger.info("Got ZeroHello wrapper key")
 
 zSocket.addZites(Initial_sites)
+
+logger.info("Initial sites added")
 
 ziteAnalyze = ZiteAnalyze()
 contentDb = ContentDb()
@@ -72,6 +75,8 @@ def fullCrawl(siteInfo):
     kw_feeds = ziteAnalyze.analyzeFeeds(
         flat_feeds[:20])  # Crawl first 20 feeds
     sotrage.storeFeeds(kw_feeds, site_id)
+    logger.info("Got {0} links from {1}".format(
+        len(links), siteinfo["address"]))
 
 
 def scanAllFiles(site_addr, flat_feeds):
