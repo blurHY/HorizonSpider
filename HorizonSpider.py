@@ -34,8 +34,6 @@ logger.info("Got wrapper key")
 
 zSocket.addZites(Initial_sites)
 
-logger.debug("Request sites:"+str(Initial_sites))
-
 ziteAnalyze = ZiteAnalyze()
 contentDb = ContentDb()
 sotrage = DataStorage()
@@ -118,5 +116,7 @@ while True:
                 else:  # Continue waiting
                     logger.info(siteinfo["address"] + " Not Downloaded")
             sotrage.conn.commit()
+        else:
+            logger.info("Skip site:{}".format(siteinfo["address"]))
 
     sleep(RunInterval)
