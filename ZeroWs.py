@@ -13,8 +13,6 @@ class ZeroWs(ZeroWebSocketBase):
             if e == "Invalid address":
                 raise ZeroWsException(
                     "Site address invalid:{}".format(address))
-            else:
-                raise
 
     def getZiteInfo(self, address):
         return self.send("as", address, "siteInfo")
