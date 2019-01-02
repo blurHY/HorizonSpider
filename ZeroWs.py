@@ -51,7 +51,7 @@ class ZeroWs(ZeroWebSocketBase):
     def addZites(self, address_set):
         for a in address_set:
             try:
-                self.addZite(address_set)
+                self.addZite(a)
             except ZeroWsException as ze:
                 logger.warning(ze)
 
