@@ -30,9 +30,6 @@ class ZeroWs(ZeroWebSocketBase):
     def siteList(self):
         return self.send("siteList")
 
-    def getSiteToCrawl():
-        pass
-
     def fileList(self, dir, target_site=None):
         if target_site:
             return self.send("as", target_site, "fileList", dir)
@@ -52,17 +49,8 @@ class ZeroWs(ZeroWebSocketBase):
             try:
                 self.addZite(address_set)
             except ZeroWsException as ze:
-                logger.warn(ze)
+                logger.warning(ze)
 
 
 class ZeroWsException(Exception):
     pass
-
-
-if __name__ == "__main__":
-    import ZiteUtils
-    ZeroHelloKey = ZiteUtils.getWrapperkey(
-        "D:\ZeroNet\data", "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D")
-
-    zSocket = ZeroWs(ZeroHelloKey)
-    zSocket.addZite("1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D")

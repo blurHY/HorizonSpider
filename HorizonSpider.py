@@ -34,6 +34,8 @@ logger.info("Got wrapper key")
 
 zSocket.addZites(Initial_sites)
 
+logger.debug("Request sites:"+str(Initial_sites))
+
 ziteAnalyze = ZiteAnalyze()
 contentDb = ContentDb()
 sotrage = DataStorage()
@@ -98,6 +100,7 @@ def updateCrawl(siteInfo, runTimeInfo):
 while True:
     siteList = zSocket.siteList()  # Update site list
     logger.info("SiteList Updated")
+    logger.debug("Sites count:{}".format(len(siteList)))
     for siteinfo in siteList:
         if not siteinfo["address"] in Skip_sites:
             if sotrage.siteExist(siteinfo["address"]):
