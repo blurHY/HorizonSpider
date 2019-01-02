@@ -1,3 +1,4 @@
+# coding:utf-8
 from ZeroWebsocketBase import ZeroWebSocketBase
 from json import loads
 from loguru import logger
