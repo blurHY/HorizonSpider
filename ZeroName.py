@@ -19,7 +19,12 @@ class ZeroName(ZiteBase):
 
     def reloadDomainData(self):
         self.last_reload = time()
-        self.names = loads(self.getNamesJson())
+        file = self.getNamesJson()
+        if file:
+            self.names = loads(file)
+        else:
+            logger.error("Domain names json missing")
+            self.names = {}
 
 
 if __name__ == "__main__":

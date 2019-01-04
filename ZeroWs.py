@@ -28,7 +28,8 @@ class ZeroWs(ZeroWebSocketBase):
         return self.send("as", address, "dbQuery", query)
 
     def getDbschema(self, target_site):
-        return loads(self.getFile("dbschema.json", target_site))
+        file = self.getFile("dbschema.json", target_site)
+        return loads(file) if file else None
 
     def siteList(self):
         return self.send("siteList")
@@ -41,11 +42,13 @@ class ZeroWs(ZeroWebSocketBase):
 
     def crawlFeeds(self, site_addr, date_least=0, no_comment=True):
         feeds = self.getDbschema(site_addr)["feeds"]
-        results = {}
-        for feed in feeds:
-            results[feed] = self.queryDb(site_addr, "select type,date_added,title,body,url from ({0}) where date_added > {1} {2}".format(
-                feeds[feed], date_least, "and type != 'comment'"if no_comment else ""))
-        return results
+        if feeds:
+            results = {}
+            for feed in feeds:
+                results[feed] = self.queryDb(site_addr, "select type,date_added,title,body,url from ({0}) where date_added > {1} {2}".format(
+                    feeds[feed], date_least, "and type != 'comment'"if no_comment else ""))
+            return results
+        logger.debug("The site doesn't have dbschema.json")
 
     def addZites(self, address_set):
         for a in address_set:
