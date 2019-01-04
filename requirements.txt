@@ -7,3 +7,4 @@ langdetect
 loguru
 requests
 websocket-client
+chardet

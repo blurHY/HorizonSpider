@@ -12,6 +12,7 @@ from ContentDb import ContentDb
 from DataStorage import DataStorage
 from ZeroWs import ZeroWs
 from ZiteAnalyze import ZiteAnalyze
+import chardet
 
 
 def waitForZeroHello():
@@ -54,7 +55,8 @@ def main():
         opFileList = contentDb.getSiteOptionalFileList(cdb_id)
         userDataFileList = zSocket.fileList(
             "./data/users", siteInfo["address"])
-        feeds = zSocket.crawlFeeds(siteInfo["address"])
+        dbschema = zSocket.getDbschema(siteInfo["address"])
+        feeds = zSocket.crawlFeeds(siteInfo["address"], dbschema)
         flat_feeds = ziteAnalyze.feedsFlatten(feeds)
         logger.info("Got {0} feeds from {1}", len(
             flat_feeds), siteInfo["address"])
@@ -89,8 +91,11 @@ def main():
                 name, ext = os.path.splitext(filename)
                 if not filename in Skip_files:
                     if ext == ".html" or ext == ".htm":  # Scan address in these files
-                        with open(os.path.join(folder, filename), 'r', encoding='UTF-8') as src:
-                            links |= ziteAnalyze.extractLinks_auto(src.read())
+                        with open(os.path.join(folder, filename), 'rb') as src:
+                            raw = src.read()
+                            det = chardet.detect(raw)
+                            links |= ziteAnalyze.extractLinks_auto(
+                                raw.decode(det["encoding"] if det and det.get("encoding") else "utf-8", 'ignore'))
                     if ext == ".js":  # Analyze javascript code
                         pass
                         # TODO: Js files analyzing

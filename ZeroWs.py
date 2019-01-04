@@ -40,8 +40,7 @@ class ZeroWs(ZeroWebSocketBase):
         else:
             return self.send("fileList", dir)
 
-    def crawlFeeds(self, site_addr, date_least=0, no_comment=True):
-        dbschema = self.getDbschema(site_addr)
+    def crawlFeeds(self, site_addr, dbschema, date_least=0, no_comment=True):
         results = {}
         if dbschema:
             feeds = dbschema.get("feeds")
@@ -51,6 +50,9 @@ class ZeroWs(ZeroWebSocketBase):
                         feeds[feed], date_least, "and type != 'comment'"if no_comment else ""))
         logger.debug("The site doesn't have dbschema.json")
         return results
+
+    def exploreDataBase(self, dbschema):
+        pass
 
     def addZites(self, address_set):
         for a in address_set:
