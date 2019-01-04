@@ -76,7 +76,9 @@ def main():
                                   siteInfo["settings"]["size_optional"],
                                   ziteAnalyze.optionalFileTypes(opFileList),
                                   len(flat_feeds),
-                                  ','.join(tuple(feeds.keys())))
+                                  ','.join(tuple(feeds.keys())),
+                                  siteInfo["settings"].get("modified"),
+                                  siteInfo["content"].get("domain"))
 
         logger.info("Scanning files")
         links = scanAllFiles(siteInfo["address"], flat_feeds)
@@ -151,11 +153,18 @@ def main():
 
 if __name__ == "__main__":
     logger.info("Horizon spider started")
+
     parser = argparse.ArgumentParser()
-    parser.add_argument("-crawlzn", "--crawlZeroName",
+    parser.add_argument("-crZN", "--crawlZeroName",
                         help="Crawl the site ZeroName first",
                         action="store_true")
+    parser.add_argument("--reCrawl",
+                        help="Re-crawl all sites",
+                        action="store_true")
     args = parser.parse_args()
+
+    if args.reCrawl:  # Delete database
+        os.remove(DbName)
 
     try:
         waitForZeroHello()

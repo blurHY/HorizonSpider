@@ -16,9 +16,10 @@ class DataStorage:
 
     def checkDb(self):
         cur = self.conn.cursor()
-        cur.execute("""CREATE TABLE if not exists "site" (
+        cur.execute("""
+    CREATE  TABLE if not exists "site" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-  "addr" TEXT NOT NULL,
+    "addr"  TEXT NOT NULL,
 	"title"	TEXT,
 	"peer"	INTEGER NOT NULL,
 	"description"	TEXT,
@@ -28,23 +29,27 @@ class DataStorage:
 	"optional_size"	INTEGER,
 	"optional_files_type"	INTEGER,
 	"feeds_count"	INTEGER,
-  "feeds_keys" TEXT
+    "feeds_keys" TEXT,
+    "last_modified" INTEGER,
+    "domain" TEXT
 )""")
         cur.execute(
             "CREATE UNIQUE INDEX IF NOT EXISTS site_id_addr ON site (id,addr) ")
-        cur.execute("""CREATE TABLE if not exists "feed" (
+        cur.execute("""
+    CREATE TABLE if not exists "feed" (
 	"site_id"	INTEGER NOT NULL,
 	"feed_id"	INTEGER NOT NULL,
-  "date_added"	INTEGER NOT NULL,
+    "date_added"	INTEGER NOT NULL,
 	"type"	TEXT NOT NULL,
-  "url"	TEXT NOT NULL,
+    "url"	TEXT NOT NULL,
 	"title"	TEXT NOT NULL,
 	"keywords"	TEXT NOT NULL,
 	PRIMARY KEY("site_id","feed_id")
 );""")
         cur.execute(
             "CREATE UNIQUE INDEX IF NOT EXISTS feed_id_id ON feed (site_id,feed_id) ")
-        cur.execute("""CREATE TABLE if not exists "site_runtime" (
+        cur.execute("""
+    CREATE  TABLE if not exists "site_runtime" (
 	"id"	INTEGER NOT NULL PRIMARY KEY,
 	"last_crawl"	INTEGER NOT NULL
 )""")
@@ -56,7 +61,7 @@ class DataStorage:
     def addSite(self, *args):
         cur = self.conn.cursor()
         cur.execute(
-            "INSERT INTO site VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?)", args)
+            "INSERT INTO site VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?)", args)
         sid = self.getSiteId(args[0])
         cur.execute(
             "INSERT OR REPLACE INTO site_runtime VALUES (?,?)", (sid, time()))
