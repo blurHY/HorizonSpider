@@ -64,7 +64,7 @@ class ZiteAnalyze:
             return self.rake.get_ranked_phrases()[:count]
 
     def extractLinks_BitcoinAddr(self, text):
-        return re.findall("1[A-Za-z0-9]{25,34}", text)
+        return re.findall("\/1[A-Za-z0-9]{25,34}", text)
 
     def extractLinks_NameCoinDomain(self, text):
         return re.findall("(?:.*?)([A-Za-z0-9_-]+\.bit)", text)
