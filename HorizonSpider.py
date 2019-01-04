@@ -98,6 +98,7 @@ def main():
                 name, ext = os.path.splitext(filename)
                 if not filename in Skip_files:
                     if ext == ".html" or ext == ".htm":  # Scan address in these files
+                        logger.debug("Scan file: {}", filename)
                         with open(os.path.join(folder, filename), 'rb') as src:
                             raw = src.read()
                             det = chardet.detect(raw)
