@@ -50,13 +50,9 @@ def fullCrawl(siteInfo):
     opFileList = contentDb.getSiteOptionalFileList(cdb_id)
     userDataFileList = zSocket.fileList(
         "./data/users", siteInfo["address"])
-    if siteInfo["feed_follow_num"] and siteInfo["feed_follow_num"] > 0:
-        feeds = zSocket.crawlFeeds(siteInfo["address"])
-    else:
-        feeds = {}
-
+    feeds = zSocket.crawlFeeds(siteInfo["address"])
     flat_feeds = ziteAnalyze.feedsFlatten(feeds)
-
+    
     logger.info("Got {0} feeds from {1}", len(flat_feeds), siteInfo["address"])
 
     site_id = sotrage.addSite(siteInfo["address"],
