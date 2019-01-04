@@ -17,14 +17,14 @@ class ContentDb:
     def getSiteOptionalFileCount(self, site_id):
         with closing(self.conn.cursor()) as c:
             c.execute(
-                "select count(*) from file_optional where site_id='{}'", site_id)
+                "select count(*) from file_optional where site_id=?", (site_id,))
             res = c.fetchone()
             if len(res) > 0:
                 return res[0]
 
     def getSiteId(self, addr):
         with closing(self.conn.cursor()) as c:
-            c.execute("select site_id from site where address='{}'", addr)
+            c.execute("select site_id from site where address=?", (addr,))
             res = c.fetchone()
             if len(res) > 0:
                 return res[0]
@@ -32,7 +32,7 @@ class ContentDb:
     def getSiteOptionalFileList(self, site_id):
         with closing(self.conn.cursor()) as c:
             c.execute(
-                "select inner_path,peer,size from file_optional where site_id='{}'", site_id)
+                "select inner_path,peer,size from file_optional where site_id=?", (site_id,))
             return c.fetchall()
 
 

@@ -45,42 +45,42 @@ atexit.register(sotrage.close)
 
 
 def fullCrawl(siteInfo):
-    fileList = zSocket.fileList("./", siteinfo["address"])
-    cdb_id = contentDb.getSiteId(siteinfo["address"])
+    fileList = zSocket.fileList("./", siteInfo["address"])
+    cdb_id = contentDb.getSiteId(siteInfo["address"])
     opFileList = contentDb.getSiteOptionalFileList(cdb_id)
     userDataFileList = zSocket.fileList(
-        "./data/users", siteinfo["address"])
-    if siteinfo["feed_follow_num"] and siteinfo["feed_follow_num"] > 0:
-        feeds = zSocket.crawlFeeds(siteinfo["address"])
+        "./data/users", siteInfo["address"])
+    if siteInfo["feed_follow_num"] and siteInfo["feed_follow_num"] > 0:
+        feeds = zSocket.crawlFeeds(siteInfo["address"])
     else:
         feeds = {}
 
     flat_feeds = ziteAnalyze.feedsFlatten(feeds)
 
-    logger.info("Got {0} feeds from {1}", len(flat_feeds), siteinfo["address"])
+    logger.info("Got {0} feeds from {1}", len(flat_feeds), siteInfo["address"])
 
-    site_id = sotrage.addSite(siteinfo["address"],
-                              siteinfo["content"].get("title"),
-                              siteinfo["peers"],
-                              siteinfo["content"].get("description"),
+    site_id = sotrage.addSite(siteInfo["address"],
+                              siteInfo["content"].get("title"),
+                              siteInfo["peers"],
+                              siteInfo["content"].get("description"),
                               ziteAnalyze.fileTypes(fileList),
                               ziteAnalyze.
                               getUserDataRatio(siteInfo,
                                                len(userDataFileList) if userDataFileList is list else 0),
-                              siteinfo["settings"]["size"],
-                              siteinfo["settings"]["size_optional"],
+                              siteInfo["settings"]["size"],
+                              siteInfo["settings"]["size_optional"],
                               ziteAnalyze.optionalFileTypes(opFileList),
                               len(flat_feeds),
                               ','.join(tuple(feeds.keys())))
 
-    links = scanAllFiles(siteinfo["address"], flat_feeds)
+    links = scanAllFiles(siteInfo["address"], flat_feeds)
 
     zSocket.addZites(links)
     kw_feeds = ziteAnalyze.analyzeFeeds(
         flat_feeds[:20])  # Crawl first 20 feeds
     sotrage.storeFeeds(kw_feeds, site_id)
 
-    logger.info("Got {0} links from {1}", len(links), siteinfo["address"])
+    logger.info("Got {0} links from {1}", len(links), siteInfo["address"])
 
 
 def scanAllFiles(site_addr, flat_feeds):

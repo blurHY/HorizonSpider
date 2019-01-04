@@ -81,11 +81,11 @@ class DataStorage:
 
     def siteExist(self, addr):
         cur = self.conn.cursor()
-        cur.execute("select count(*) from site where addr='{}'".format(addr))
+        cur.execute("select count(*) from site where addr=?", (addr,)
         return bool(cur.fetchone()[0])
 
     def getSiteId(self, addr):
-        cur = self.conn.cursor()
+        cur=self.conn.cursor()
         cur.execute("SELECT id FROM site WHERE addr=?", (addr,))
         try:
             return cur.fetchone()[0]
@@ -93,8 +93,8 @@ class DataStorage:
             raise DataStorageException("Site doesn't exist")
 
     def storeFeeds(self, feeds, site_id, truncate=True):  # Truncate and store
-        cur = self.conn.cursor()
-        x = 0
+        cur=self.conn.cursor()
+        x=0
         if truncate:
             cur.execute("DELETE FROM feed WHERE site_id=?", (site_id,))
         for feed in feeds:
@@ -105,5 +105,5 @@ class DataStorage:
 
 
 if __name__ == "__main__":
-    ds = DataStorage()
+    ds=DataStorage()
     print(ds.getSiteRuntimeData(1))
