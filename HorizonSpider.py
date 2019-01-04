@@ -56,6 +56,9 @@ def fullCrawl(siteInfo):
         feeds = {}
 
     flat_feeds = ziteAnalyze.feedsFlatten(feeds)
+
+    logger.info("Got {0} feeds from {1}", len(flat_feeds), siteinfo["address"])
+
     site_id = sotrage.addSite(siteinfo["address"],
                               siteinfo["content"].get("title"),
                               siteinfo["peers"],
@@ -69,14 +72,15 @@ def fullCrawl(siteInfo):
                               ziteAnalyze.optionalFileTypes(opFileList),
                               len(flat_feeds),
                               ','.join(tuple(feeds.keys())))
+
     links = scanAllFiles(siteinfo["address"], flat_feeds)
-    logger.debug("Got {} links".format(len(links)))
+
     zSocket.addZites(links)
     kw_feeds = ziteAnalyze.analyzeFeeds(
         flat_feeds[:20])  # Crawl first 20 feeds
     sotrage.storeFeeds(kw_feeds, site_id)
-    logger.info("Got {0} links from {1}".format(
-        len(links), siteinfo["address"]))
+
+    logger.info("Got {0} links from {1}", len(links), siteinfo["address"])
 
 
 def scanAllFiles(site_addr, flat_feeds):
@@ -103,25 +107,27 @@ def updateCrawl(siteInfo, runTimeInfo):
 while True:
     siteList = zSocket.siteList()  # Update site list
     logger.info("SiteList Updated")
-    logger.debug("Sites count:{}".format(len(siteList)))
+    logger.debug("Sites count:{}", len(siteList))
+    
     for siteinfo in siteList:
         if not siteinfo["address"] in Skip_sites:
             if sotrage.siteExist(siteinfo["address"]):
-                logger.info(siteinfo["address"] + " Checking")
                 site_id = sotrage.getSiteId(siteinfo["address"])
                 run_time_info = sotrage.getSiteRuntimeData(site_id)
                 if time() - run_time_info[0] >= ReCrawlInterval:
+                    logger.info(siteinfo["address"] + " Outdated,Re-fullCrawl")
                     fullCrawl(siteinfo)
                 else:
+                    logger.info(siteinfo["address"] + " UpdateCrawl")
                     updateCrawl(siteinfo, run_time_info)
             else:  # First crawl
                 if siteinfo["bad_files"] == 0 and siteinfo["settings"]["size"] > 0:
-                    logger.info(siteinfo["address"] + " New Site")
+                    logger.info(siteinfo["address"] + " New Site,fullCrawl")
                     fullCrawl(siteinfo)
                 else:  # Continue waiting
                     logger.info(siteinfo["address"] + " Not Downloaded")
             sotrage.conn.commit()
         else:
-            logger.info("Skip site:{}".format(siteinfo["address"]))
+            logger.info("Skip site {}", siteinfo["address"])
 
     sleep(RunInterval)

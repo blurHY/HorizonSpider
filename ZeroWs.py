@@ -9,11 +9,11 @@ class ZeroWs(ZeroWebSocketBase):
     def addZite(self, address):
         try:
             self.send("siteAdd", address)
-            logger.debug("Request site:{}".format(address))
+            logger.debug("Request site:{}", address)
         except self.Error as e:
             if e == "Invalid address":
                 raise ZeroWsException(
-                    "Site address invalid:{}".format(address))
+                    "Site address invalid:{}", address)
 
     def getZiteInfo(self, address):
         return self.send("as", address, "siteInfo")
