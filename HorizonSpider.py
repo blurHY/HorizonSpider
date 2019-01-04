@@ -5,6 +5,7 @@ import requests
 from loguru import logger
 from json import dump
 from time import sleep, time
+import argparse
 
 import ZiteUtils
 from Config import *
@@ -27,6 +28,8 @@ def waitForZeroHello():
             try:
                 ZeroHelloKey = ZiteUtils.getWrapperkey(
                     "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D")
+            except (KeyboardInterrupt, SystemExit):
+                raise
             except:
                 logger.info("Not downloaded.Continue waiting.")
                 sleep(60)
@@ -35,6 +38,7 @@ def waitForZeroHello():
 @logger.catch
 def main():
     global ZeroHelloKey
+
     zSocket = ZeroWs(ZeroHelloKey)
 
     logger.info("Got ZeroHello wrapper key")
@@ -74,6 +78,7 @@ def main():
                                   len(flat_feeds),
                                   ','.join(tuple(feeds.keys())))
 
+        logger.info("Scanning files")
         links = scanAllFiles(siteInfo["address"], flat_feeds)
 
         zSocket.addZites(links)
@@ -105,6 +110,14 @@ def main():
         pass
         # TODO: Updaing crawl
 
+    def crawlZeroName():
+        logger.info("Started crawling ZeroName")
+        ziteAnalyze.zeroName.reloadDomainData()
+        zSocket.addZites(set(ziteAnalyze.zeroName.names.values()))
+
+    if args.crawlZeroName:
+        crawlZeroName()
+
     while True:
         siteList = zSocket.siteList()  # Update site list
         logger.info("SiteList Updated")
@@ -132,11 +145,20 @@ def main():
                 sotrage.conn.commit()
             else:
                 logger.info("Skip site {}", siteinfo["address"])
-
+        logger.info("No site left. Sleep ...")
         sleep(RunInterval)
 
 
 if __name__ == "__main__":
     logger.info("Horizon spider started")
-    waitForZeroHello()
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-crawlzn", "--crawlZeroName",
+                        help="Crawl the site ZeroName first",
+                        action="store_true")
+    args = parser.parse_args()
+
+    try:
+        waitForZeroHello()
+        main()
+    except KeyboardInterrupt:
+        logger.warning("KeyboardInterrupt. Exiting")

@@ -7,13 +7,8 @@ from loguru import logger
 class ZeroWs(ZeroWebSocketBase):
 
     def addZite(self, address):
-        try:
-            self.send("siteAdd", address)
-            logger.debug("Request site:{}", address)
-        except self.Error as e:
-            if e == "Invalid address":
-                raise ZeroWsException(
-                    "Site address invalid:{}", address)
+        self.send("siteAdd", address)
+        logger.debug("Request site:{}", address)
 
     def getZiteInfo(self, address):
         return self.send("as", address, "siteInfo")
@@ -58,7 +53,7 @@ class ZeroWs(ZeroWebSocketBase):
         for a in address_set:
             try:
                 self.addZite(a)
-            except ZeroWsException as ze:
+            except Exception as ze:
                 logger.warning(ze)
 
 

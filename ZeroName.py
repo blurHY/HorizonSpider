@@ -18,6 +18,7 @@ class ZeroName(ZiteBase):
         return self.names.get(domain.lower())
 
     def reloadDomainData(self):
+        logger.info("Reloading domain data")
         self.last_reload = time()
         file = self.getNamesJson()
         if file:
