@@ -41,8 +41,9 @@ class ZeroWs(ZeroWebSocketBase):
             return self.send("fileList", dir)
 
     def crawlFeeds(self, site_addr, date_least=0, no_comment=True):
-        feeds = self.getDbschema(site_addr)["feeds"]
-        if feeds:
+        dbschema = self.getDbschema(site_addr)
+        if dbschema:
+            feeds = dbschema["feeds"]
             results = {}
             for feed in feeds:
                 results[feed] = self.queryDb(site_addr, "select type,date_added,title,body,url from ({0}) where date_added > {1} {2}".format(
