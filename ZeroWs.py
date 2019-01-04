@@ -44,10 +44,11 @@ class ZeroWs(ZeroWebSocketBase):
         dbschema = self.getDbschema(site_addr)
         results = {}
         if dbschema:
-            feeds = dbschema["feeds"]
-            for feed in feeds:
-                results[feed] = self.queryDb(site_addr, "select type,date_added,title,body,url from ({0}) where date_added > {1} {2}".format(
-                    feeds[feed], date_least, "and type != 'comment'"if no_comment else ""))
+            feeds = dbschema.get("feeds")
+            if feeds:
+                for feed in feeds:
+                    results[feed] = self.queryDb(site_addr, "select type,date_added,title,body,url from ({0}) where date_added > {1} {2}".format(
+                        feeds[feed], date_least, "and type != 'comment'"if no_comment else ""))
         logger.debug("The site doesn't have dbschema.json")
         return results
 
