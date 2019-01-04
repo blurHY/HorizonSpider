@@ -101,8 +101,10 @@ def main():
                         with open(os.path.join(folder, filename), 'rb') as src:
                             raw = src.read()
                             det = chardet.detect(raw)
+                            if det:
+                                encoding = det.get(encoding)
                             links |= ziteAnalyze.extractLinks_auto(
-                                raw.decode(det["encoding"] if det and det.get("encoding") else "utf-8", 'ignore'))
+                                raw.decode(encoding if encoding else "utf-8", 'ignore'))
                     if ext == ".js":  # Analyze javascript code
                         pass
                         # TODO: Js files analyzing
