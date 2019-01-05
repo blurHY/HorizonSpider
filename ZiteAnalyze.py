@@ -79,6 +79,7 @@ class ZiteAnalyze:
 
     def crawlLinksFeeds(self, feeds):  # Crawl all links
         links = set()
+        logger.info("{} feeds", len(feeds))
         for feed in feeds:
             links |= self.extractLinks_auto(feed["body"])
             links |= self.extractLinks_auto(feed["title"])

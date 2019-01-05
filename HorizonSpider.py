@@ -80,18 +80,25 @@ def main():
                                   siteInfo["settings"].get("modified"),
                                   siteInfo["content"].get("domain"))
 
-        logger.info("Scanning files")
-        links = scanAllFiles(siteInfo["address"], flat_feeds)
+        logger.debug("Scanning files and feeds")
 
-        zSocket.addZites(links)
-        kw_feeds = ziteAnalyze.analyzeFeeds(
-            flat_feeds[:20])  # Crawl first 20 feeds
-        sotrage.storeFeeds(kw_feeds, site_id)
+        links = scanAllFiles(siteInfo["address"], flat_feeds)
 
         logger.info("Got {0} links from {1}", len(links), siteInfo["address"])
 
+        logger.debug("Request crawled links")
+        zSocket.addZites(links)
+
+        logger.debug("Analyze a few feeds via NLP")
+        kw_feeds = ziteAnalyze.analyzeFeeds(flat_feeds[:20])
+
+        logger.debug("Store analyzed feeds")
+        sotrage.storeFeeds(kw_feeds, site_id)
+
     def scanAllFiles(site_addr, flat_feeds):
         links = ziteAnalyze.crawlLinksFeeds(flat_feeds)  # Get links in feeds
+
+        logger.debug("Entered file scanning loop")
         # Get links in all files
         for folder, subs, files in os.walk(os.path.join(DataDir, site_addr)):
             for filename in files:
@@ -102,9 +109,10 @@ def main():
                         with open(os.path.join(folder, filename), 'rb') as src:
                             raw = src.read()
                             det = chardet.detect(raw)
-                            encoding = "utf-8"
                             if det:
-                                encoding = det.get(encoding)
+                                encoding = det.get("encoding")
+                            if not encoding:
+                                encoding = "utf-8"
                             links |= ziteAnalyze.extractLinks_auto(
                                 raw.decode(encoding, 'ignore'))
                     if ext == ".js":  # Analyze javascript code

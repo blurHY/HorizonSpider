@@ -7,8 +7,8 @@ from loguru import logger
 class ZeroWs(ZeroWebSocketBase):
 
     def addZite(self, address):
-        self.send("siteAdd", address)
         logger.debug("Request site:{}", address)
+        self.send("siteAdd", address)
 
     def getZiteInfo(self, address):
         return self.send("as", address, "siteInfo")
@@ -43,7 +43,7 @@ class ZeroWs(ZeroWebSocketBase):
                 for feed in feeds:
                     results[feed] = self.queryDb(site_addr, "select type,date_added,title,body,url from ({0}) where date_added > {1} {2}".format(
                         feeds[feed], date_least, "and type != 'comment'"if no_comment else ""))
-        logger.debug("The site doesn't have dbschema.json")
+            logger.debug("This site has dbschama.json. Feeds crawled")
         return results
 
     def exploreDataBase(self, dbschema):
