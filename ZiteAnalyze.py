@@ -153,7 +153,9 @@ class ZiteAnalyze:
 
     # For ranking , the bigger the better
     def getUserDataRatio(self, site_info, optinal_file_count):
-        return optinal_file_count/site_info["content"]["files"]
+        if not site_info["content"]["files"]: # The site has no file
+            return 0
+        return optinal_file_count / site_info["content"]["files"]
 
     def countSiteFiles(self, addr):  # Downloaded files
         return sum([len(files) for r, d, files in os.walk(config.DataDir + "\\" + addr)])
