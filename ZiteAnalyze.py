@@ -15,13 +15,15 @@ from ZeroName import ZeroName
 
 
 class ZiteAnalyze:
-    def __init__(self):
+    def __init__(self, nltk_download=True, init_zeroname=True):
         mime_init()
         jieba.analyse.set_stop_words("./ChineseStopWords.txt")
-        nltk.download("stopwords")
-        nltk.download("punkt")
+        if nltk_download:
+            nltk.download("stopwords")
+            nltk.download("punkt")
         self.rake = Rake()
-        self.zeroName = ZeroName()
+        if init_zeroname:
+            self.zeroName = ZeroName()
 
     def feedsFlatten(self, feeds):
         flat_feeds = []
@@ -32,6 +34,8 @@ class ZiteAnalyze:
 
     def analyzeFeeds(self, feeds):  # Turn text to keywords
         for feed in feeds:
+            logger.debug("Feed: {}", feed["body"][:10])
+
             if feed["type"] == "comment":  # Skip comments
                 continue
             feed["body"] = self.textOptimize(feed["body"])
@@ -44,6 +48,7 @@ class ZiteAnalyze:
             else:
                 feed["keywords"] = []
             del feed["body"]
+
         return feeds
 
     def textOptimize(self, text):
@@ -70,7 +75,7 @@ class ZiteAnalyze:
         if len(res) == 2:
             return res[0] if res[0] else res[1]
         else:
-          return []
+            return []
 
     def extractLinks_NameCoinDomain(self, text):
         return re.findall("[A-Za-z0-9_-]+\.bit", text)
@@ -142,11 +147,3 @@ class ZiteAnalyze:
 
     def countSiteFiles(self, addr):  # Downloaded files
         return sum([len(files) for r, d, files in os.walk(config.DataDir + "\\" + addr)])
-
-
-if __name__ == "__main__":
-    config.RootDir = "D:/ZeroNet"
-    za = ZiteAnalyze()
-    za.zeroName.reloadDomainData()
-    print(za.extractLinks_BitcoinAddr(
-        "1asdas/1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D"))
