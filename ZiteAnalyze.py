@@ -69,6 +69,8 @@ class ZiteAnalyze:
             "http?://.*/(1[A-Za-z0-9]{25,34})|\[.*\]\(.*\/(1[A-Za-z0-9]{25,34}).*\)", text)
         if len(res) == 2:
             return res[0] if res[0] else res[1]
+        else:
+          return []
 
     def extractLinks_NameCoinDomain(self, text):
         return re.findall("[A-Za-z0-9_-]+\.bit", text)
