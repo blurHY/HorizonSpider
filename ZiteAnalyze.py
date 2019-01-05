@@ -34,11 +34,11 @@ class ZiteAnalyze:
 
     def analyzeFeeds(self, feeds):  # Turn text to keywords
         for feed in feeds:
-            logger.debug("Feed: {}", feed["body"][:10])
-
             if feed["type"] == "comment":  # Skip comments
                 continue
             feed["body"] = self.textOptimize(feed["body"])
+            logger.debug("Feed: {0},Len: {1}",
+                         feed["body"][:30], len(feed["body"]))
             if len(feed["body"]) > 200:
                 feed["keywords"] = self.extractKeyword_auto(
                     feed["body"], 5)
@@ -63,6 +63,7 @@ class ZiteAnalyze:
             lang = detect(text)
         except:
             lang = None
+        logger.debug("Lang of feed: {}", lang)
         if lang == "zh-cn" or lang == "zh-tw":
             return jieba.analyse.extract_tags(text)
         else:
