@@ -136,7 +136,7 @@ def main():
         logger.info("Updating SiteList")
         siteList = zSocket.siteList()  # Update site list
         logger.debug("Sites count:{}", len(siteList))
-
+        ziteAnalyze.zeroName.reloadDomainData()
         for siteinfo in siteList:
             if not siteinfo["address"] in Skip_sites:
                 if sotrage.siteExist(siteinfo["address"]):
