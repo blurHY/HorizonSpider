@@ -69,21 +69,6 @@ def main():
         flat_feeds = ziteAnalyze.feedsFlatten(feeds)
         logger.info("Got {0} feeds from {1}", len(
             flat_feeds), siteInfo["address"])
-        site_id = sotrage.addSite(siteInfo["address"],
-                                  siteInfo["content"].get("title"),
-                                  siteInfo["peers"],
-                                  siteInfo["content"].get("description"),
-                                  ziteAnalyze.fileTypes(fileList),
-                                  ziteAnalyze.
-                                  getUserDataRatio(siteInfo,
-                                                   len(userDataFileList) if userDataFileList is list else 0),
-                                  siteInfo["settings"]["size"],
-                                  siteInfo["settings"]["size_optional"],
-                                  ziteAnalyze.optionalFileTypes(opFileList),
-                                  len(flat_feeds),
-                                  ','.join(tuple(feeds.keys())),
-                                  siteInfo["settings"].get("modified"),
-                                  siteInfo["content"].get("domain"))
 
         logger.debug("Scanning files and feeds")
 
@@ -96,6 +81,22 @@ def main():
 
         logger.debug("Analyze a few feeds via NLP")
         kw_feeds = ziteAnalyze.analyzeFeeds(flat_feeds[:20])
+
+        site_id = sotrage.addSite(siteInfo["address"],
+                            siteInfo["content"].get("title"),
+                            siteInfo["peers"],
+                            siteInfo["content"].get("description"),
+                            ziteAnalyze.fileTypes(fileList),
+                            ziteAnalyze.
+                            getUserDataRatio(siteInfo,
+                                            len(userDataFileList) if userDataFileList is list else 0),
+                            siteInfo["settings"]["size"],
+                            siteInfo["settings"]["size_optional"],
+                            ziteAnalyze.optionalFileTypes(opFileList),
+                            len(flat_feeds),
+                            ','.join(tuple(feeds.keys())),
+                            siteInfo["settings"].get("modified"),
+                            siteInfo["content"].get("domain"))
 
         logger.debug("Store analyzed feeds")
         sotrage.storeFeeds(kw_feeds, site_id)

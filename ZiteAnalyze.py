@@ -28,8 +28,7 @@ class ZiteAnalyze:
     def feedsFlatten(self, feeds):
         flat_feeds = []
         for key in feeds:
-            for feed in feeds[key]:
-                flat_feeds.append(feed)
+            flat_feeds += feeds[key]
         return flat_feeds
 
     def analyzeFeeds(self, feeds):  # Turn text to keywords
@@ -153,7 +152,7 @@ class ZiteAnalyze:
 
     # For ranking , the bigger the better
     def getUserDataRatio(self, site_info, optinal_file_count):
-        if not site_info["content"]["files"]: # The site has no file
+        if not site_info["content"]["files"]:  # The site has no file
             return 0
         return optinal_file_count / site_info["content"]["files"]
 
