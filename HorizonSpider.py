@@ -8,7 +8,8 @@ from time import sleep, time
 import argparse
 
 import ZiteUtils
-from Config import *
+from Config import config
+from os.path import join
 from ContentDb import ContentDb
 from DataStorage import DataStorage
 from ZeroWs import ZeroWs
@@ -23,7 +24,7 @@ def waitForZeroHello():
             "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D")
     except:
         logger.warning("ZeroHello has not been downloaded yet")
-        requests.get("http://"+ZeroNetAddr, headers={"ACCEPT": "text/html"})
+        requests.get("http://"+config.ZeroNetAddr, headers={"ACCEPT": "text/html"})
         while True:
             try:
                 ZeroHelloKey = ZiteUtils.getWrapperkey(
@@ -43,7 +44,7 @@ def main():
 
     logger.info("Got ZeroHello wrapper key")
 
-    zSocket.addZites(Initial_sites)
+    zSocket.addZites(config.Initial_sites)
 
     logger.info("Initial sites added")
 
@@ -100,10 +101,10 @@ def main():
 
         logger.debug("Entered file scanning loop")
         # Get links in all files
-        for folder, subs, files in os.walk(os.path.join(DataDir, site_addr)):
+        for folder, subs, files in os.walk(os.path.join(config.DataDir, site_addr)):
             for filename in files:
                 name, ext = os.path.splitext(filename)
-                if not filename in Skip_files:
+                if not filename in config.Skip_files:
                     if ext == ".html" or ext == ".htm":  # Scan address in these files
                         logger.debug("Scan file: {}", filename)
                         with open(os.path.join(folder, filename), 'rb') as src:
@@ -138,11 +139,11 @@ def main():
         logger.debug("Sites count:{}", len(siteList))
         ziteAnalyze.zeroName.reloadDomainData()
         for siteinfo in siteList:
-            if not siteinfo["address"] in Skip_sites:
+            if not siteinfo["address"] in config.Skip_sites:
                 if sotrage.siteExist(siteinfo["address"]):
                     site_id = sotrage.getSiteId(siteinfo["address"])
                     run_time_info = sotrage.getSiteRuntimeData(site_id)
-                    if time() - run_time_info[0] >= ReCrawlInterval:
+                    if time() - run_time_info[0] >= config.ReCrawlInterval:
                         logger.info(siteinfo["address"] +
                                     " Outdated: Re-fullCrawl")
                         fullCrawl(siteinfo)
@@ -160,7 +161,7 @@ def main():
             else:
                 logger.info("Skip site {}", siteinfo["address"])
         logger.info("No site left. Sleep ...")
-        sleep(RunInterval)
+        sleep(config.RunInterval)
 
 
 if __name__ == "__main__":
@@ -173,10 +174,16 @@ if __name__ == "__main__":
     parser.add_argument("--reCrawl",
                         help="Re-crawl all sites",
                         action="store_true")
+    parser.add_argument("-znRoot", "--zeronetRootDir",
+                        help="Root dir of ZeroNet",
+                        type=str)
+
     args = parser.parse_args()
 
+    if args.zeronetRootDir:
+        config.RootDir = args.zeronetRootDir
     if args.reCrawl:  # Delete database
-        os.remove(DbName)
+        os.remove(config.DbName)
 
     try:
         waitForZeroHello()

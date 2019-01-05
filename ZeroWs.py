@@ -39,6 +39,7 @@ class ZeroWs(ZeroWebSocketBase):
         results = {}
         if dbschema:
             feeds = dbschema.get("feeds")
+            logger.debug("Querying all feeds")
             if feeds:
                 for feed in feeds:
                     results[feed] = self.queryDb(site_addr, "select type,date_added,title,body,url from ({0}) where date_added > {1} {2}".format(

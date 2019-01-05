@@ -1,7 +1,6 @@
 psutil
 websocket
 jieba
-nltk
 rake-nltk
 langdetect
 loguru

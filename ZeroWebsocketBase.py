@@ -5,11 +5,11 @@ import sys
 
 import websocket
 
-from Config import *
+from Config import config
 
 
 class ZeroWebSocketBase(object):
-    def __init__(self, wrapper_key, address=ZeroNetAddr, secure=False):
+    def __init__(self, wrapper_key, address=config.ZeroNetAddr, secure=False):
         try:
             self.ws = websocket.create_connection(
                 "%s://%s/Websocket?wrapper_key=%s" % ("wss" if secure else "ws", address, wrapper_key))

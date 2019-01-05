@@ -1,11 +1,11 @@
 import json
 import sqlite3
 from os.path import join
-from Config import *
+from Config import config
 
 
 def getWrapperkey(address):
-    with open(join(DataDir, "sites.json")) as f:
+    with open(config.sitesJson) as f:
         sites = json.loads(f.read())
         if address in sites:
             return sites[address]["wrapper_key"]
@@ -14,7 +14,7 @@ def getWrapperkey(address):
 
 
 def findByWrapperkey(wrapper_key):
-    with open(join(DataDir, "sites.json")) as f:
+    with open(config.sitesJson) as f:
         sites = json.loads(f.read())
 
         for address, site in sites.iteritems():

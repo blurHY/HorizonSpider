@@ -1,5 +1,5 @@
 from ZeroWs import ZeroWs
-from Config import *
+from Config import config
 import ZiteUtils
 
 

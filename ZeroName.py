@@ -1,7 +1,8 @@
 from ZiteBase import ZiteBase
 from json import loads
 from time import time
-from Config import *
+from loguru import logger
+from Config import config
 
 
 class ZeroName(ZiteBase):

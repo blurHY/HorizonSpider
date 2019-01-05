@@ -1,5 +1,5 @@
 import sqlite3
-from Config import *
+from Config import config
 from time import time
 import atexit
 
@@ -11,7 +11,7 @@ class DataStorageException(Exception):
 class DataStorage:
 
     def __init__(self):
-        self.conn = sqlite3.connect(DbName)
+        self.conn = sqlite3.connect(config.DbName)
         self.checkDb()
 
     def checkDb(self):

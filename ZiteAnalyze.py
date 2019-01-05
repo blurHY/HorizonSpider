@@ -8,8 +8,9 @@ import jieba.analyse
 from rake_nltk import Rake
 import nltk
 from langdetect import detect, lang_detect_exception
+from loguru import logger
 
-from Config import *
+from Config import config
 from ZeroName import ZeroName
 
 
@@ -67,7 +68,7 @@ class ZiteAnalyze:
         return re.findall("\/1[A-Za-z0-9]{25,34}", text)
 
     def extractLinks_NameCoinDomain(self, text):
-        return re.findall("(?:.*?)([A-Za-z0-9_-]+\.bit)", text)
+        return re.findall("[A-Za-z0-9_-]+\.bit", text)
 
     def extractLinks_auto(self, text):
         bitc_addrs = self.extractLinks_BitcoinAddr(text)
@@ -133,8 +134,60 @@ class ZiteAnalyze:
         return optinal_file_count/site_info["content"]["files"]
 
     def countSiteFiles(self, addr):  # Downloaded files
-        return sum([len(files) for r, d, files in os.walk(DataDir + "\\" + addr)])
+        return sum([len(files) for r, d, files in os.walk(config.DataDir + "\\" + addr)])
 
 
 if __name__ == "__main__":
+    config.RootDir = "/ZeroBundle/ZeroNet"
     za = ZiteAnalyze()
+    za.zeroName.reloadDomainData()
+    za.extractLinks_auto("""
+    from 92 个站点 用时 81.11秒
+ZeroTalk
+4 小时前
+评论于Ways to popularize zeronet
+eightyfour › quantumworld:  This. The growing climate of censorship will lead to increased interest in censorship-resistant technologies, but don't let that lead you to inaction! There's still much to be done! As c
+ZeroTalk
+6 小时前
+评论于ZeroNet Games
+eightyfour › what do people think.bit of a sort of Steam alternative using ZeroNet? As in: an interface to download, manage, rate, and interact socially in games (find other players, share tips, etc.) Maybe even linked
+ZeroTalk
+12 小时前
+New issue: Like Beaker-browser, support.bit to point a site to custom folder
+ https://github.com/HelloZeroNet/ZeroNet/issues/1844  -- [Issues · HelloZeroNet/ZeroNet · GitHub](https://github.com/HelloZeroNet/ZeroNet/issues) Jan 4, 2019
+ZeroTalk
+12 小时前
+评论于ZeroNet Games
+randomshit › [Games shared on ZeroWiki](/138R53t3ZW7KDfSfxVpWUsMXgwUnsDNXLP/?Page:zite-list-games)
+ZeroTalk
+12 小时前
+评论于"9/11 Papers"
+randomshit › It is not very difficult to breach a security system when granting a means of backdoor access for the federal government is mandatory. I can't throw any stones at TDO when figures like Alexander Nix ar
+ZeroMe
+12 小时前
+评论于Your post
+styromaniac@zeroid.bit › Add a few craters to the inside of the ring. Make each circlet and letter a deep space kind of color. Dreamy and stuff.
+styromaniac@zeroid.bit › I like it.
+ssdifnskdjfnsdjk@zeroid.bit › would better like smaller font and.bit round corners of the font, smaller circle when comparing to font
+blurHY › @styromaniac
+ZeroTalk
+14 小时前
+评论于"9/11 Papers"
+ssdifnskdjfnsdjk › "TDO used remote access tools.bit to breach school district networks and then proceeded to steal sensitive data. To extort money from its victims, including students, TDO threatened violence or the release
+ZeroTalk
+14 小时前
+New issue: ZeroName updater should use "map" field for subdomains
+ https://github.com/HelloZeroNet/ZeroNet/issues/1843  -- [Issues · HelloZeroNet/ZeroNet · GitHub](https://github.com/HelloZeroNet/ZeroNet/issues) Jan 4, 2019
+ZeroTalk
+14 小时前
+New commit: Rev3747. Dont show tor meek proxy on configuration page if it's not s…
+     Rev3747. Dont show tor meek proxy on configuration page if it's not supported https://github.com/HelloZeroNet/ZeroNet/commit/1ab9bc40a5d54b6ed04f4dde0376cd5a36fbd391  -- [Recent Commits to ZeroNet
+0list
+14 小时前
+Incantata - creative common trading card game
+http://127.0.0.1:43110/13VDeMgRgGf73mHsMrrorXkq4fhUKfBvPz/  (DE) http://127.0.0.1:43110/19xqgCi5YTsdTxY97Pferz9GuQERzSSVFe/ (EN) 
+ZeroTalk
+14 小时前
+提到了你Do you have any idea about the logo of Horizon Search Engine
+blurhy › ssdifnskdjfnsdjk:  That's the problem of browser,maybe
+    """)

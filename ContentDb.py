@@ -4,15 +4,13 @@ from os.path import join
 
 from loguru import logger
 
-from Config import *
+from Config import config
 
 
 class ContentDb:
-    DbPath = join(DataDir, "content.db")
-
     def __init__(self):
-        logger.debug("Content Db path {}", self.DbPath)
-        self.conn = sqlite3.connect(self.DbPath)
+        logger.debug("Content Db path {}", config.ContentDbPath)
+        self.conn = sqlite3.connect(config.ContentDbPath)
 
     def getSiteOptionalFileCount(self, site_id):
         with closing(self.conn.cursor()) as c:
