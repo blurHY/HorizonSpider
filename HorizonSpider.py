@@ -54,6 +54,10 @@ def main():
 
     atexit.register(sotrage.close)
 
+    def reFullCrawl(siteInfo):
+        pass
+        # TODO: Clear db row of a site and fullCrawl
+
     def fullCrawl(siteInfo):
         fileList = zSocket.fileList("./", siteInfo["address"])
         cdb_id = contentDb.getSiteId(siteInfo["address"])
@@ -144,7 +148,7 @@ def main():
                     if time() - run_time_info[0] >= config.ReCrawlInterval:
                         logger.info(siteinfo["address"] +
                                     " Outdated: Re-fullCrawl")
-                        fullCrawl(siteinfo)
+                        reFullCrawl(siteinfo)
                     else:
                         logger.info(siteinfo["address"] + " UpdateCrawl")
                         updateCrawl(siteinfo, run_time_info)
