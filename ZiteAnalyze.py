@@ -39,6 +39,9 @@ class ZiteAnalyze:
             feed["body"] = self.textOptimize(feed["body"])
             logger.debug("Feed: {0},Len: {1}",
                          feed["body"][:30], len(feed["body"]))
+            if len(feed["body"]) > 50000:
+                logger.debug("Feed too long.Skip")
+                continue
             if len(feed["body"]) > 200:
                 feed["keywords"] = self.extractKeyword_auto(
                     feed["body"], 5)
