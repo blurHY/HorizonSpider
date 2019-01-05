@@ -133,8 +133,8 @@ def main():
         crawlZeroName()
 
     while True:
+        logger.info("Updating SiteList")
         siteList = zSocket.siteList()  # Update site list
-        logger.info("SiteList Updated")
         logger.debug("Sites count:{}", len(siteList))
 
         for siteinfo in siteList:
@@ -144,7 +144,7 @@ def main():
                     run_time_info = sotrage.getSiteRuntimeData(site_id)
                     if time() - run_time_info[0] >= ReCrawlInterval:
                         logger.info(siteinfo["address"] +
-                                    " Outdated,Re-fullCrawl")
+                                    " Outdated: Re-fullCrawl")
                         fullCrawl(siteinfo)
                     else:
                         logger.info(siteinfo["address"] + " UpdateCrawl")
@@ -152,7 +152,7 @@ def main():
                 else:  # First crawl
                     if siteinfo["bad_files"] == 0 and siteinfo["settings"]["size"] > 0:
                         logger.info(siteinfo["address"] +
-                                    " New Site,fullCrawl")
+                                    " New Site: fullCrawl")
                         fullCrawl(siteinfo)
                     else:  # Continue waiting
                         logger.info(siteinfo["address"] + " Not Downloaded")
