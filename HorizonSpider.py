@@ -130,10 +130,8 @@ def main():
         ziteAnalyze.zeroName.reloadDomainData()
         zSocket.addZites(set(ziteAnalyze.zeroName.names.values()))
 
-    if args.crawlZeroName:
-        crawlZeroName()
-
-    while True:
+    @logger.catch
+    def mainProcess():
         logger.info("Updating SiteList")
         siteList = zSocket.siteList()  # Update site list
         logger.debug("Sites count:{}", len(siteList))
@@ -160,6 +158,12 @@ def main():
                 sotrage.conn.commit()
             else:
                 logger.info("Skip site {}", siteinfo["address"])
+
+    if args.crawlZeroName:
+        crawlZeroName()
+
+    while True:
+        mainProcess()
         logger.info("No site left. Sleep ...")
         sleep(config.RunInterval)
 
