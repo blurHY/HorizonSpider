@@ -37,20 +37,25 @@ class ZiteAnalyze:
             if feed["type"] == "comment":  # Skip comments
                 continue
             feed["body"] = self.textOptimize(feed["body"])
+            feed["keywords"] = []
             logger.debug("Feed: {0},Len: {1}",
                          feed["body"][:30], len(feed["body"]))
             if len(feed["body"]) > 50000:
                 logger.debug("Feed too long.Skip")
-                feed["keywords"] = []
                 continue
             if len(feed["body"]) > 200:
                 feed["keywords"] = self.extractKeyword_auto(
                     feed["body"], 5)
-            elif len(feed["title"]) < 10:
-                feed["keywords"] = self.extractKeyword_auto(
-                    feed["body"], 1)[:10]
             else:
-                feed["keywords"] = []
+                if len(feed["body"]) < 25:
+                    feed["keywords"].append(feed["body"])
+                elif len(feed["title"]) < 10:
+                    feed["keywords"] += self.extractKeyword_auto(
+                        feed["body"], 5)
+                else:
+                    feed["keywords"] = self.extractKeyword_auto(
+                        feed["body"], 1)
+
             del feed["body"]
 
         return feeds
