@@ -43,7 +43,7 @@ class ZiteAnalyze:
                 logger.debug("Feed too long.Skip")
                 continue
             if len(feed["body"]) > 200:
-                feed["keywords"] = self.extractKeyword_auto(
+                feed["keywords"] += self.extractKeyword_auto(
                     feed["body"], 5)
             else:
                 if len(feed["body"]) < 25:

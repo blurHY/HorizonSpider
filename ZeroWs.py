@@ -35,6 +35,7 @@ class ZeroWs(ZeroWebSocketBase):
         else:
             return self.send("fileList", dir)
 
+    @logger.catch
     def crawlFeeds(self, site_addr, dbschema, date_least=0, no_comment=True):
         results = {}
         if dbschema:
@@ -42,8 +43,11 @@ class ZeroWs(ZeroWebSocketBase):
             logger.debug("Querying all feeds")
             if feeds:
                 for feed in feeds:
-                    results[feed] = self.queryDb(site_addr, "select type,date_added,title,body,url from ({0}) where date_added > {1} {2}".format(
-                        feeds[feed], date_least, "and type != 'comment'"if no_comment else ""))
+                    if feeds[feed].strip().upper().startswith("SELECT"):
+                        results[feed] = self.queryDb(site_addr, "select type,date_added,title,body,url from ({0}) where date_added > {1} {2}".format(
+                            feeds[feed], date_least, "and type != 'comment'"if no_comment else ""))
+                    else:
+                        results[feed] = []
             logger.debug("This site has dbschama.json. Feeds crawled")
         return results
 

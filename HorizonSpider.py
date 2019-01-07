@@ -14,6 +14,7 @@ from ContentDb import ContentDb
 from DataStorage import DataStorage
 from ZeroWs import ZeroWs
 from ZiteAnalyze import ZiteAnalyze
+from ZeroWebsocketBase import ZeroWebsocketBase
 import chardet
 
 
@@ -24,7 +25,8 @@ def waitForZeroHello():
             "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D")
     except:
         logger.warning("ZeroHello has not been downloaded yet")
-        requests.get("http://"+config.ZeroNetAddr, headers={"ACCEPT": "text/html"})
+        requests.get("http://"+config.ZeroNetAddr,
+                     headers={"ACCEPT": "text/html"})
         while True:
             try:
                 ZeroHelloKey = ZiteUtils.getWrapperkey(
@@ -65,8 +67,14 @@ def main():
         userDataFileList = zSocket.fileList(
             "./data/users", siteInfo["address"])
         dbschema = zSocket.getDbschema(siteInfo["address"])
-        feeds = zSocket.crawlFeeds(siteInfo["address"], dbschema)
-        flat_feeds = ziteAnalyze.feedsFlatten(feeds)
+
+        feeds = zSocket.crawlFeeds(siteInfo["address"], dbschema) # The feed query of a zite might has some syntax errors
+
+        if feeds:
+            flat_feeds = ziteAnalyze.feedsFlatten(feeds)
+        else:
+            flat_feeds = []
+
         logger.info("Got {0} feeds from {1}", len(
             flat_feeds), siteInfo["address"])
 
@@ -83,20 +91,20 @@ def main():
         kw_feeds = ziteAnalyze.analyzeFeeds(flat_feeds[:20])
 
         site_id = sotrage.addSite(siteInfo["address"],
-                            siteInfo["content"].get("title"),
-                            siteInfo["peers"],
-                            siteInfo["content"].get("description"),
-                            ziteAnalyze.fileTypes(fileList),
-                            ziteAnalyze.
-                            getUserDataRatio(siteInfo,
-                                            len(userDataFileList) if userDataFileList is list else 0),
-                            siteInfo["settings"]["size"],
-                            siteInfo["settings"]["size_optional"],
-                            ziteAnalyze.optionalFileTypes(opFileList),
-                            len(flat_feeds),
-                            ','.join(tuple(feeds.keys())),
-                            siteInfo["settings"].get("modified"),
-                            siteInfo["content"].get("domain"))
+                                  siteInfo["content"].get("title"),
+                                  siteInfo["peers"],
+                                  siteInfo["content"].get("description"),
+                                  ziteAnalyze.fileTypes(fileList),
+                                  ziteAnalyze.
+                                  getUserDataRatio(siteInfo,
+                                                   len(userDataFileList) if userDataFileList is list else 0),
+                                  siteInfo["settings"]["size"],
+                                  siteInfo["settings"]["size_optional"],
+                                  ziteAnalyze.optionalFileTypes(opFileList),
+                                  len(flat_feeds),
+                                  ','.join(tuple(feeds.keys())),
+                                  siteInfo["settings"].get("modified"),
+                                  siteInfo["content"].get("domain"))
 
         logger.debug("Store analyzed feeds")
         sotrage.storeFeeds(kw_feeds, site_id)

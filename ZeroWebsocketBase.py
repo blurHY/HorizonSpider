@@ -44,8 +44,7 @@ class ZeroWebSocketBase(object):
 
             if response["cmd"] == "response" and response["to"] == self.next_id:
                 self.next_id += 1
-
-                if response["result"] is not None and "error" in response["result"]:
+                if response["result"] is not None and isinstance(response["result"], dict) and "error" in response["result"]:
                     raise ZeroWebSocketBase.Error(response["result"]["error"])
                 else:
                     return response["result"]
