@@ -3,3 +3,4 @@ __pycache__
 .vscode
 horizon_data.db
 .log
+node_modules
