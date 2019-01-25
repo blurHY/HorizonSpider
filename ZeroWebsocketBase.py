@@ -8,13 +8,12 @@ import websocket
 from Config import config
 
 
-class ZeroWebSocketBase(object):
+class ZeroWebSocketBase:
     def __init__(self, wrapper_key, address=config.ZeroNetAddr, secure=False):
         try:
             self.ws = websocket.create_connection(
-                "%s://%s/Websocket?wrapper_key=%s"
-                % ("wss" if secure else "ws", address, wrapper_key)
-            )
+                "%s://%s/Websocket?wrapper_key=%s" %
+                ("wss" if secure else "ws", address, wrapper_key))
         except socket.error as e:
             raise ZeroWebSocketBase.Error("Cannot open socket.")
 
@@ -34,8 +33,7 @@ class ZeroWebSocketBase(object):
             data = dict(cmd=cmd, params=args, id=self.next_id)
         else:
             raise TypeError(
-                "Only args/kwargs alone are allowed in call to ZeroWebSocket"
-            )
+                "Only args/kwargs alone are allowed in call to ZeroWebSocket")
 
         self.ws.send(json.dumps(data))
 
@@ -47,22 +45,18 @@ class ZeroWebSocketBase(object):
 
             if response["cmd"] == "response" and response["to"] == self.next_id:
                 self.next_id += 1
-                if (
-                    response["result"] is not None
-                    and isinstance(response["result"], dict)
-                    and "error" in response["result"]
-                ):
+                if (response["result"] is not None
+                        and isinstance(response["result"], dict)
+                        and "error" in response["result"]):
                     raise ZeroWebSocketBase.Error(response["result"]["error"])
                 else:
                     return response["result"]
             elif response["cmd"] == "error":
                 self.next_id += 1
-                raise ZeroWebSocketBase.Error(
-                    *map(
-                        lambda x: re.sub(r"<[^<]+?>", "", x),
-                        response["params"].split("<br>"),
-                    )
-                )
+                raise ZeroWebSocketBase.Error(*map(
+                    lambda x: re.sub(r"<[^<]+?>", "", x),
+                    response["params"].split("<br>"),
+                ))
 
     class Error(Exception):
         pass

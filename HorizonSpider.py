@@ -1,21 +1,30 @@
+import argparse
 import atexit
 import os
+import sys
 import platform
-import requests
-from loguru import logger
 from json import dump
+from os.path import join
 from time import sleep, time
-import argparse
+from signal import signal, SIGTERM
 
+import chardet
+import requests
 import ZiteUtils
 from Config import config
-from os.path import join
 from ContentDb import ContentDb
 from DataStorage import DataStorage
+from loguru import logger
+from ZeroWebsocketBase import ZeroWebsocketBase
 from ZeroWs import ZeroWs
 from ZiteAnalyze import ZiteAnalyze
-from ZeroWebsocketBase import ZeroWebsocketBase
-import chardet
+
+signal(SIGTERM, lambda signum, stack_frame: sys.exit(1))
+
+
+@atexit.register
+def logExit():
+    logger.info("Gracefully exiting...")
 
 
 def waitForZeroHello():
@@ -25,8 +34,8 @@ def waitForZeroHello():
             "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D")
     except:
         logger.warning("ZeroHello has not been downloaded yet")
-        requests.get("http://"+config.ZeroNetAddr,
-                     headers={"ACCEPT": "text/html"})
+        requests.get(
+            "http://" + config.ZeroNetAddr, headers={"ACCEPT": "text/html"})
         while True:
             try:
                 ZeroHelloKey = ZiteUtils.getWrapperkey(
@@ -64,19 +73,21 @@ def main():
         fileList = zSocket.fileList("./", siteInfo["address"])
         cdb_id = contentDb.getSiteId(siteInfo["address"])
         opFileList = contentDb.getSiteOptionalFileList(cdb_id)
-        userDataFileList = zSocket.fileList(
-            "./data/users", siteInfo["address"])
+        userDataFileList = zSocket.fileList("./data/users",
+                                            siteInfo["address"])
         dbschema = zSocket.getDbschema(siteInfo["address"])
 
-        feeds = zSocket.crawlFeeds(siteInfo["address"], dbschema) # The feed query of a zite might has some syntax errors
+        feeds = zSocket.crawlFeeds(
+            siteInfo["address"],
+            dbschema)  # The feed query of a zite might has some syntax errors
 
         if feeds:
             flat_feeds = ziteAnalyze.feedsFlatten(feeds)
         else:
             flat_feeds = []
 
-        logger.info("Got {0} feeds from {1}", len(
-            flat_feeds), siteInfo["address"])
+        logger.info("Got {0} feeds from {1}", len(flat_feeds),
+                    siteInfo["address"])
 
         logger.debug("Scanning files and feeds")
 
@@ -90,21 +101,19 @@ def main():
         logger.debug("Analyze a few feeds via NLP")
         kw_feeds = ziteAnalyze.analyzeFeeds(flat_feeds[:20])
 
-        site_id = sotrage.addSite(siteInfo["address"],
-                                  siteInfo["content"].get("title"),
-                                  siteInfo["peers"],
-                                  siteInfo["content"].get("description"),
-                                  ziteAnalyze.fileTypes(fileList),
-                                  ziteAnalyze.
-                                  getUserDataRatio(siteInfo,
-                                                   len(userDataFileList) if userDataFileList is list else 0),
-                                  siteInfo["settings"]["size"],
-                                  siteInfo["settings"]["size_optional"],
-                                  ziteAnalyze.optionalFileTypes(opFileList),
-                                  len(flat_feeds),
-                                  ','.join(tuple(feeds.keys())),
-                                  siteInfo["settings"].get("modified"),
-                                  siteInfo["content"].get("domain"))
+        site_id = sotrage.addSite(
+            siteInfo["address"], siteInfo["content"].get("title"),
+            siteInfo["peers"], siteInfo["content"].get("description"),
+            ziteAnalyze.fileTypes(fileList),
+            ziteAnalyze.getUserDataRatio(
+                siteInfo,
+                len(userDataFileList) if userDataFileList is list else 0),
+            siteInfo["settings"]["size"],
+            siteInfo["settings"]["size_optional"],
+            ziteAnalyze.optionalFileTypes(opFileList), len(flat_feeds),
+            ','.join(tuple(
+                feeds.keys())), siteInfo["settings"].get("modified"),
+            siteInfo["content"].get("domain"))
 
         logger.debug("Store analyzed feeds")
         sotrage.storeFeeds(kw_feeds, site_id)
@@ -114,7 +123,8 @@ def main():
 
         logger.debug("Entered file scanning loop")
         # Get links in all files
-        for folder, subs, files in os.walk(os.path.join(config.DataDir, site_addr)):
+        for folder, subs, files in os.walk(
+                os.path.join(config.DataDir, site_addr)):
             for filename in files:
                 name, ext = os.path.splitext(filename)
                 if not filename in config.Skip_files:
@@ -162,7 +172,8 @@ def main():
                         logger.info(siteinfo["address"] + " UpdateCrawl")
                         updateCrawl(siteinfo, run_time_info)
                 else:  # First crawl
-                    if siteinfo["bad_files"] == 0 and siteinfo["settings"]["size"] > 0:
+                    if siteinfo["bad_files"] == 0 and siteinfo["settings"][
+                            "size"] > 0:
                         logger.info(siteinfo["address"] +
                                     " New Site: fullCrawl")
                         fullCrawl(siteinfo)
@@ -185,15 +196,15 @@ if __name__ == "__main__":
     logger.info("Horizon spider started")
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("-crZN", "--crawlZeroName",
-                        help="Crawl the site ZeroName first",
-                        action="store_true")
-    parser.add_argument("--reCrawl",
-                        help="Re-crawl all sites",
-                        action="store_true")
-    parser.add_argument("-znRoot", "--zeronetRootDir",
-                        help="Root dir of ZeroNet",
-                        type=str)
+    parser.add_argument(
+        "-crZN",
+        "--crawlZeroName",
+        help="Crawl the site ZeroName first",
+        action="store_true")
+    parser.add_argument(
+        "--reCrawl", help="Re-crawl all sites", action="store_true")
+    parser.add_argument(
+        "-znRoot", "--zeronetRootDir", help="Root dir of ZeroNet", type=str)
 
     args = parser.parse_args()
 

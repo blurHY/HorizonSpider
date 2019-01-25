@@ -1,3 +1,4 @@
 {
-    "python.linting.pylintEnabled": true
+    "python.linting.pylintEnabled": true,
+    "python.pythonPath": "C:\\Users\\blurHY\\AppData\\Local\\Programs\\Python\\Python37\\python.exe"
 }
