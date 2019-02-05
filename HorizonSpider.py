@@ -11,13 +11,13 @@ from signal import signal, SIGTERM
 import chardet
 import requests
 import ZiteUtils
-from Config import config
-from ContentDb import ContentDb
-from DataStorage import DataStorage
+from .Config import config
+from .ContentDb import ContentDb
+from .DataStorage import DataStorage
 from loguru import logger
-from ZeroWebsocketBase import ZeroWebsocketBase
-from ZeroWs import ZeroWs
-from ZiteAnalyze import ZiteAnalyze
+from .ZeroWebsocketBase import ZeroWebSocketBase
+from .ZeroWs import ZeroWs
+from .ZiteAnalyze import ZiteAnalyze
 
 signal(SIGTERM, lambda signum, stack_frame: sys.exit(1))
 
