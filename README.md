@@ -2,6 +2,8 @@
 
 <img width=50% height=auto src="https://github.com/blurHY/Horizon/raw/master/logo.png">
 
+**Rewriting with nodejs and mongodb**
+
 The ZeroNet spider for Horizon Search Engine (Still in development)
 
 ![](img/loop.svg)
