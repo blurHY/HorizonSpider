@@ -22,6 +22,4 @@ Then zeronet processes them, and downloads these zites.
 
 The crawler continues to traversal `siteList` and crawls newly downloaded sites to get more links
 
-Also, it will store data in mongodb as cache for faster access.
-
-![](./Horizon.svg)
+![](./Horizon.svg) 
