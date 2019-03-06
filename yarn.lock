@@ -8,9 +8,9 @@ abbrev@1:
   integrity sha1-+PLIh60Qv2f2NPAFtph/7TF5qsg=
 
 ajv@^6.5.5:
-  version "6.9.1"
-  resolved "http://registry.npm.taobao.org/ajv/download/ajv-6.9.1.tgz#a4d3683d74abc5670e75f0b16520f70a20ea8dc1"
-  integrity sha1-pNNoPXSrxWcOdfCxZSD3CiDqjcE=
+  version "6.10.0"
+  resolved "http://registry.npm.taobao.org/ajv/download/ajv-6.10.0.tgz#90d0d54439da587cd7e843bfb7045f50bd22bdf1"
+  integrity sha1-kNDVRDnaWHzX6EO/twRfUL0ivfE=
   dependencies:
     fast-deep-equal "^2.0.1"
     fast-json-stable-stringify "^2.0.0"
@@ -232,6 +232,11 @@ ecc-jsbn@~0.1.1:
   dependencies:
     jsbn "~0.1.0"
     safer-buffer "^2.1.0"
+
+es6-promise-pool@^2.5.0:
+  version "2.5.0"
+  resolved "http://registry.npm.taobao.org/es6-promise-pool/download/es6-promise-pool-2.5.0.tgz#147c612b36b47f105027f9d2bf54a598a99d9ccb"
+  integrity sha1-FHxhKza0fxBQJ/nSv1SlmKmdnMs=
 
 escape-string-regexp@^1.0.5:
   version "1.0.5"
@@ -458,17 +463,17 @@ memory-pager@^1.0.2:
   resolved "http://registry.npm.taobao.org/memory-pager/download/memory-pager-1.5.0.tgz#d8751655d22d384682741c972f2c3d6dfa3e66b5"
   integrity sha1-2HUWVdItOEaCdByXLyw9bfo+ZrU=
 
-mime-db@~1.37.0:
-  version "1.37.0"
-  resolved "http://registry.npm.taobao.org/mime-db/download/mime-db-1.37.0.tgz#0b6a0ce6fdbe9576e25f1f2d2fde8830dc0ad0d8"
-  integrity sha1-C2oM5v2+lXbiXx8tL96IMNwK0Ng=
+mime-db@~1.38.0:
+  version "1.38.0"
+  resolved "http://registry.npm.taobao.org/mime-db/download/mime-db-1.38.0.tgz#1a2aab16da9eb167b49c6e4df2d9c68d63d8e2ad"
+  integrity sha1-GiqrFtqesWe0nG5N8tnGjWPY4q0=
 
 mime-types@^2.1.12, mime-types@~2.1.19:
-  version "2.1.21"
-  resolved "http://registry.npm.taobao.org/mime-types/download/mime-types-2.1.21.tgz#28995aa1ecb770742fe6ae7e58f9181c744b3f96"
-  integrity sha1-KJlaoey3cHQv5q5+WPkYHHRLP5Y=
+  version "2.1.22"
+  resolved "http://registry.npm.taobao.org/mime-types/download/mime-types-2.1.22.tgz#fe6b355a190926ab7698c9a0556a11199b2199bd"
+  integrity sha1-/ms1WhkJJqt2mMmgVWoRGZshmb0=
   dependencies:
-    mime-db "~1.37.0"
+    mime-db "~1.38.0"
 
 minimatch@^3.0.4:
   version "3.0.4"
@@ -612,11 +617,6 @@ node-pre-gyp@^0.11.0:
     semver "^5.3.0"
     tar "^4"
 
-node-sqlparser@^1.0.4:
-  version "1.0.4"
-  resolved "http://registry.npm.taobao.org/node-sqlparser/download/node-sqlparser-1.0.4.tgz#1b97bef90f5ad7276de709c5c0bd3f47582049a7"
-  integrity sha1-G5e++Q9a1ydt5wnFwL0/R1ggSac=
-
 nopt@^4.0.1:
   version "4.0.1"
   resolved "http://registry.npm.taobao.org/nopt/download/nopt-4.0.1.tgz#d0d4685afd5415193c8c7505602d0d17cd64474d"
@@ -631,9 +631,9 @@ npm-bundled@^1.0.1:
   integrity sha1-57qarc75YrthJI+RchzZMrP+a90=
 
 npm-packlist@^1.1.6:
-  version "1.3.0"
-  resolved "http://registry.npm.taobao.org/npm-packlist/download/npm-packlist-1.3.0.tgz#7f01e8e44408341379ca98cfd756e7b29bd2626c"
-  integrity sha1-fwHo5EQINBN5ypjP11bnspvSYmw=
+  version "1.4.1"
+  resolved "http://registry.npm.taobao.org/npm-packlist/download/npm-packlist-1.4.1.tgz#19064cdf988da80ea3cee45533879d90192bbfbc"
+  integrity sha1-GQZM35iNqA6jzuRVM4edkBkrv7w=
   dependencies:
     ignore-walk "^3.0.1"
     npm-bundled "^1.0.1"

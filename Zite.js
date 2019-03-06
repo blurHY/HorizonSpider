@@ -8,7 +8,4 @@ module.exports = class Zite extends ZeroWs {
         log('info', "spider", "Getting wrapper key for " + site_addr)
         super(getWrapperKey(site_addr), Settings.ZeroNetHost)
     }
-    getSiteInfo() {
-
-    }
 }

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const log = require('Logger')
+const log = require("./Logger")
 const events = require('events');
 
 let siteSchema = new mongoose.Schema({
@@ -21,7 +21,7 @@ let siteSchema = new mongoose.Schema({
         size_optional: Number
     },
     feedsQueried: [{
-        query: String,
+        name: String,
         result: [{
             itemType: String,
             date_added: Number,
@@ -34,7 +34,7 @@ let siteSchema = new mongoose.Schema({
         cert_signers: [String],
         includesOfRoot: [String], // Included content jsons in root content.json
         usedTechs: [{
-            itemType: String, // frontend or zeronet
+            itemType: String, // Frontend frameworks, zeronet apis etc.
             value: String
         }], // Site quality
         siteFiles: [{ // files field in a site's root content.json
@@ -61,7 +61,8 @@ let siteSchema = new mongoose.Schema({
         hash_id: String,
         size: Number,
         peer: Number,
-        time_added: Number
+        time_added: Number,
+        category: String // Originally the name of a feed query
     }],
     runtimeInfo: {
         lastCrawl: {
@@ -73,11 +74,12 @@ let siteSchema = new mongoose.Schema({
             analyze: {
                 full: Date
             },
-            optioanl: {
+            optional: {
                 check: Date,
                 full: Date
             }
-        }
+        },
+        error: [] // Errors occurred while crawling
     }
 })
 
@@ -101,7 +103,7 @@ siteSchema.methods.setSiteInfo = function (siteInfoObj) {
     }
     // Extra keys such as 'settings'
     for (let key in siteInfoObj.content)
-        if (!(key in ['files',
+        if (["files",
             'domain',
             'description',
             'cloned_from',
@@ -117,9 +119,9 @@ siteSchema.methods.setSiteInfo = function (siteInfoObj) {
             'zeronet_version',
             'postmessage_nonce_security',
             'address_index',
-            'background-color']))
+            "background-color"].indexOf(key) < 0)
             this.basicInfo.extra[key] = siteInfoObj.content[key]
-    this.runtimeInfo.lastCrawl.siteInfo = new Date
+    this.runtimeInfo.lastCrawl.siteInfo = new Date()
     this.markModified("basicInfo.extra")
     log("info", "spider", `Updated site info for ${this.basicInfo.address}`, siteInfoObj)
 }
@@ -138,16 +140,12 @@ let siteModel = mongoose.model('site', siteSchema)
 let event = new events.EventEmitter()
 
 module.exports = {
-    addNewSite(siteInfo) {
+    genNewSite(siteInfo) { // Generate a site obj with siteInfo
         let site = new siteModel()
         site.setSiteInfo(siteInfo)
         site.runtimeInfo.lastCrawl.siteInfo = Date.now()
-        site.save(r => {
-            log(r.errors ? "warning" : "info", "spider", "New site added", r)
-        })
         return site
     },
-    event,
     connect() {
         mongoose.connect('mongodb://localhost:27017/horizon', {
             useNewUrlParser: true
@@ -158,5 +156,21 @@ module.exports = {
             log("error", "spider", "Cannot connect to database", err)
             event.emit("error", err)
         });
-    }
+    },
+    getSite(addr) {
+        return new Promise((res, rej) => {
+            siteModel.find({
+                "basicInfo.address": addr
+            }, (err, site) => {
+                if (err)
+                    rej(err)
+                else
+                    res(site)
+            })
+        })
+    },
+    event,
+    siteModel
 }
+
+

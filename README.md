@@ -25,3 +25,7 @@ The crawler continues to traversal `siteList` and crawls newly downloaded sites 
 Also, it will store data in mongodb as cache for faster access.
 
 ![](./Horizon.svg)
+
+## Future plans
+
+Write zeronet-js implementation
