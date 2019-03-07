@@ -123,7 +123,7 @@ siteSchema.methods.setSiteInfo = function (siteInfoObj) {
             this.basicInfo.extra[key] = siteInfoObj.content[key]
     this.runtimeInfo.lastCrawl.siteInfo = new Date()
     this.markModified("basicInfo.extra")
-    log("info", "spider", `Updated site info for ${this.basicInfo.address}`, siteInfoObj)
+    log("info", "spider", `Updated site info for ${this.basicInfo.address}`)
 }
 
 siteSchema.method.addFeeds = function (feeds) {
@@ -165,7 +165,7 @@ module.exports = {
                 if (err)
                     rej(err)
                 else
-                    res(site)
+                    res(site[0])
             })
         })
     },

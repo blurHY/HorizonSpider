@@ -12,6 +12,8 @@ const PromisePool = require("es6-promise-pool")
 
 let admin = new Admin()
 
+let exiting = false
+
 async function updateFeeds(dbSchema, siteDB, siteObj) {
     if (!siteDB || !dbSchema || !dbSchema.feeds) // Always check params in final function
         return
@@ -22,13 +24,16 @@ async function updateFeeds(dbSchema, siteDB, siteObj) {
             continue
 
         let query = dbSchema.feeds[name]
-        if (!(siteObj.runtimeInfo.lastCrawl.feeds.full < Date.now() - process.env.feedFull_Period)) {
-            if (siteObj.runtimeInfo.lastCrawl.feeds.check < Date.now() - process.env.feedCheck_Peroid) { // New feeds only
+        if (!(siteObj.runtimeInfo.lastCrawl.feeds.full < new Date() - process.env.feedFull_Period)) {
+            if (siteObj.runtimeInfo.lastCrawl.feeds.check < new Date() - process.env.feedCheck_Peroid) { // New feeds only
+                siteObj.runtimeInfo.lastCrawl.feeds.check = new Date()
                 let maxDate = Math.max.apply(Math, siteObj.feedsQueried.map(o => o.result.date_added))
                 query = `SELECT * FROM (${query}) where date_added > ${maxDate}` // Not needed to add outer where clause into inner, because of the sqlite optimization
-            }
+            } else
+                log("info", "spider", `Stored feeds are up to date ${siteObj.basicInfo.address}`)
         } else {
-            siteObj.feedsQueried = []
+            siteObj.feedsQueried = [] // Clear old data and re-query all feeds
+            siteObj.runtimeInfo.lastCrawl.feeds.full = new Date()
         }
 
         await pagingFeedQuery(query, siteDB, siteObj, name)
@@ -38,7 +43,7 @@ async function updateFeeds(dbSchema, siteDB, siteObj) {
 
 async function pagingFeedQuery(query, siteDB, siteObj, name, count = 3000, start = 0) {
     let ori_query = query
-    query = `select * from (${query}) limit ${count} offset ${start}`
+    query = `select * from (${query}) limit ${count} offset ${start}` // Sqlite has powerful optimization, so we have do it like this.
     siteDB.all(query, async (err, rows) => {
         if (err || !(rows instanceof Array)) {
             log("error", "spider", "An error occurred during a feed query", err)
@@ -56,7 +61,7 @@ async function pagingFeedQuery(query, siteDB, siteObj, name, count = 3000, start
                 })
             }
             log("info", "spider", `Imported ${rows.length} feeds from ${siteObj.basicInfo.address}`)
-            await pagingFeedQuery(ori_query, siteDB, siteObj, name, count, start + count)
+            await pagingFeedQuery(ori_query, siteDB, siteObj, name, count, start + count) // Query and store next page
         }
     })
 }
@@ -71,11 +76,13 @@ async function crawlASite(site) {
     try {
         log("info", "spider", `Started crawling site ${site.address}`)
         let dbSchema = SiteMeta.getDBJson(site.address)
-        let siteObj = (await DataBase.getSite(site.address))[0]
+        let siteObj = await DataBase.getSite(site.address)
         let siteDB = SiteDB.getSiteDataBase(site.address)
 
-        if (!siteObj) // Site not found, create one
+        if (!siteObj) { // Site not found, create one
+            log("info", "spider", `Discovered a brand new site ${site.address}`)
             siteObj = DataBase.genNewSite(site)
+        }
 
         await Promise.all([updateFeeds(dbSchema, siteDB, siteObj), updateOptionalFiles(siteDB, siteObj)])
 
@@ -88,6 +95,8 @@ async function crawlASite(site) {
 async function forEachSite() {
     function* promiseGenerator() {
         for (let site of admin.siteList) {
+            if (exiting) // The minimal unit is a single site.
+                return
             yield crawlASite(site)
         }
     }
@@ -102,7 +111,22 @@ admin.Event.on("wsOpen", async () => {
         while (true) {
             await admin.reloadSiteList()
             await forEachSite()
+            log("info", "spider", `Sleeping for next loop`)
+            if (exiting)
+                process.exit()
             await delay(process.env.mainLoopInterval)
         }
     })
+})
+
+function exitHandler() {
+    log("warning", "spider", "Received signal, gracefully shutting down...")
+    exiting = true
+}
+
+process.on("SIGINT", exitHandler)
+process.on("SIGTERM", exitHandler)
+
+process.on("exit", () => {
+    log("warning", "spider", "Exited")
 })
