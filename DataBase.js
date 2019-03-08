@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose")
 const log = require("./Logger")
-const events = require('events');
+const events = require("events")
 
 let siteSchema = new mongoose.Schema({
     basicInfo: {
@@ -10,7 +10,7 @@ let siteSchema = new mongoose.Schema({
         description: String,
         title: String,
         cloned_from: String,
-        address: { type: String, unique: true },
+        address: {type: String, unique: true},
         cloneable: Boolean,
         extra: Object,
         modified: Number, // Keep original format to reduce bugs
@@ -66,7 +66,7 @@ let siteSchema = new mongoose.Schema({
     }],
     runtimeInfo: {
         lastCrawl: {
-            siteInfo: { type: Date, default: Date.now },
+            siteInfo: {type: Date, default: Date.now},
             feeds: {
                 check: Date, // Only compare last row and add new stuff
                 full: Date // Check old rows
@@ -104,21 +104,21 @@ siteSchema.methods.setSiteInfo = function (siteInfoObj) {
     // Extra keys such as 'settings'
     for (let key in siteInfoObj.content)
         if (["files",
-            'domain',
-            'description',
-            'cloned_from',
-            'address',
-            'includes',
-            'cloneable',
-            'inner_path',
-            'files_optional',
-            'title',
-            'signs_required',
-            'modified',
-            'ignore',
-            'zeronet_version',
-            'postmessage_nonce_security',
-            'address_index',
+            "domain",
+            "description",
+            "cloned_from",
+            "address",
+            "includes",
+            "cloneable",
+            "inner_path",
+            "files_optional",
+            "title",
+            "signs_required",
+            "modified",
+            "ignore",
+            "zeronet_version",
+            "postmessage_nonce_security",
+            "address_index",
             "background-color"].indexOf(key) < 0)
             this.basicInfo.extra[key] = siteInfoObj.content[key]
     this.runtimeInfo.lastCrawl.siteInfo = new Date()
@@ -136,7 +136,7 @@ siteSchema.method.addOptionalFiles = function (optionals) {
     this.optionalFiles = this.optionalFiles.concat(optionals)
 }
 
-let siteModel = mongoose.model('site', siteSchema)
+let siteModel = mongoose.model("site", siteSchema)
 let event = new events.EventEmitter()
 
 module.exports = {
@@ -147,7 +147,7 @@ module.exports = {
         return site
     },
     connect() {
-        mongoose.connect('mongodb://localhost:27017/horizon', {
+        mongoose.connect("mongodb://localhost:27017/horizon", {
             useNewUrlParser: true
         }).then(() => {
             log("info", "spider", "Successfully connected database")
@@ -155,18 +155,11 @@ module.exports = {
         }).catch(err => {
             log("error", "spider", "Cannot connect to database", err)
             event.emit("error", err)
-        });
+        })
     },
-    getSite(addr) {
-        return new Promise((res, rej) => {
-            siteModel.find({
-                "basicInfo.address": addr
-            }, (err, site) => {
-                if (err)
-                    rej(err)
-                else
-                    res(site[0])
-            })
+    async getSite(addr) {
+        return await siteModel.findOne({
+            "basicInfo.address": addr
         })
     },
     event,
