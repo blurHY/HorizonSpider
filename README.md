@@ -1,5 +1,7 @@
 # HorizonSpider - Nodejs
 
+![](https://img.shields.io/badge/NodeJs-Async-brightgreen.svg) ![](https://img.shields.io/badge/DataBase-NoSQL-blue.svg) ![]
+
 HorizonPanel is included in HorizonSpider now.
 
 Actually, this is the third version. And it's not done yet
