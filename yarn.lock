@@ -475,6 +475,11 @@ mime-types@^2.1.12, mime-types@~2.1.19:
   dependencies:
     mime-db "~1.38.0"
 
+mini-deep-assign@0.0.8:
+  version "0.0.8"
+  resolved "http://registry.npm.taobao.org/mini-deep-assign/download/mini-deep-assign-0.0.8.tgz#14fa4cad93d47cfbb4392796a8b0015e7f60cbcd"
+  integrity sha1-FPpMrZPUfPu0OSeWqLABXn9gy80=
+
 minimatch@^3.0.4:
   version "3.0.4"
   resolved "http://registry.npm.taobao.org/minimatch/download/minimatch-3.0.4.tgz#5166e286457f03306064be5497e8dbb0c3d32083"
@@ -513,6 +518,11 @@ mkdirp@^0.5.0, mkdirp@^0.5.1:
   integrity sha1-MAV0OOrGz3+MR2fzhkjWaX11yQM=
   dependencies:
     minimist "0.0.8"
+
+module-parent@0.0.2:
+  version "0.0.2"
+  resolved "http://registry.npm.taobao.org/module-parent/download/module-parent-0.0.2.tgz#be1cbb3cb6a55060fc86467d2f2d2cd0a600e199"
+  integrity sha1-vhy7PLalUGD8hkZ9Ly0s0KYA4Zk=
 
 mongodb-core@3.1.11:
   version "3.1.11"
@@ -776,6 +786,14 @@ request@^2.87.0:
     tough-cookie "~2.4.3"
     tunnel-agent "^0.6.0"
     uuid "^3.3.2"
+
+require-dir-all@^0.4.15:
+  version "0.4.15"
+  resolved "http://registry.npm.taobao.org/require-dir-all/download/require-dir-all-0.4.15.tgz#4e9928831adf1e18b15d3943c97f91ac88557b3b"
+  integrity sha1-TpkogxrfHhixXTlDyX+RrIhVezs=
+  dependencies:
+    mini-deep-assign "0.0.8"
+    module-parent "0.0.2"
 
 require_optional@^1.0.1:
   version "1.0.1"
