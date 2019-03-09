@@ -13,7 +13,7 @@ async function updateFeeds(dbSchema, siteDB, siteObj) {
     if (!(siteObj.runtimeInfo.lastCrawl.feeds.full < new Date() - process.env.feedFull_Period) && maxDate > 0) {
         if (siteObj.runtimeInfo.lastCrawl.feeds.check < new Date() - process.env.feedCheck_Peroid) { // New feeds only
             siteObj.runtimeInfo.lastCrawl.feeds.check = new Date()
-            func = s => `SELECT * FROM (${s}) where date_added > ${maxDate}` // Not needed to add outer where clause into inner, because of the sqlite optimization
+            func = s => `SELECT * FROM (${s}) where date_added > ${maxDate}` // Not needed to add the outer where clause to inner, because of the sqlite optimization
         } else
             log("info", "spider", `Stored feeds are up to date ${siteObj.basicInfo.address}`)
     } else {
@@ -72,7 +72,7 @@ async function pagingFeedQuery(query, siteDB, siteObj, name, count = 3000, start
                         {$push: {feedsQueried: {name, result: renamedRows}}}
                     )
                 else {
-                    await DataBase.siteModel.update(
+                    await DataBase.siteModel.update(    // Add items to existing array
                         {"basicInfo.address": siteObj.basicInfo.address},
                         {$push: {[`feedsQueried.${index}.result`]: {$each: renamedRows}}}
                     )

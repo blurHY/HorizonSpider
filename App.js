@@ -1,12 +1,11 @@
 require("dotenv").config()
 
-const Settings = require("./SettingsLoader")
-const Admin = require("./AdminZite")
+const Admin = require("./ZeroNet/AdminZite")
 const delay = require("delay")
 const log = require("./Logger")
 const DataBase = require("./DataBase")
-const SiteDB = require("./SiteDataBase")
-const SiteMeta = require("./SiteMeta")
+const SiteDB = require("./ZeroNet/SiteDataBase")
+const SiteMeta = require("./ZeroNet/SiteMeta")
 const PromisePool = require("es6-promise-pool")
 
 let modules = require("require-dir-all")("Crawlers")

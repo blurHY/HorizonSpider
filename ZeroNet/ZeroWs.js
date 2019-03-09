@@ -1,6 +1,6 @@
 const W3CWebSocket = require("websocket").w3cwebsocket
 const EventEmitter = require("events")
-const log = require("./Logger")
+const log = require("../Logger")
 
 
 module.exports = class ZeroWs {
@@ -13,11 +13,11 @@ module.exports = class ZeroWs {
         this.message_queue = []
 
         this.ws.onerror = () => {
-            log("error", "spider", "Cannot connect to zeronet")
+            log("error", "zeronet", "Cannot connect to zeronet")
         }
 
         this.ws.onclose = () => {
-            log("warning", "spider", "Connection to zeronet has been closed")
+            log("warning", "zeronet", "Connection to zeronet has been closed")
             this.Event.emit("wsClose")
         }
 
@@ -28,11 +28,11 @@ module.exports = class ZeroWs {
             if (cmd === "response" && this.waiting_cb[message.to] != null)
                 return this.waiting_cb[message.to](message.result)
             else
-                log("info", "spider", "Msg from ZeroNet", message)
+                log("info", "zeronet", "Msg from ZeroNet", message)
         }
 
         this.ws.onopen = () => {
-            log("info", "spider", `Zeronet websocket connected - Msg queue: ${this.message_queue.length}`)
+            log("info", "zeronet", `Zeronet websocket connected - Msg queue: ${this.message_queue.length}`)
             let i, len, message, ref
             ref = this.message_queue
             for (i = 0, len = ref.length; i < len; i++) {
@@ -49,7 +49,7 @@ module.exports = class ZeroWs {
     }
 
     cmd(cmd, params = {}, cb = null) { // params can b both obj or array
-        log("info", "spider", `Cmd: ${cmd}`, params)
+        log("info", "zeronet", `Cmd: ${cmd}`, params)
         this.send({
             cmd,
             params

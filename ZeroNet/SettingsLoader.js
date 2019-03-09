@@ -1,11 +1,11 @@
 const readFileSync = require('fs').readFileSync;
 const parse = require('ini').parse;
 const join = require('path').join;
-const log = require('./Logger')
+const log = require('../Logger')
 let obj;
 
-function reloadConf(cb) { // Reloading zeronet conf file
-    log("info", "spider", "Reloading configuration file of zeronet")
+function reloadConf() { // Reloading zeronet conf file
+    log("info", "zeronet", "Reloading configuration file of zeronet")
     obj = parse(readFileSync(join(process.env.ZeroNetPath, 'zeronet.conf'), 'utf-8'))
 }
 
