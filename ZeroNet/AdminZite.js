@@ -18,4 +18,11 @@ module.exports = class AdminZite extends Zite {
         for (let site of this.siteList)
             this.cmdp("siteUpdate", site.address).then(res => log("info", "spider", `${res}: ${site.address}`))
     }
+
+    addSites(siteAddrs) {
+        let count = siteAddrs.length
+        log("info", "zeronet", `Adding ${count} sites to zeronet`)
+        for (let addr of siteAddrs)
+            this.cmdp("siteAdd", addr)
+    }
 }

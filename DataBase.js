@@ -1,6 +1,31 @@
 const mongoose = require("mongoose")
+const ObjectId = mongoose.Schema.Types.ObjectId
 const log = require("./Logger")
 const events = require("events")
+
+let feedSchema = new mongoose.Schema({
+    itemType: String,
+    date_added: Number,
+    title: String,
+    body: String,
+    url: String,
+    site: {type: ObjectId, ref: "site"}
+})
+
+let feed = mongoose.model("feed", feedSchema)
+
+let opfileSchema = new mongoose.Schema({ // https://zeronet.io/docs/site_development/zeroframe_api_reference/#optionalfilelist
+    inner_path: String,
+    hash_id: Number,
+    size: Number,
+    peer: Number,
+    time_added: Number,
+    extra: {},
+    site: {type: ObjectId, ref: "site"}
+})
+
+let opfile = mongoose.model("opfile", opfileSchema)
+
 
 let siteSchema = new mongoose.Schema({
     basicInfo: {
@@ -22,48 +47,11 @@ let siteSchema = new mongoose.Schema({
     },
     feedsQueried: [{
         name: String,
-        result: [{
-            itemType: String,
-            date_added: Number,
-            title: String,
-            body: String,
-            url: String
-        }]
+        result: [{type: ObjectId, ref: "feed"}]
     }],
-    analyzedInfo: {
-        cert_signers: [String],
-        includesOfRoot: [String], // Included content jsons in root content.json
-        usedTechs: [{
-            itemType: String, // Frontend frameworks, zeronet apis etc.
-            value: String
-        }], // Site quality
-        siteFiles: [{ // files field in a site's root content.json
-            fileType: String,
-            count: Number
-        }],
-        userContentJson: {
-            permission_rules: {
-                "all": {
-                    files_allowed: [String],
-                    max_size: Number,
-                    max_size_optional: Number,
-                    signers: [String]
-                }
-            },
-            permissions_individual: [{
-                user: String,
-                rule: Object
-            }]
-        }
-    },
-    optionalFiles: [{ // https://zeronet.io/docs/site_development/zeroframe_api_reference/#optionalfilelist
-        inner_path: String,
-        hash_id: String,
-        size: Number,
-        peer: Number,
-        time_added: Number,
-        category: String // Originally the name of a feed query
-    }],
+    optionalFiles: [
+        {type: ObjectId, ref: "opfile"}
+    ],
     runtimeInfo: {
         lastCrawl: {
             siteInfo: {type: Date, default: Date.now},
@@ -80,7 +68,20 @@ let siteSchema = new mongoose.Schema({
             }
         },
         error: [] // Errors occurred while crawling
-    }
+    },
+    linksExtracted: {
+        links: [{
+            site: String, // Keep original text. Don't resolve domain here
+            path: String,
+            date: Date, // e.g. date_added of a feed
+            from: String // siteFiles/feedsQueried/optionalFilesInfo/basicInfo
+        }]
+    },
+    json: [{
+        json_id: Number,
+        directory: String,
+        cert_user_id: String
+    }]
 })
 
 siteSchema.methods.setSiteInfo = function (siteInfoObj) {
@@ -126,14 +127,29 @@ siteSchema.methods.setSiteInfo = function (siteInfoObj) {
     log("info", "spider", `Updated site info for ${this.basicInfo.address}`)
 }
 
-siteSchema.method.addFeeds = function (feeds) {
-    log("info", "spider", `Added ${feeds.length} feeds to ${this.basicInfo.address}`, feeds)
-    this.feedsQueried = this.feedsQueried.concat(feeds)
+siteSchema.methods.addFeeds = async function (feeds, name) {
+    let feedCategory = this.feedsQueried.find(f => f.name === name)
+    if (!feedCategory) {
+        feedCategory = {name, result: []}
+        this.feedsQueried.push(feedCategory)
+    }
+    for (let f of feeds) {
+        f._id = new mongoose.Types.ObjectId()
+        f.site = this._id
+        let feedObj = new feed(f)
+        feedCategory.result.push(f._id)
+        await feedObj.save()
+    }
 }
 
-siteSchema.method.addOptionalFiles = function (optionals) {
-    log("info", "spider", `Added ${optionals.length} optioanl files to ${this.basicInfo.address}`, optionals)
-    this.optionalFiles = this.optionalFiles.concat(optionals)
+siteSchema.methods.addOptionalFiles = async function (optionals) {
+    for (let o of optionals) {
+        o._id = new mongoose.Types.ObjectId()
+        o.site = this._id
+        let oObj = new opfile(o)
+        this.optionalFiles.push(oObj._id)
+        await oObj.save()
+    }
 }
 
 let siteModel = mongoose.model("site", siteSchema)
@@ -166,4 +182,15 @@ module.exports = {
     siteModel
 }
 
-
+// module.exports.connect()
+// event.on("connected", async () => {
+//     let siteId = new mongoose.Types.ObjectId()
+//     let feedId = new mongoose.Types.ObjectId()
+//     let feedObj = new feed({title: "234", _id: feedId})
+//     await feedObj.save()
+//     let site = new siteModel({address: "123123", _id: siteId})
+//     site.feedsQueried.push({name: "a", result: [feedId]})
+//     await site.save()
+//     let x = await siteModel.findOne({}).populate("feedsQueried.result").exec()
+//     console.log(x)
+// })

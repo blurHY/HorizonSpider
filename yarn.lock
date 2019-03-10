@@ -864,7 +864,12 @@ sparse-bitfield@^3.0.3:
   dependencies:
     memory-pager "^1.0.2"
 
-sqlite3@^4.0.6:
+sql-template-strings@^2.2.2:
+  version "2.2.2"
+  resolved "http://registry.npm.taobao.org/sql-template-strings/download/sql-template-strings-2.2.2.tgz#3f11508a25addfce217a3042a9d300c3193b96ff"
+  integrity sha1-PxFQiiWt384hejBCqdMAwxk7lv8=
+
+sqlite3@^4.0.0, sqlite3@^4.0.6:
   version "4.0.6"
   resolved "http://registry.npm.taobao.org/sqlite3/download/sqlite3-4.0.6.tgz#e587b583b5acc6cb38d4437dedb2572359c080ad"
   integrity sha1-5Ye1g7Wsxss41EN97bJXI1nAgK0=
@@ -872,6 +877,15 @@ sqlite3@^4.0.6:
     nan "~2.10.0"
     node-pre-gyp "^0.11.0"
     request "^2.87.0"
+
+sqlite@^3.0.2:
+  version "3.0.2"
+  resolved "http://registry.npm.taobao.org/sqlite/download/sqlite-3.0.2.tgz#5589e980a070b39e0b8810d723485285a87b9f2c"
+  integrity sha1-VYnpgKBws54LiBDXI0hShah7nyw=
+  dependencies:
+    sqlite3 "^4.0.0"
+  optionalDependencies:
+    sql-template-strings "^2.2.2"
 
 sshpk@^1.7.0:
   version "1.16.1"

@@ -34,55 +34,30 @@ async function updateFeeds(dbSchema, siteDB, siteObj) {
 async function pagingFeedQuery(query, siteDB, siteObj, name, count = 3000, start = 0) {
     let ori_query = query
     query = `select * from (${query}) limit ${count} offset ${start}` // Sqlite has powerful optimization, so we have do it like this.
-    siteDB.all(query, async (err, rows) => {
-            if (err || !(rows instanceof Array)) {
-                log("error", "spider", "An error occurred during a feed query", err)
-            } else if (rows.length > 0) {
-
-                let renamedRows = []
-                for (let row of rows) {
-                    renamedRows.push({
-                        itemType: row.type,
-                        date_added: row.date_added,
-                        title: row.title,
-                        body: row.body,
-                        url: row.url
-                    })
-                }
-
-                siteObj = await DataBase.getSite(siteObj.basicInfo.address) // Refresh model
-
-                if (!siteObj)
-                    return
-
-                let feedObj = false
-                let index = 0
-
-                for (let ele of siteObj.feedsQueried) {
-                    if (ele.name === name) {
-                        feedObj = ele
-                        break
-                    }
-                    index++
-                }
-
-                if (!feedObj)
-                    await DataBase.siteModel.update(
-                        {"basicInfo.address": siteObj.basicInfo.address},
-                        {$push: {feedsQueried: {name, result: renamedRows}}}
-                    )
-                else {
-                    await DataBase.siteModel.update(    // Add items to existing array
-                        {"basicInfo.address": siteObj.basicInfo.address},
-                        {$push: {[`feedsQueried.${index}.result`]: {$each: renamedRows}}}
-                    )
-                }
-
-                log("info", "spider", `Imported ${rows.length} feeds from ${siteObj.basicInfo.address}`)
-                await pagingFeedQuery(ori_query, siteDB, siteObj, name, count, start + count) // Query and store next page
-            }
+    let rows = await siteDB.all(query)
+    if (!(rows instanceof Array)) {
+        log("error", "spider", "An error occurred during a feed query", err)
+    } else if (rows.length > 0) {
+        let renamedRows = []
+        for (let row of rows) {
+            renamedRows.push({
+                itemType: row.type,
+                date_added: row.date_added,
+                title: row.title,
+                body: row.body,
+                url: row.url
+            })
         }
-    )
+
+        let refreshedSiteObj = await DataBase.getSite(siteObj.basicInfo.address) // Refresh model
+        if (refreshedSiteObj)
+            siteObj = refreshedSiteObj
+
+        await siteObj.addFeeds(renamedRows, name)
+
+        log("info", "spider", `Imported ${rows.length} feeds from ${siteObj.basicInfo.address}`)
+        await pagingFeedQuery(ori_query, siteDB, siteObj, name, count, start + count) // Query and store next page
+    }
 }
 
 module.exports = {crawl: updateFeeds}

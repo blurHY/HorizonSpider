@@ -7,6 +7,7 @@ const DataBase = require("./DataBase")
 const SiteDB = require("./ZeroNet/SiteDataBase")
 const SiteMeta = require("./ZeroNet/SiteMeta")
 const PromisePool = require("es6-promise-pool")
+const extractLinks = require("./Crawlers/LinksExtractor").extractLinks
 
 let modules = require("require-dir-all")("Crawlers")
 
@@ -19,22 +20,31 @@ async function crawlASite(site) {
         log("info", "spider", `Started crawling site ${site.address}`)
         let dbSchema = SiteMeta.getDBJson(site.address)
         let siteObj = await DataBase.getSite(site.address)
-        let siteDB = SiteDB.getSiteDataBase(site.address)
+        let siteDB = await SiteDB.getSiteDataBase(site.address)
 
         if (!siteObj) { // Site not found, create one
             log("info", "spider", `Discovered a brand new site ${site.address}`)
-            siteObj = DataBase.genNewSite(site)
+            siteObj = DataBase.genNewSite(site) // Init with siteInfo
         }
 
         function* promiseGenerator() {
             for (let crawler in modules) {
                 if (modules[crawler] && modules[crawler].crawl)
-                    yield (async () => await modules[crawler].crawl(dbSchema, siteDB, siteObj))()
+                    yield (async () =>
+                            await modules[crawler].crawl(dbSchema, siteDB, siteObj)
+                    )()
             }
         }
 
-        let pool = new PromisePool(promiseGenerator, parseInt(process.env.Concurrency) || 3)
+        let pool = new PromisePool(promiseGenerator, parseInt(process.env.Concurrency) || 3) // Start crawlers in parallel
         await pool.start()
+
+        await siteObj.save()
+        siteObj = await DataBase.getSite(site.address) // Refresh from db
+        let links = await extractLinks(siteObj, siteDB)
+
+        if (links && links.length > 0)
+            admin.addSites(links)
 
         await siteObj.save()
         log("info", "spider", `Saved site ${site.address}`)
