@@ -10,7 +10,7 @@ async function updateOptionalFiles(dbSchema, siteDB, siteObj) {
     let count = 0
     try {
         count = await siteDB.each("select count(*) from file limit 1")
-    } catch {
+    } catch (e) {
         log("info", "spider", "No additional data for optional files")
     }
 
@@ -33,8 +33,12 @@ async function pagingQuery(siteDB, siteObj, addiCount, count = 3000, start = 0) 
                 time_added: row.time_added,
                 extra: {} // That field name is from ZeroUp
             }
-            if (addiCount)
-                obj.extra = await siteDB.each(`select * from file where file_name=? limit 1`, basename(row.inner_path))
+            try {
+                if (addiCount)
+                    obj.extra = await siteDB.each(`select * from file where file_name=? limit 1`, basename(row.inner_path))
+            } catch {
+
+            }
             rowsToAdd.push(obj)
         }
     }

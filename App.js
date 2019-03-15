@@ -7,7 +7,7 @@ const DataBase = require("./DataBase")
 const SiteDB = require("./ZeroNet/SiteDataBase")
 const SiteMeta = require("./ZeroNet/SiteMeta")
 const PromisePool = require("es6-promise-pool")
-const extractLinks = require("./Crawlers/LinksExtractor").extractLinks
+const LinksExtractor = require("./Crawlers/LinksExtractor")
 
 let modules = require("require-dir-all")("Crawlers")
 
@@ -40,17 +40,25 @@ async function crawlASite(site) {
         await pool.start()
 
         await siteObj.save()
-        siteObj = await DataBase.getSite(site.address) // Refresh from db
-        let links = await extractLinks(siteObj, siteDB)
-
-        if (links && links.length > 0)
-            admin.addSites(links)
-
-        await siteObj.save()
+        // siteObj = await DataBase.getSite(site.address) // Refresh from db
+        // let links = await extractLinks(siteObj, siteDB)
+        //
+        // if (links && links.length > 0)
+        //     for (let link of links)
+        //         admin.addSites(link.site)
+        //
+        // siteObj.linksExtracted = links
+        // await siteObj.save()
         log("info", "spider", `Saved site ${site.address}`)
     } catch (e) {
         log("error", "spider", `Unknown error in ${site.address}`, e)
     }
+}
+
+async function extractLinksAndAddSite(){
+    await LinksExtractor.extractLinksForNewFeeds()
+    // TODO: use db.collection.distinct to get sites, and add them
+    // TODO: domain resolver
 }
 
 async function forEachSite() {
@@ -72,6 +80,7 @@ admin.Event.on("wsOpen", async () => {
         while (true) {
             await admin.reloadSiteList()
             await forEachSite()
+            await extractLinksAndAddSite()
             log("info", "spider", `Sleeping for next loop`)
             if (exiting)
                 process.exit()

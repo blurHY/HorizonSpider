@@ -2,7 +2,7 @@
 
 ![](https://img.shields.io/badge/NodeJs-Async-brightgreen.svg) ![](https://img.shields.io/badge/DataBase-NoSQL-blue.svg) ![](https://img.shields.io/badge/License-GPL-orange.svg)
 
-HorizonPanel is included in HorizonSpider now.
+HorizonPanel is included in HorizonSpider.
 
 Actually, this is the third version. And it's not done yet
 
@@ -26,8 +26,15 @@ The crawler continues to traversal `siteList` and crawls newly downloaded sites 
 
 Also, it will store data in mongodb as cache for faster access.
 
+## Usage
+
+```bash
+yarn
+yarn crawl / serve
+```
+
 ![](./Horizon.svg)
 
-## Future plans
+## Further plans
 
 Write zeronet-js implementation

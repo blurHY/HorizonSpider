@@ -9,7 +9,8 @@ let feedSchema = new mongoose.Schema({
     title: String,
     body: String,
     url: String,
-    site: {type: ObjectId, ref: "site"}
+    site: {type: ObjectId, ref: "site"},
+    linksExtracted: Boolean
 })
 
 let feed = mongoose.model("feed", feedSchema)
@@ -26,6 +27,19 @@ let opfileSchema = new mongoose.Schema({ // https://zeronet.io/docs/site_develop
 
 let opfile = mongoose.model("opfile", opfileSchema)
 
+let linkSchema = new mongoose.Schema({
+    site: String,
+    path: String,
+    date: Date,
+    fromObj: {type: ObjectId, refPath: "fromType"},
+    fromType: {
+        type: String,
+        required: true,
+        enum: ["feed", "site", "opfile"]
+    }
+})
+
+let link = mongoose.model("link", linkSchema)
 
 let siteSchema = new mongoose.Schema({
     basicInfo: {
@@ -68,14 +82,6 @@ let siteSchema = new mongoose.Schema({
             }
         },
         error: [] // Errors occurred while crawling
-    },
-    linksExtracted: {
-        links: [{
-            site: String, // Keep original text. Don't resolve domain here
-            path: String,
-            date: Date, // e.g. date_added of a feed
-            from: String // siteFiles/feedsQueried/optionalFilesInfo/basicInfo
-        }]
     },
     json: [{
         json_id: Number,
@@ -179,7 +185,11 @@ module.exports = {
         })
     },
     event,
-    siteModel
+    siteModel,
+    async addLink(obj) {
+        await (new link(obj)).save()
+    },
+    feed, opfile
 }
 
 // module.exports.connect()
@@ -191,6 +201,7 @@ module.exports = {
 //     let site = new siteModel({address: "123123", _id: siteId})
 //     site.feedsQueried.push({name: "a", result: [feedId]})
 //     await site.save()
+
 //     let x = await siteModel.findOne({}).populate("feedsQueried.result").exec()
 //     console.log(x)
 // })
