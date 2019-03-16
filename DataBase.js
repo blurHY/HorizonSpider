@@ -10,7 +10,7 @@ let feedSchema = new mongoose.Schema({
     body: String,
     url: String,
     site: {type: ObjectId, ref: "site"},
-    linksExtracted: Boolean
+    linksExtracted: {type: Boolean, default: false}
 })
 
 let feed = mongoose.model("feed", feedSchema)
@@ -34,9 +34,9 @@ let linkSchema = new mongoose.Schema({
     fromObj: {type: ObjectId, refPath: "fromType"},
     fromType: {
         type: String,
-        required: true,
         enum: ["feed", "site", "opfile"]
-    }
+    },
+    added: Boolean // Whether added to zeronet pending sites list
 })
 
 let link = mongoose.model("link", linkSchema)
@@ -189,7 +189,7 @@ module.exports = {
     async addLink(obj) {
         await (new link(obj)).save()
     },
-    feed, opfile
+    feed, opfile, link
 }
 
 // module.exports.connect()
@@ -204,4 +204,12 @@ module.exports = {
 
 //     let x = await siteModel.findOne({}).populate("feedsQueried.result").exec()
 //     console.log(x)
+// })
+
+// event.on("connected", async () => {
+//     // for (let x = 0; x < 100; x++) {
+//     //     //     await (new link({site: x, added: Boolean(x % 2)})).save()
+//     //     // }
+//     let arr = await module.exports.link.find({added: false}).limit(10).skip(10).select("site").exec()
+//     console.log(arr)
 // })

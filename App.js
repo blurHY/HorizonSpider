@@ -8,6 +8,7 @@ const SiteDB = require("./ZeroNet/SiteDataBase")
 const SiteMeta = require("./ZeroNet/SiteMeta")
 const PromisePool = require("es6-promise-pool")
 const LinksExtractor = require("./Crawlers/LinksExtractor")
+const DomainResolver = require("./ZeroNet/DomainResolver")
 
 let modules = require("require-dir-all")("Crawlers")
 
@@ -40,25 +41,33 @@ async function crawlASite(site) {
         await pool.start()
 
         await siteObj.save()
-        // siteObj = await DataBase.getSite(site.address) // Refresh from db
-        // let links = await extractLinks(siteObj, siteDB)
-        //
-        // if (links && links.length > 0)
-        //     for (let link of links)
-        //         admin.addSites(link.site)
-        //
-        // siteObj.linksExtracted = links
-        // await siteObj.save()
         log("info", "spider", `Saved site ${site.address}`)
     } catch (e) {
         log("error", "spider", `Unknown error in ${site.address}`, e)
     }
 }
 
-async function extractLinksAndAddSite(){
+async function extractSitesAndAdd() {
     await LinksExtractor.extractLinksForNewFeeds()
-    // TODO: use db.collection.distinct to get sites, and add them
-    // TODO: domain resolver
+
+    let perPageCount = 500
+    let skip = 0
+
+    while (true) {
+        let arr = await DataBase.link.find({added: {$ne: true}}).limit(perPageCount).skip(skip).sort("site").select("site").exec()
+        if (arr.length === 0)
+            break
+        for (let link of arr) {
+            let addr = link.site
+            try {
+                addr = DomainResolver.resolveDomain(addr)
+            } catch {
+            }
+            if (!admin.isSiteExisted(addr))
+                admin.addSites([addr])
+        }
+        skip += perPageCount
+    }
 }
 
 async function forEachSite() {
@@ -80,7 +89,8 @@ admin.Event.on("wsOpen", async () => {
         while (true) {
             await admin.reloadSiteList()
             await forEachSite()
-            await extractLinksAndAddSite()
+            await extractSitesAndAdd()
+
             log("info", "spider", `Sleeping for next loop`)
             if (exiting)
                 process.exit()
