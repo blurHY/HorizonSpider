@@ -7,6 +7,7 @@ const log = require("./Logger")
 const DataBase = require("./DataBase")
 const SiteDB = require("./ZeroNet/SiteDataBase")
 const SiteMeta = require("./ZeroNet/SiteMeta")
+const SitesJson = require("./ZeroNet/SitesJson")
 const PromisePool = require("es6-promise-pool")
 const DomainResolver = require("./ZeroNet/DomainResolver")
 
@@ -18,6 +19,7 @@ let exiting = false
 async function waitAndGetAdmin() {
     while (true) {
         try {
+            SitesJson.reloadJson()
             admin = new Admin()
         } catch (e) {
             log("error", "zeronet", "Cannot connect to admin site: Possibly ZeroHello is not downloaded", e)
