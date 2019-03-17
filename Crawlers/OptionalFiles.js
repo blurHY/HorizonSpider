@@ -1,6 +1,5 @@
 const ContentDB = require("../ZeroNet/ContentDB")
 const basename = require("path").basename
-const DataBase = require("../DataBase")
 const log = require("../Logger")
 
 async function updateOptionalFiles(dbSchema, siteDB, siteObj) {
@@ -14,14 +13,26 @@ async function updateOptionalFiles(dbSchema, siteDB, siteObj) {
         log("info", "spider", "No additional data for optional files")
     }
 
-    await pagingQuery(siteDB, siteObj, count, 3000, 0)
+    let maxDate = siteObj.runtimeInfo.lastCrawl.optional.itemDate
+    if ((siteObj.runtimeInfo.lastCrawl.optional.full > new Date() - process.env.optionalFull_Period) && maxDate > 0) {
+        if (siteObj.runtimeInfo.lastCrawl.optional.check < new Date() - process.env.optionalCheck_Peroid) { // New feeds only
+            siteObj.runtimeInfo.lastCrawl.optional.check = new Date()
+            siteObj.runtimeInfo.lastCrawl.optional.itemDate = await ContentDB.getLastItemDate(siteObj.basicInfo.address)
+        } else
+            log("info", "spider", `Stored optional files are up to date ${siteObj.basicInfo.address}`)
+    } else {
+        siteObj.optionalFiles.splice(0) // Clear old data and re-query all optionalFiles, but leave records
+        siteObj.runtimeInfo.lastCrawl.optional.full = new Date()
+    }
+
+    await pagingQuery(siteDB, siteObj, count, 3000, 0, maxDate > 0 ? maxDate : null)
 }
 
 
-async function pagingQuery(siteDB, siteObj, addiCount, count = 3000, start = 0) {
+async function pagingQuery(siteDB, siteObj, addiCount, count = 3000, start = 0, dateAfter = null) {
     let rowsToAdd = []
     for (let offset = start; offset < start + count; offset += count) {
-        let rows = await ContentDB.getOptionalFiles(siteObj.basicInfo.address, count, offset)
+        let rows = await ContentDB.getOptionalFiles(siteObj.basicInfo.address, count, offset, dateAfter)
         if (!rows || rows.length === 0)
             return
         for (let row of rows) {

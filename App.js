@@ -7,7 +7,6 @@ const DataBase = require("./DataBase")
 const SiteDB = require("./ZeroNet/SiteDataBase")
 const SiteMeta = require("./ZeroNet/SiteMeta")
 const PromisePool = require("es6-promise-pool")
-const LinksExtractor = require("./Crawlers/LinksExtractor")
 const DomainResolver = require("./ZeroNet/DomainResolver")
 
 let modules = require("require-dir-all")("Crawlers")
@@ -15,6 +14,13 @@ let modules = require("require-dir-all")("Crawlers")
 let admin = new Admin()
 
 let exiting = false
+
+function bootstrapCrawling() {
+    admin.addSites([
+        "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D",
+        "1Name2NXVi1RDPDgf5617UoW7xA6YrhM9F"
+    ])
+}
 
 async function crawlASite(site) {
     try {
@@ -48,8 +54,7 @@ async function crawlASite(site) {
 }
 
 async function extractSitesAndAdd() {
-    await LinksExtractor.extractLinksForNewFeeds()
-
+    // await LinksExtractor.extractLinksForNewFeeds()
     let perPageCount = 500
     let skip = 0
 
@@ -85,6 +90,7 @@ async function forEachSite() {
 
 admin.Event.on("wsOpen", async () => {
     DataBase.connect()
+    bootstrapCrawling()
     DataBase.event.on("connected", async () => { // Main loop
         while (true) {
             await admin.reloadSiteList()

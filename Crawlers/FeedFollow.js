@@ -9,10 +9,11 @@ async function updateFeeds(dbSchema, siteDB, siteObj) {
 
     let query, func = s => s
 
-    let maxDate = Math.max.apply(Math, siteObj.feedsQueried.map(o => o.result.date_added))
-    if (!(siteObj.runtimeInfo.lastCrawl.feeds.full < new Date() - process.env.feedFull_Period) && maxDate > 0) {
+    let maxDate = siteObj.runtimeInfo.lastCrawl.feeds.itemDate
+    if ((siteObj.runtimeInfo.lastCrawl.feeds.full > new Date() - process.env.feedFull_Period) && maxDate > 0) {
         if (siteObj.runtimeInfo.lastCrawl.feeds.check < new Date() - process.env.feedCheck_Peroid) { // New feeds only
             siteObj.runtimeInfo.lastCrawl.feeds.check = new Date()
+            siteObj.runtimeInfo.lastCrawl.feeds.itemDate = await siteDB.each(`select * from (${dbSchema.feeds[name]}) order by date_added desc limit 1`)
             func = s => `SELECT * FROM (${s}) where date_added > ${maxDate}` // Not needed to add the outer where clause to inner, because of the sqlite optimization
         } else
             log("info", "spider", `Stored feeds are up to date ${siteObj.basicInfo.address}`)
@@ -33,7 +34,7 @@ async function updateFeeds(dbSchema, siteDB, siteObj) {
 
 async function pagingFeedQuery(query, siteDB, siteObj, name, count = 3000, start = 0) {
     let ori_query = query
-    query = `select * from (${query}) limit ${count} offset ${start}` // Sqlite has powerful optimization, so we have do it like this.
+    query = `select * from (${query}) order by date_added limit ${count} offset ${start}` // Sqlite has powerful optimization, so we have do it like this.
     let rows = await siteDB.all(query)
     if (!(rows instanceof Array)) {
         log("error", "spider", "An error occurred during a feed query", err)

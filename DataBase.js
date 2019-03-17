@@ -71,14 +71,13 @@ let siteSchema = new mongoose.Schema({
             siteInfo: {type: Date, default: Date.now},
             feeds: {
                 check: Date, // Only compare last row and add new stuff
-                full: Date // Check old rows
-            },
-            analyze: {
-                full: Date
+                full: Date, // Check old rows
+                itemDate: Number // Date of latest item checked
             },
             optional: {
                 check: Date,
-                full: Date
+                full: Date,
+                itemDate: Number
             }
         },
         error: [] // Errors occurred while crawling

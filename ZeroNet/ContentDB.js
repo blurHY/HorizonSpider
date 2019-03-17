@@ -1,6 +1,5 @@
 const sqlite = require("sqlite")
 const path = require("path")
-const SQL = require("sql-template-strings")
 
 let contentDB = null
 
@@ -11,9 +10,14 @@ async function getContentDB() {
         return contentDB = await sqlite.open(path.join(process.env.ZeronetDataPath, "content.db"))
 }
 
-async function getOptionalFiles(site_addr, count, start) {
-    let db = await getContentDB()
-    return await db.all(SQL`select * from file_optional where site_id=(select site_id from site where address = ${site_addr})  limit ${count} offset ${start}`)
+async function getOptionalFiles(site_addr, count, start, dateAfter = null) {
+    await getContentDB()
+    return await contentDB.all(`select * from file_optional where site_id=(select site_id from site where address = ?) ${dateAfter ? `and time_added > ${dateAfter}` : ""} order by time_added limit ? offset ?`, site_addr, count, start)
 }
 
-module.exports = {getContentDB, getOptionalFiles}
+async function getLastItemDate(site_addr) {
+    await getContentDB()
+    return await parseInt(contentDB.each(`select * from file_optional where site_id=(select site_id from site where address = ?) order by time_added desc limit 1`), site_addr)
+}
+
+module.exports = {getContentDB, getOptionalFiles, getLastItemDate}
