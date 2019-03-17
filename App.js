@@ -55,6 +55,7 @@ function bootstrapCrawling() {
 async function crawlASite(site) {
     try {
         log("info", "spider", `Started crawling site ${site.address}`)
+        
         let dbSchema = SiteMeta.getDBJson(site.address)
         let siteObj = await DataBase.getSite(site.address)
         let siteDB = await SiteDB.getSiteDataBase(site.address)
@@ -64,15 +65,19 @@ async function crawlASite(site) {
             siteObj = DataBase.genNewSite(site) // Init with siteInfo
         }
 
-        if (new Date() - siteObj.runtimeInfo.lastCrawl.siteInfo > process.env.siteInfoUpdateInterval || 3600000)
+        if (new Date() - siteObj.runtimeInfo.lastCrawl.siteInfo > process.env.siteInfoUpdateInterval || 3600000) {
+            log("info", "spider", `Updated siteInfo for ${site.address}`)
             siteObj.setSiteInfo(site)
+        }
 
         function* promiseGenerator() {
             for (let crawler in modules) {
                 if (modules[crawler] && modules[crawler].crawl)
-                    yield (async () =>
-                            await modules[crawler].crawl(dbSchema, siteDB, siteObj)
-                    )()
+                    log("info", "spider", `Started crawler ${crawler} for ${site.address}`)
+                    yield (async () => {
+                        await modules[crawler].crawl(dbSchema, siteDB, siteObj)
+                        log("info", "spider", `Finished crawler ${crawler} for ${site.address}`)
+                    })()
             }
         }
 
