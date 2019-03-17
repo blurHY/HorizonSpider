@@ -1,6 +1,6 @@
 const path = require("path")
 const fs = require("fs")
-const log = require("./Logger")
+const log = require("../Logger")
 
 let domainNameJsonPath = path.join(process.env.ZeronetDataPath, "1Name2NXVi1RDPDgf5617UoW7xA6YrhM9F/data/names.json")
 let modified = 0
