@@ -14,7 +14,7 @@ let consoleColor = {
 // type: zeronet spider panel
 function log(level, type, msg, obj) {
     let [levelC, typeC] = [level, type].map(capitalize)
-    console.log(`${chalk[consoleColor[level]](levelC)} - ${new Date()} - ${chalk[consoleColor.type](typeC)}: ${msg} ${(typeof obj === "object") ? JSON.stringify(obj) : (obj ? obj : "")}`)
+    console.log(`${chalk[consoleColor[level]](levelC)} - ${new Date()} - ${chalk[consoleColor.type](typeC)}`, obj)
     // TODO: Ws send to panel
 }
 
