@@ -40,14 +40,10 @@ async function waitAndGetAdmin() {
 
 function bootstrapCrawling() {
     log("info", "spider", "Adding bootstrap sites")
-    try {
-        admin.addSites([
-            "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D",
-            "1Name2NXVi1RDPDgf5617UoW7xA6YrhM9F"
-        ])
-    } catch {
-
-    }
+    admin.addSites([
+        "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D",
+        "1Name2NXVi1RDPDgf5617UoW7xA6YrhM9F"
+    ])
     DomainResolver.loadDomains()
     for (let domain in DomainResolver.domainMapObj)
         admin.addSites([DomainResolver.domainMapObj[domain]])

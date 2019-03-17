@@ -28,7 +28,8 @@ module.exports = class AdminZite extends Zite {
         else
             log("info", "zeronet", `Adding new site ${siteAddrs[0]} to zeronet`)
         for (let addr of siteAddrs)
-            this.cmdp("siteAdd", addr)
+            this.cmdp("siteAdd", addr).catch((e) => {
+            })
     }
 
     isSiteExisted(siteAddr) {
