@@ -21,4 +21,4 @@ function resolveDomain(address) {
     return domainMapObj[address]
 }
 
-module.exports = {resolveDomain}
+module.exports = {resolveDomain, domainMapObj, loadDomains}
