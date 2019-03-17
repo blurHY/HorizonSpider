@@ -9,7 +9,6 @@ let zeroNameContentJson = path.join(process.env.ZeronetDataPath, "1Name2NXVi1RDP
 global.domainMapObj = null
 
 function loadDomains(force = false) {
-    log("info", "zeronet", "Reloading domain map")
     zeroNameContentJson = JSON.parse(fs.readFileSync(zeroNameContentJson, "utf8"))
     if (zeroNameContentJson.modified > modified || !global.domainMapObj || force) {
         global.domainMapObj = JSON.parse(fs.readFileSync(domainNameJsonPath, "utf8"))

@@ -90,10 +90,12 @@ async function extractSitesAndAdd() {
     // await LinksExtractor.extractLinksForNewFeeds()
     let perPageCount = 500
     let skip = 0
+    let arr
 
     while (true) {
-        let arr = await DataBase.link.find({added: {$ne: true}}).limit(perPageCount).skip(skip).sort("site").select("site").exec()
-        if (arr.length === 0)
+        arr = await DataBase.link.find({added: {$ne: true}}).limit(perPageCount).skip(skip).sort("site").select("site").exec()
+        skip += perPageCount
+        if (!arr || arr.length === 0)
             break
         for (let link of arr) {
             let addr = link.site
@@ -103,8 +105,9 @@ async function extractSitesAndAdd() {
             }
             if (!admin.isSiteExisted(addr))
                 admin.addSites([addr])
+            link.added = true
+            await link.save()
         }
-        skip += perPageCount
     }
 }
 
@@ -129,11 +132,10 @@ waitAndGetAdmin().then(() => {
             while (true) {
                 await admin.reloadSiteList()
                 await forEachSite()
-                await extractSitesAndAdd()
-
-                log("info", "spider", `Sleeping for next loop`)
                 if (exiting)
                     process.exit()
+                await extractSitesAndAdd()
+                log("info", "spider", `Sleeping for next loop`)
                 await delay(process.env.mainLoopInterval)
             }
         })
