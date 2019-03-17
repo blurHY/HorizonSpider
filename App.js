@@ -29,7 +29,7 @@ async function waitAndGetAdmin() {
                 url: process.env.ZeroNetUrl || "http://127.0.0.1:43110",
                 headers: {"Accept": "text/html"}
             }, (err, res, body) => {
-                log("info", "zeronet", "Sent request to ZeroHello", err || body)
+                log(err ? "error" : "info", "zeronet", "Sent request to ZeroHello", err)
             })
             await delay(process.env.mainLoopInterval)
         }
