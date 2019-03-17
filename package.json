@@ -20,7 +20,7 @@
     "websocket": "^1.0.28"
   },
   "scripts": {
-    "crawl": "node App.js | rtail --id Horizon --host 127.0.0.1 --port 8080",
+    "crawl": "node App.js",
     "serve": "node Server.js"
   }
 }
