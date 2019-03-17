@@ -64,6 +64,9 @@ async function crawlASite(site) {
             siteObj = DataBase.genNewSite(site) // Init with siteInfo
         }
 
+        if (new Date() - siteObj.runtimeInfo.lastCrawl.siteInfo > process.env.siteInfoUpdateInterval || 3600000)
+            siteObj.setSiteInfo(site)
+
         function* promiseGenerator() {
             for (let crawler in modules) {
                 if (modules[crawler] && modules[crawler].crawl)
