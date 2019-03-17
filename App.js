@@ -9,6 +9,7 @@ const SiteDB = require("./ZeroNet/SiteDataBase")
 const SiteMeta = require("./ZeroNet/SiteMeta")
 const SitesJson = require("./ZeroNet/SitesJson")
 const PromisePool = require("es6-promise-pool")
+const SettingsLoader = require("./ZeroNet/SettingsLoader")
 const DomainResolver = require("./ZeroNet/DomainResolver")
 
 let modules = require("require-dir-all")("Crawlers")
@@ -28,7 +29,7 @@ async function waitAndGetAdmin() {
             break
         else {
             request({
-                url: process.env.ZeroNetUrl || "http://127.0.0.1:43110",
+                url: `http://${SettingsLoader.ZeroNetHost}`,
                 headers: {"Accept": "text/html"}
             }, (err, res, body) => {
                 log(err ? "error" : "info", "zeronet", "Sent request to ZeroHello", err)
@@ -47,7 +48,7 @@ function bootstrapCrawling() {
     DomainResolver.loadDomains()
     log("info", "zeronet", `Adding ${Object.keys(global.domainMapObj).length} sites from ZeroName`)
     for (let domain in global.domainMapObj)
-        if (domain)
+        if (global.domainMapObj[domain])
             admin.addSites([global.domainMapObj[domain]])
 }
 
