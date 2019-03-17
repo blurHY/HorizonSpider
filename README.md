@@ -35,6 +35,22 @@ yarn crawl / serve
 
 ![](./Horizon.svg)
 
+## Config
+
+Create `.env` file and add configs as follows:
+
+```
+ZeroNetPath=D:/ZeroNet
+ZeronetDataPath=D:/ZeroNet/Data
+feedFull_Period=7200000 
+feedCheck_Peroid=1800000
+optionalFull_Period=7200000
+optionalCheck_Peroid=1800000
+mainLoopInterval=60000
+Concurrency=1
+ZeroNetUrl=http://127.0.0.1:43110
+```
+
 ## Further plans
 
 Write zeronet-js implementation
