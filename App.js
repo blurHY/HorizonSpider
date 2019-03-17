@@ -39,6 +39,7 @@ async function waitAndGetAdmin() {
 }
 
 function bootstrapCrawling() {
+    log("info","spider","Adding bootstrap sites")
     admin.addSites([
         "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D",
         "1Name2NXVi1RDPDgf5617UoW7xA6YrhM9F"
