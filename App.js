@@ -45,6 +45,7 @@ function bootstrapCrawling() {
         "1Name2NXVi1RDPDgf5617UoW7xA6YrhM9F"
     ])
     DomainResolver.loadDomains()
+    log("info","zeronet",`Adding ${Object.keys(DomainResolver.domainMapObj).length} sites from ZeroName`)
     for (let domain in DomainResolver.domainMapObj)
         admin.addSites([DomainResolver.domainMapObj[domain]])
 }
