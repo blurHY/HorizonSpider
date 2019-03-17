@@ -52,7 +52,7 @@ module.exports = class ZeroWs {
     }
 
     cmd(cmd, params = {}, cb = null) { // params can b both obj or array
-        log("info", "zeronet", `Cmd: ${cmd}`, params)
+        // log("info", "zeronet", `Cmd: ${cmd}`, params)
         this.send({
             cmd,
             params

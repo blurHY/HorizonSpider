@@ -22,6 +22,7 @@ async function waitAndGetAdmin() {
         try {
             SitesJson.reloadJson()
             admin = new Admin()
+            log("info","zeronet","Connected to admin site")
         } catch (e) {
             log("error", "zeronet", "Cannot connect to admin site: Possibly ZeroHello is not downloaded", e)
         }
@@ -55,7 +56,7 @@ function bootstrapCrawling() {
 async function crawlASite(site) {
     try {
         log("info", "spider", `Started crawling site ${site.address}`)
-        
+
         let dbSchema = SiteMeta.getDBJson(site.address)
         let siteObj = await DataBase.getSite(site.address)
         let siteDB = await SiteDB.getSiteDataBase(site.address)
