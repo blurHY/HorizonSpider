@@ -11,7 +11,7 @@ let domainMapObj = null
 function loadDomains(force = false) {
     log("info", "zeronet", "Reloading domain map")
     zeroNameContentJson = JSON.parse(fs.readFileSync(zeroNameContentJson, "utf8"))
-    if (zeroNameContentJson.modified > modified || force)
+    if (zeroNameContentJson.modified > modified || !domainMapObj || force)
         domainMapObj = JSON.parse(fs.readFileSync(domainNameJsonPath, "utf8"))
     modified = zeroNameContentJson.modified
 }
