@@ -45,9 +45,10 @@ function bootstrapCrawling() {
         "1Name2NXVi1RDPDgf5617UoW7xA6YrhM9F"
     ])
     DomainResolver.loadDomains()
-    log("info","zeronet",`Adding ${Object.keys(global.domainMapObj).length} sites from ZeroName`)
+    log("info", "zeronet", `Adding ${Object.keys(global.domainMapObj).length} sites from ZeroName`)
     for (let domain in global.domainMapObj)
-        admin.addSites([global.domainMapObj[domain]])
+        if (domain)
+            admin.addSites([global.domainMapObj[domain]])
 }
 
 async function crawlASite(site) {
