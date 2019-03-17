@@ -5,6 +5,9 @@ const log = require("../Logger")
 
 module.exports = class ZeroWs {
     constructor(wrapper_key, zeroNetHost = "localhost:43110", secureWs = false) {
+        if (!wrapper_key) {
+            throw "No wrapper_key"
+        }
         this.Event = new EventEmitter()
         this.ws = new W3CWebSocket(`ws${secureWs ? "s" : ""}://${zeroNetHost}/Websocket?wrapper_key=${wrapper_key}`)
 

@@ -1,5 +1,6 @@
 require("dotenv").config()
 
+const request = require("request")
 const Admin = require("./ZeroNet/AdminZite")
 const delay = require("delay")
 const log = require("./Logger")
@@ -11,9 +12,29 @@ const DomainResolver = require("./ZeroNet/DomainResolver")
 
 let modules = require("require-dir-all")("Crawlers")
 
-let admin = new Admin()
-
+let admin = null
 let exiting = false
+
+async function waitAndGetAdmin() {
+    while (true) {
+        try {
+            admin = new Admin()
+        } catch (e) {
+            log("error", "zeronet", "Cannot connect to admin site: Possibly ZeroHello is not downloaded", e)
+        }
+        if (admin.connected)
+            break
+        else {
+            request({
+                url: process.env.ZeroNetUrl || "http://127.0.0.1:43110",
+                headers: {"Accept": "text/html"}
+            }, (err, res, body) => {
+                log("info", "zeronet", "Sent request to ZeroHello", err || body)
+            })
+            await delay(process.env.mainLoopInterval)
+        }
+    }
+}
 
 function bootstrapCrawling() {
     admin.addSites([
@@ -88,20 +109,22 @@ async function forEachSite() {
     await pool.start()
 }
 
-admin.Event.on("wsOpen", async () => {
-    DataBase.connect()
-    bootstrapCrawling()
-    DataBase.event.on("connected", async () => { // Main loop
-        while (true) {
-            await admin.reloadSiteList()
-            await forEachSite()
-            await extractSitesAndAdd()
+waitAndGetAdmin().then(() => {
+    admin.Event.on("wsOpen", async () => {
+        DataBase.connect()
+        bootstrapCrawling()
+        DataBase.event.on("connected", async () => { // Main loop
+            while (true) {
+                await admin.reloadSiteList()
+                await forEachSite()
+                await extractSitesAndAdd()
 
-            log("info", "spider", `Sleeping for next loop`)
-            if (exiting)
-                process.exit()
-            await delay(process.env.mainLoopInterval)
-        }
+                log("info", "spider", `Sleeping for next loop`)
+                if (exiting)
+                    process.exit()
+                await delay(process.env.mainLoopInterval)
+            }
+        })
     })
 })
 

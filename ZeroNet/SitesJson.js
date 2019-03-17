@@ -15,7 +15,7 @@ module.exports = {
     getWrapperKey(site_addr) {
         if (!obj)
             module.exports.reloadJson()
-        return obj ? obj[site_addr].wrapper_key : null
+        return obj && obj[site_addr] ? obj[site_addr].wrapper_key : null
     },
     obj
 }
