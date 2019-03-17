@@ -22,7 +22,7 @@ async function waitAndGetAdmin() {
         } catch (e) {
             log("error", "zeronet", "Cannot connect to admin site: Possibly ZeroHello is not downloaded", e)
         }
-        if (admin.connected)
+        if (admin && admin.connected)
             break
         else {
             request({
