@@ -34,11 +34,8 @@ async function waitAndGetAdmin() {
                     headers: {"Accept": "text/html"},
                     followRedirect: false
                 })
-            } catch (e) {
-                if (e.statusCode === 301)
-                    break
-                signale.error("An error occurred while sending a request to ZeroHello", e)
-                signale.info("Wait a while and send a request again")
+            } catch {
+                signale.info("Sent request to trigger ZeroHello downloading.")
                 await delay(process.env.mainLoopInterval)
             }
         } else

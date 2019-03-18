@@ -24,7 +24,7 @@ module.exports = class ZeroWs {
             if (!this.reconnecting) {
                 this.reconnecting = true
                 setTimeout(() => {
-                    this.createWebSocket(zeroNetHost, secureWs)
+                    this.createWebSocket(wrapper_key, zeroNetHost, secureWs)
                 }, 3000)
             }
         }
@@ -34,7 +34,7 @@ module.exports = class ZeroWs {
             if (!this.reconnecting) {
                 this.reconnecting = true
                 setTimeout(() => {
-                    this.createWebSocket(zeroNetHost, secureWs)
+                    this.createWebSocket(wrapper_key, zeroNetHost, secureWs)
                 }, 3000)
             }
             this.Event.emit("wsClose")
