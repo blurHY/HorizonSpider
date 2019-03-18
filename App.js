@@ -4,7 +4,7 @@ const rp = require("request-promise")
 const fs = require("fs")
 const Admin = require("./ZeroNet/AdminZite")
 const delay = require("delay")
-const signale = require('signale');
+const signale = require("signale")
 const DataBase = require("./DataBase")
 const SiteDB = require("./ZeroNet/SiteDataBase")
 const SiteMeta = require("./ZeroNet/SiteMeta")
@@ -35,6 +35,8 @@ async function waitAndGetAdmin() {
                     followRedirect: false
                 })
             } catch (e) {
+                if (e.statusCode === 301)
+                    break
                 signale.error("An error occurred while sending a request to ZeroHello", e)
                 signale.info("Wait a while and send a request again")
                 await delay(process.env.mainLoopInterval)
@@ -145,8 +147,8 @@ async function forEachSite() {
 
 waitAndGetAdmin().then(() => {
     admin.Event.on("wsOpen", async () => {
-        DataBase.connect()
         bootstrapCrawling()
+        DataBase.connect()
         DataBase.event.on("connected", async () => { // Main loop
             while (true) {
                 await admin.reloadSiteList()
