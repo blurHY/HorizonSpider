@@ -31,15 +31,15 @@ async function waitAndGetAdmin() {
             try {
                 await rp({
                     url: `http://${SettingsLoader.ZeroNetHost}`,
-                    headers: {"Accept": "text/html"}
+                    headers: {"Accept": "text/html"},
+                    followRedirect: false
                 })
             } catch (e) {
                 log("error", "zeronet", "An error occurred while sending a request to ZeroHello", e)
                 log("info", "spider", "Wait a while and send a request again")
                 await delay(process.env.mainLoopInterval)
             }
-        }
-        else
+        } else
             break
     }
 }
