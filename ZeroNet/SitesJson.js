@@ -1,6 +1,6 @@
 const readFileSync = require("fs").readFileSync
 const join = require("path").join
-const log = require("../Logger")
+const signale = require('signale');
 
 let obj = null
 
@@ -9,7 +9,7 @@ module.exports = {
         try {
             obj = JSON.parse(readFileSync(join(process.env.ZeroNetPath, "data", "sites.json"), "utf-8"))
         } catch (e) {
-            log.error("Cannot load sites json: " + e)
+            signale.error("Cannot load sites json: " + e)
         }
     },
     getWrapperKey(site_addr) {

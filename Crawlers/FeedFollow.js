@@ -1,11 +1,11 @@
-const log = require("../Logger")
+const signale = require('signale');
 const DataBase = require("../DataBase")
 
 async function updateFeeds(dbSchema, siteDB, siteObj) {
     if (!siteDB || !dbSchema || !dbSchema.feeds) // Always check params in final function
         return
 
-    log.info(`Feeds available: ${siteObj.basicInfo.address}`)
+    signale.info(`Feeds available: ${siteObj.basicInfo.address}`)
 
     let query, func = s => s
 
@@ -16,7 +16,7 @@ async function updateFeeds(dbSchema, siteDB, siteObj) {
             siteObj.runtimeInfo.lastCrawl.feeds.itemDate = await siteDB.each(`select * from (${dbSchema.feeds[name]}) order by date_added desc limit 1`)
             func = s => `SELECT * FROM (${s}) where date_added > ${maxDate}` // Not needed to add the outer where clause to inner, because of the sqlite optimization
         } else
-            log.info(`Stored feeds are up to date ${siteObj.basicInfo.address}`)
+            signale.info(`Stored feeds are up to date ${siteObj.basicInfo.address}`)
     } else {
         siteObj.feedsQueried.splice(0) // Clear old data and re-query all feeds
         siteObj.runtimeInfo.lastCrawl.feeds.full = new Date()
@@ -29,7 +29,7 @@ async function updateFeeds(dbSchema, siteDB, siteObj) {
 
         await pagingFeedQuery(query, siteDB, siteObj, name)
     }
-    log.info(`Updated feeds for ${siteObj.basicInfo.address}`)
+    signale.info(`Updated feeds for ${siteObj.basicInfo.address}`)
 }
 
 async function pagingFeedQuery(query, siteDB, siteObj, name, count = 3000, start = 0) {
@@ -37,7 +37,7 @@ async function pagingFeedQuery(query, siteDB, siteObj, name, count = 3000, start
     query = `select * from (${query}) order by date_added limit ${count} offset ${start}` // Sqlite has powerful optimization, so we have do it like this.
     let rows = await siteDB.all(query)
     if (!(rows instanceof Array)) {
-        log.error("An error occurred during a feed query", err)
+        signale.error("An error occurred during a feed query", err)
     } else if (rows.length > 0) {
         let renamedRows = []
         for (let row of rows) {
@@ -56,7 +56,7 @@ async function pagingFeedQuery(query, siteDB, siteObj, name, count = 3000, start
 
         await siteObj.addFeeds(renamedRows, name)
 
-        log.info(`Imported ${rows.length} feeds from ${siteObj.basicInfo.address}`)
+        signale.info(`Imported ${rows.length} feeds from ${siteObj.basicInfo.address}`)
         await pagingFeedQuery(ori_query, siteDB, siteObj, name, count, start + count) // Query and store next page
     }
 }

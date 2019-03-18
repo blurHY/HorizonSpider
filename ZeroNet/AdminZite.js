@@ -1,5 +1,5 @@
 const Zite = require("./Zite")
-const log = require("../Logger")
+const signale = require('signale');
 
 module.exports = class AdminZite extends Zite {
     constructor() {
@@ -9,22 +9,22 @@ module.exports = class AdminZite extends Zite {
     }
 
     async reloadSiteList() {
-        log.info("Reloading sites list")
+        signale.info("Reloading sites list")
         this.siteList = await this.cmdp("siteList")
         this.siteAddrs = this.siteList.map(s => s.address)
     }
 
     async updateAll() {
-        log.info("Updating all sites")
+        signale.info("Updating all sites")
         await this.reloadSiteList()
         for (let site of this.siteList)
-            this.cmdp("siteUpdate", site.address).then(res => log.info(`${res}: ${site.address}`))
+            this.cmdp("siteUpdate", site.address).then(res => signale.info(`${res}: ${site.address}`))
     }
 
     addSites(siteAddrs) {
         let count = siteAddrs.length
         if (count > 1)
-            log.info(`Adding ${count} sites to zeronet`)
+            signale.info(`Adding ${count} sites to zeronet`)
         for (let addr of siteAddrs)
             this.cmdp("siteAdd", addr).catch((e) => {
             })

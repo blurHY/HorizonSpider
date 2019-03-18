@@ -4,7 +4,7 @@ const rp = require("request-promise")
 const fs = require("fs")
 const Admin = require("./ZeroNet/AdminZite")
 const delay = require("delay")
-const log = require("./Logger")
+const signale = require('signale');
 const DataBase = require("./DataBase")
 const SiteDB = require("./ZeroNet/SiteDataBase")
 const SiteMeta = require("./ZeroNet/SiteMeta")
@@ -23,9 +23,9 @@ async function waitAndGetAdmin() {
         try {
             SitesJson.reloadJson()
             admin = new Admin()
-            log.info("Connected to admin site")
+            signale.success("Connected to admin site")
         } catch (e) {
-            log.error("Cannot connect to admin site: Possibly ZeroHello is not downloaded: %j", e)
+            signale.fatal("Cannot connect to admin site", e)
         }
         if (!admin) {
             try {
@@ -35,8 +35,8 @@ async function waitAndGetAdmin() {
                     followRedirect: false
                 })
             } catch (e) {
-                log.error("An error occurred while sending a request to ZeroHello: %j", e)
-                log.info("Wait a while and send a request again")
+                signale.error("An error occurred while sending a request to ZeroHello", e)
+                signale.info("Wait a while and send a request again")
                 await delay(process.env.mainLoopInterval)
             }
         } else
@@ -45,7 +45,7 @@ async function waitAndGetAdmin() {
 }
 
 function bootstrapCrawling() {
-    log.info("Adding bootstrap sites")
+    signale.info("Adding bootstrap sites")
     admin.addSites([
         "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D",
         "1Name2NXVi1RDPDgf5617UoW7xA6YrhM9F"
@@ -58,7 +58,7 @@ function bootstrapCrawling() {
     }
     if (Date.now() - lastAddDomain > 12 * 60 * 60 * 1000) {
         DomainResolver.loadDomains()
-        log.info(`Adding ${Object.keys(global.domainMapObj).length} sites from ZeroName`)
+        signale.info(`Adding ${Object.keys(global.domainMapObj).length} sites from ZeroName`)
         for (let domain in global.domainMapObj)
             if (global.domainMapObj[domain])
                 admin.addSites([global.domainMapObj[domain]])
@@ -68,29 +68,29 @@ function bootstrapCrawling() {
 
 async function crawlASite(site) {
     try {
-        log.info(`Started crawling site ${site.address}`)
+        signale.info(`Started crawling site ${site.address}`)
 
         let dbSchema = SiteMeta.getDBJson(site.address)
         let siteObj = await DataBase.getSite(site.address)
         let siteDB = await SiteDB.getSiteDataBase(site.address)
 
         if (!siteObj) { // Site not found, create one
-            log.info(`Discovered a brand new site ${site.address}`)
+            signale.info(`Discovered a brand new site ${site.address}`)
             siteObj = DataBase.genNewSite(site) // Init with siteInfo
         }
 
         if (new Date() - siteObj.runtimeInfo.lastCrawl.siteInfo > process.env.siteInfoUpdateInterval || 3600000) {
-            log.info(`Updated siteInfo for ${site.address}`)
+            signale.info(`Updated siteInfo for ${site.address}`)
             siteObj.setSiteInfo(site)
         }
 
         function* promiseGenerator() {
             for (let crawler in modules) {
                 if (modules[crawler] && modules[crawler].crawl)
-                    log.info(`Started crawler ${crawler} for ${site.address}`)
+                    signale.info(`Started crawler ${crawler} for ${site.address}`)
                 yield (async () => {
                     await modules[crawler].crawl(dbSchema, siteDB, siteObj)
-                    log.info(`Finished crawler ${crawler} for ${site.address}`)
+                    signale.info(`Finished crawler ${crawler} for ${site.address}`)
                 })()
             }
         }
@@ -99,9 +99,9 @@ async function crawlASite(site) {
         await pool.start()
 
         await siteObj.save()
-        log.info(`Saved site ${site.address}`)
+        signale.info(`Saved site ${site.address}`)
     } catch (e) {
-        log.error(`Unknown error in ${site.address}`, e)
+        signale.error(`Unknown error in ${site.address}`, e)
     }
 }
 
@@ -110,7 +110,7 @@ async function extractSitesAndAdd() {
     let perPageCount = 500
     let skip = 0
     let arr
-    log.info("Adding sites of extracted links to ZeroNet")
+    signale.info("Adding sites of extracted links to ZeroNet")
     while (true) {
         arr = await DataBase.link.find({added: {$ne: true}}).limit(perPageCount).skip(skip).sort("site").select("site").exec()
         skip += perPageCount
@@ -154,7 +154,7 @@ waitAndGetAdmin().then(() => {
                 if (exiting)
                     process.exit()
                 await extractSitesAndAdd()
-                log.info(`Sleeping for next loop`)
+                signale.info(`Sleeping for next loop`)
                 await delay(process.env.mainLoopInterval)
             }
         })
@@ -165,7 +165,7 @@ waitAndGetAdmin().then(() => {
 })
 
 function exitHandler() {
-    log.warning("Received signal, gracefully shutting down...")
+    signale.warn("Received signal, gracefully shutting down...")
     exiting = true
 }
 
@@ -173,5 +173,5 @@ process.on("SIGINT", exitHandler)
 process.on("SIGTERM", exitHandler)
 
 process.on("exit", () => {
-    log.warning("Exited")
+    signale.warn("Exited")
 })

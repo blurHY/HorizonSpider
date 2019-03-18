@@ -1,6 +1,6 @@
 const path = require("path")
 const fs = require("fs")
-const log = require("../Logger")
+const signale = require('signale');
 
 let domainNameJsonPath = path.join(process.env.ZeronetDataPath, "1Name2NXVi1RDPDgf5617UoW7xA6YrhM9F/data/names.json")
 let modified = 0
@@ -13,7 +13,7 @@ function loadDomains(force = false) {
     if (zeroNameContentJson.modified > modified || !global.domainMapObj || force) {
         global.domainMapObj = JSON.parse(fs.readFileSync(domainNameJsonPath, "utf8"))
         if(!global.domainMapObj){
-            log.error(`Domain map is null`)
+            signale.error(`Domain map is null`)
         }
     }
     modified = zeroNameContentJson.modified

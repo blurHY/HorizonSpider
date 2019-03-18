@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 const ObjectId = mongoose.Schema.Types.ObjectId
-const log = require("./Logger")
+const signale = require('signale');
 const events = require("events")
 
 let feedSchema = new mongoose.Schema({
@@ -129,7 +129,7 @@ siteSchema.methods.setSiteInfo = function (siteInfoObj) {
             this.basicInfo.extra[key] = siteInfoObj.content[key]
     this.runtimeInfo.lastCrawl.siteInfo = new Date()
     this.markModified("basicInfo.extra")
-    log.info(`Updated site info for ${this.basicInfo.address}`)
+    signale.info(`Updated site info for ${this.basicInfo.address}`)
 }
 
 siteSchema.methods.addFeeds = async function (feeds, name) {
@@ -171,10 +171,10 @@ module.exports = {
         mongoose.connect("mongodb://localhost:27017/horizon", {
             useNewUrlParser: true
         }).then(() => {
-            log.info("Successfully connected database")
+            signale.info("Successfully connected database")
             event.emit("connected")
         }).catch(err => {
-            log.error("Cannot connect to database", err)
+            signale.error("Cannot connect to database", err)
             event.emit("error", err)
         })
     },
