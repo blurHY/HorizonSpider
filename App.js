@@ -41,6 +41,7 @@ async function waitAndGetAdmin() {
             })
         }
     }
+    getAdmin()
 }
 
 function bootstrapCrawling() {
