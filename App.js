@@ -1,6 +1,6 @@
 require("dotenv").config()
 
-const request = require("request")
+const rp = require("request-promise")
 const fs = require("fs")
 const Admin = require("./ZeroNet/AdminZite")
 const delay = require("delay")
@@ -19,7 +19,7 @@ let admin = null
 let exiting = false
 
 async function waitAndGetAdmin() {
-    function getAdmin() {
+    while (true) {
         try {
             SitesJson.reloadJson()
             admin = new Admin()
@@ -28,20 +28,20 @@ async function waitAndGetAdmin() {
             log("error", "zeronet", "Cannot connect to admin site: Possibly ZeroHello is not downloaded", e)
         }
         if (!admin) {
-            request({
-                url: `http://${SettingsLoader.ZeroNetHost}`,
-                headers: {"Accept": "text/html"}
-            }, async (err, res, body) => {
-                log(err ? "error" : "info", "zeronet", "Sent a request to ZeroHello", err)
-                if (err) {
-                    log("info", "spider", "Wait a while and send a request again")
-                    await delay(process.env.mainLoopInterval)
-                    getAdmin()
-                }
-            })
+            try {
+                await rp({
+                    url: `http://${SettingsLoader.ZeroNetHost}`,
+                    headers: {"Accept": "text/html"}
+                })
+            } catch (e) {
+                log("error", "zeronet", "An error occurred while sending a request to ZeroHello", e)
+                log("info", "spider", "Wait a while and send a request again")
+                await delay(process.env.mainLoopInterval)
+            }
         }
+        else
+            break
     }
-    getAdmin()
 }
 
 function bootstrapCrawling() {

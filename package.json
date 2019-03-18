@@ -14,6 +14,7 @@
     "ini": "^1.3.5",
     "mongoose": "^5.4.12",
     "request": "^2.88.0",
+    "request-promise": "^4.2.4",
     "require-dir-all": "^0.4.15",
     "sqlite": "^3.0.2",
     "sqlite3": "^4.0.6",
