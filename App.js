@@ -19,7 +19,7 @@ let admin = null
 let exiting = false
 
 async function waitAndGetAdmin() {
-    while (true) {
+    function getAdmin() {
         try {
             SitesJson.reloadJson()
             admin = new Admin()
@@ -27,17 +27,18 @@ async function waitAndGetAdmin() {
         } catch (e) {
             log("error", "zeronet", "Cannot connect to admin site: Possibly ZeroHello is not downloaded", e)
         }
-        if (admin)
-            break
-        else {
+        if (!admin) {
             request({
                 url: `http://${SettingsLoader.ZeroNetHost}`,
                 headers: {"Accept": "text/html"}
-            }, (err, res, body) => {
+            }, async (err, res, body) => {
                 log(err ? "error" : "info", "zeronet", "Sent a request to ZeroHello", err)
+                if (err) {
+                    log("info", "spider", "Wait a while and send a request again")
+                    await delay(process.env.mainLoopInterval)
+                    getAdmin()
+                }
             })
-            log("info","spider","Wait a while and send a request again")
-            await delay(process.env.mainLoopInterval)
         }
     }
 }
@@ -108,7 +109,7 @@ async function extractSitesAndAdd() {
     let perPageCount = 500
     let skip = 0
     let arr
-    log("info","spider","Adding sites of extracted links to ZeroNet")
+    log("info", "spider", "Adding sites of extracted links to ZeroNet")
     while (true) {
         arr = await DataBase.link.find({added: {$ne: true}}).limit(perPageCount).skip(skip).sort("site").select("site").exec()
         skip += perPageCount
