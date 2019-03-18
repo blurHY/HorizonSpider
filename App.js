@@ -1,6 +1,7 @@
 require("dotenv").config()
 
 const request = require("request")
+const fs = require("fs")
 const Admin = require("./ZeroNet/AdminZite")
 const delay = require("delay")
 const log = require("./Logger")
@@ -22,7 +23,7 @@ async function waitAndGetAdmin() {
         try {
             SitesJson.reloadJson()
             admin = new Admin()
-            log("info","zeronet","Connected to admin site")
+            log("info", "zeronet", "Connected to admin site")
         } catch (e) {
             log("error", "zeronet", "Cannot connect to admin site: Possibly ZeroHello is not downloaded", e)
         }
@@ -33,8 +34,9 @@ async function waitAndGetAdmin() {
                 url: `http://${SettingsLoader.ZeroNetHost}`,
                 headers: {"Accept": "text/html"}
             }, (err, res, body) => {
-                log(err ? "error" : "info", "zeronet", "Sent request to ZeroHello", err)
+                log(err ? "error" : "info", "zeronet", "Sent a request to ZeroHello", err)
             })
+            log("info","spider","Wait a while and send a request again")
             await delay(process.env.mainLoopInterval)
         }
     }
@@ -46,11 +48,20 @@ function bootstrapCrawling() {
         "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D",
         "1Name2NXVi1RDPDgf5617UoW7xA6YrhM9F"
     ])
-    DomainResolver.loadDomains()
-    log("info", "zeronet", `Adding ${Object.keys(global.domainMapObj).length} sites from ZeroName`)
-    for (let domain in global.domainMapObj)
-        if (global.domainMapObj[domain])
-            admin.addSites([global.domainMapObj[domain]])
+    let lastAddDomain = 0
+    try {
+        lastAddDomain = parseInt(fs.readFileSync("./lastAddDomain", "utf8"))
+    } catch {
+
+    }
+    if (Date.now() - lastAddDomain > 12 * 60 * 60 * 1000) {
+        DomainResolver.loadDomains()
+        log("info", "zeronet", `Adding ${Object.keys(global.domainMapObj).length} sites from ZeroName`)
+        for (let domain in global.domainMapObj)
+            if (global.domainMapObj[domain])
+                admin.addSites([global.domainMapObj[domain]])
+        fs.writeFileSync("./lastAddDomain", Date.now())
+    }
 }
 
 async function crawlASite(site) {
@@ -75,10 +86,10 @@ async function crawlASite(site) {
             for (let crawler in modules) {
                 if (modules[crawler] && modules[crawler].crawl)
                     log("info", "spider", `Started crawler ${crawler} for ${site.address}`)
-                    yield (async () => {
-                        await modules[crawler].crawl(dbSchema, siteDB, siteObj)
-                        log("info", "spider", `Finished crawler ${crawler} for ${site.address}`)
-                    })()
+                yield (async () => {
+                    await modules[crawler].crawl(dbSchema, siteDB, siteObj)
+                    log("info", "spider", `Finished crawler ${crawler} for ${site.address}`)
+                })()
             }
         }
 
@@ -97,7 +108,7 @@ async function extractSitesAndAdd() {
     let perPageCount = 500
     let skip = 0
     let arr
-
+    log("info","spider","Adding sites of extracted links to ZeroNet")
     while (true) {
         arr = await DataBase.link.find({added: {$ne: true}}).limit(perPageCount).skip(skip).sort("site").select("site").exec()
         skip += perPageCount
@@ -145,6 +156,9 @@ waitAndGetAdmin().then(() => {
                 await delay(process.env.mainLoopInterval)
             }
         })
+    })
+    admin.Event.on("wsClose", () => {
+
     })
 })
 

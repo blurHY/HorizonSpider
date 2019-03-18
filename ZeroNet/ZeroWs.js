@@ -9,6 +9,11 @@ module.exports = class ZeroWs {
             throw "No wrapper_key"
         }
         this.Event = new EventEmitter()
+        this.createWebSocket(zeroNetHost, secureWs)
+    }
+
+    createWebSocket(zeroNetHost = "localhost:43110", secureWs = false) {
+        log("info","zeronet","Creating websocket connection")
         this.ws = new W3CWebSocket(`ws${secureWs ? "s" : ""}://${zeroNetHost}/Websocket?wrapper_key=${wrapper_key}`)
 
         this.waiting_cb = {}
@@ -16,11 +21,23 @@ module.exports = class ZeroWs {
         this.message_queue = []
 
         this.ws.onerror = () => {
-            log("error", "zeronet", "Cannot connect to zeronet")
+            log("error", "zeronet", "Cannot connect to ZeroNet")
+            if(!this.reconnecting) {
+                this.reconnecting = true
+                setTimeout(() => {
+                    this.createWebSocket(zeroNetHost, secureWs)
+                }, 3000)
+            }
         }
 
         this.ws.onclose = () => {
-            log("warning", "zeronet", "Connection to zeronet has been closed")
+            log("warning", "zeronet", "Connection to ZeroNet has been closed")
+            if(!this.reconnecting) {
+                this.reconnecting = true
+                setTimeout(() => {
+                    this.createWebSocket(zeroNetHost, secureWs)
+                }, 3000)
+            }
             this.Event.emit("wsClose")
         }
 
@@ -31,11 +48,11 @@ module.exports = class ZeroWs {
             if (cmd === "response" && this.waiting_cb[message.to] != null)
                 return this.waiting_cb[message.to](message.result)
             else
-                log("info", "zeronet", "Msg from ZeroNet", message)
+                log("info", "zeronet", "Message from ZeroNet", message)
         }
 
         this.ws.onopen = () => {
-            log("info", "zeronet", `Zeronet websocket connected - Msg queue: ${this.message_queue.length}`)
+            log("info", "zeronet", `ZeroNet websocket connected - Pending messages: ${this.message_queue.length}`)
             let i, len, message, ref
             ref = this.message_queue
             for (i = 0, len = ref.length; i < len; i++) {
@@ -52,7 +69,6 @@ module.exports = class ZeroWs {
     }
 
     cmd(cmd, params = {}, cb = null) { // params can b both obj or array
-        // log("info", "zeronet", `Cmd: ${cmd}`, params)
         this.send({
             cmd,
             params
