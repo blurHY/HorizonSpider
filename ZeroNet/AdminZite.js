@@ -1,5 +1,5 @@
 const Zite = require("./Zite")
-const signale = require('signale');
+const signale = require("signale")
 
 module.exports = class AdminZite extends Zite {
     constructor() {
@@ -10,7 +10,7 @@ module.exports = class AdminZite extends Zite {
 
     async reloadSiteList() {
         signale.info("Reloading sites list")
-        this.siteList = await this.cmdp("siteList")
+        this.siteList = await this.cmdp("siteList", [])
         this.siteAddrs = this.siteList.map(s => s.address)
     }
 

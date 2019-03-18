@@ -8,61 +8,69 @@ module.exports = class ZeroWs {
         if (!wrapper_key)
             throw "No wrapper_key"
         this.Event = new EventEmitter()
-        this.createWebSocket(wrapper_key, zeroNetHost, secureWs)
+        this.wrapper_key = wrapper_key
+        this.zeroNetHost = zeroNetHost
+        this.secureWs = secureWs
+        signale.info("Creating websocket connection")
+        this.connect()
     }
 
-    createWebSocket(wrapper_key, zeroNetHost = "localhost:43110", secureWs = false) {
-        signale.info("Creating websocket connection")
-        this.ws = new W3CWebSocket(`ws${secureWs ? "s" : ""}://${zeroNetHost}/Websocket?wrapper_key=${wrapper_key}`)
+    onError() {
+        signale.error("Cannot connect to ZeroNet")
+        if (!this.reconnecting) {
+            this.reconnecting = true
+            setTimeout(() => {
+                this.reconnecting = false
+                this.connect()
+            }, 2000)
+        }
+    }
+
+    onClose() {
+        signale.warn("Connection to ZeroNet has been closed")
+        if (!this.reconnecting) {
+            this.reconnecting = true
+            setTimeout(() => {
+                this.reconnecting = false
+                this.connect()
+            }, 2000)
+        }
+        this.Event.emit("wsClose")
+    }
+
+    onMsg(e) {
+        let cmd, message
+        message = JSON.parse(e.data)
+        cmd = message.cmd
+        if (cmd === "response" && this.waiting_cb[message.to] != null)
+            return this.waiting_cb[message.to](message.result)
+        else
+            signale.info("Message from ZeroNet", message)
+    }
+
+    onOpen() {
+        signale.info(`ZeroNet websocket connected`)
+        let i, len, message, ref
+        ref = this.message_queue
+        for (i = 0, len = ref.length; i < len; i++) {
+            message = ref[i]
+            this.ws.send(JSON.stringify(message))
+        }
+        this.message_queue = []
+        this.Event.emit("wsOpen")
+    }
+
+    connect() {
+        this.ws = new W3CWebSocket(`ws${this.secureWs ? "s" : ""}://${this.zeroNetHost}/Websocket?wrapper_key=${this.wrapper_key}`)
 
         this.waiting_cb = {}
         this.next_message_id = 1
         this.message_queue = []
 
-        this.ws.onerror = () => {
-            signale.error("Cannot connect to ZeroNet")
-            if (!this.reconnecting) {
-                this.reconnecting = true
-                setTimeout(() => {
-                    this.reconnecting = false
-                    this.createWebSocket(wrapper_key, zeroNetHost, secureWs)
-                }, 3000)
-            }
-        }
-
-        this.ws.onclose = () => {
-            signale.warn("Connection to ZeroNet has been closed")
-            if (!this.reconnecting) {
-                this.reconnecting = true
-                setTimeout(() => {
-                    this.reconnecting = false
-                    this.createWebSocket(wrapper_key, zeroNetHost, secureWs)
-                }, 3000)
-            }
-            this.Event.emit("wsClose")
-        }
-
-        this.ws.onmessage = e => {
-            let cmd, message
-            message = JSON.parse(e.data)
-            cmd = message.cmd
-            if (cmd === "response" && this.waiting_cb[message.to] != null)
-                return this.waiting_cb[message.to](message.result)
-            else
-                signale.info("Message from ZeroNet", message)
-        }
-
-        this.ws.onopen = () => {
-            signale.info(`ZeroNet websocket connected - Pending messages: ${this.message_queue.length}`)
-            let i, len, message, ref
-            ref = this.message_queue
-            for (i = 0, len = ref.length; i < len; i++) {
-                message = ref[i]
-                this.ws.send(JSON.stringify(message))
-            }
-            this.message_queue = []
-            this.Event.emit("wsOpen")
-        }
+        this.ws.onmessage = () => this.onMsg()
+        this.ws.onopen = () => this.onOpen()
+        this.ws.onerror = () => this.onError()
+        this.ws.onclose = () => this.onClose()
     }
 
     get connected() {

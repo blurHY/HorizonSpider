@@ -130,6 +130,8 @@ async function extractSitesAndAdd() {
 }
 
 async function forEachSite() {
+    global.foreaching = true
+
     function* promiseGenerator() {
         for (let site of admin.siteList) {
             if (exiting) // The minimal unit is a single site.
@@ -140,27 +142,37 @@ async function forEachSite() {
 
     let pool = new PromisePool(promiseGenerator, parseInt(process.env.Concurrency) || 3)
     await pool.start()
+    global.foreaching = false
 }
 
 waitAndGetAdmin().then(() => {
     admin.Event.on("wsOpen", async () => {
-        bootstrapCrawling()
+        if (exiting)
+            return
+        await admin.reloadSiteList()
         DataBase.connect()
         DataBase.event.on("connected", async () => { // Main loop
-            while (admin.connected) {
-                await admin.reloadSiteList()
+            if (global.loopStarted || exiting)
+                return
+            global.loopStarted = true
+            signale.debug("Started main loop")
+            bootstrapCrawling()
+            while (true) {
                 await forEachSite()
                 if (exiting)
                     process.exit()
                 await extractSitesAndAdd()
                 signale.info(`Sleeping for next loop`)
                 await delay(process.env.mainLoopInterval)
+                await admin.reloadSiteList()
             }
         })
     })
 })
 
 function exitHandler() {
+    if (!global.foreaching || exiting)
+        process.exit()
     signale.warn("Received signal, gracefully shutting down...")
     exiting = true
 }
