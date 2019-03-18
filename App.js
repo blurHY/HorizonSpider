@@ -147,7 +147,7 @@ waitAndGetAdmin().then(() => {
         bootstrapCrawling()
         DataBase.connect()
         DataBase.event.on("connected", async () => { // Main loop
-            while (true) {
+            while (admin.connected) {
                 await admin.reloadSiteList()
                 await forEachSite()
                 if (exiting)
@@ -157,9 +157,6 @@ waitAndGetAdmin().then(() => {
                 await delay(process.env.mainLoopInterval)
             }
         })
-    })
-    admin.Event.on("wsClose", () => {
-
     })
 })
 
