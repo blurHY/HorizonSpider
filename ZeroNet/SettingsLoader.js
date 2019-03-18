@@ -5,7 +5,7 @@ const log = require("../Logger")
 global.ZeroNetConfObj = null
 
 function reloadConf() { // Reloading zeronet conf file
-    log("info", "zeronet", "Reloading configuration file of zeronet")
+    log.info("Reloading configuration file of zeronet")
     global.ZeroNetConfObj  = parse(readFileSync(join(process.env.ZeroNetPath, "zeronet.conf"), "utf-8"))
 }
 

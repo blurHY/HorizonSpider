@@ -6,8 +6,8 @@ const log = require("../Logger")
 
 module.exports = class Zite extends ZeroWs {
     constructor(site_addr) {
-        log("info", "zeronet", "Getting wrapper key for " + site_addr)
-        log("info", "zeronet", `ZeroNetHost: ${Settings.ZeroNetHost}`)
+        log.info("Getting wrapper key for " + site_addr)
+        log.info(`ZeroNetHost: ${Settings.ZeroNetHost}`)
         super(getWrapperKey(site_addr), Settings.ZeroNetHost)
     }
 }

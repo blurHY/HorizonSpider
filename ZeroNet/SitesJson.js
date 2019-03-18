@@ -9,7 +9,7 @@ module.exports = {
         try {
             obj = JSON.parse(readFileSync(join(process.env.ZeroNetPath, "data", "sites.json"), "utf-8"))
         } catch (e) {
-            log("error", "zeronet", "Cannot load sites json: " + e)
+            log.error("Cannot load sites json: " + e)
         }
     },
     getWrapperKey(site_addr) {

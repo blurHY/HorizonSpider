@@ -13,7 +13,7 @@ module.exports = class ZeroWs {
     }
 
     createWebSocket(zeroNetHost = "localhost:43110", secureWs = false) {
-        log("info","zeronet","Creating websocket connection")
+        log.info("Creating websocket connection")
         this.ws = new W3CWebSocket(`ws${secureWs ? "s" : ""}://${zeroNetHost}/Websocket?wrapper_key=${wrapper_key}`)
 
         this.waiting_cb = {}
@@ -21,8 +21,8 @@ module.exports = class ZeroWs {
         this.message_queue = []
 
         this.ws.onerror = () => {
-            log("error", "zeronet", "Cannot connect to ZeroNet")
-            if(!this.reconnecting) {
+            log.error("Cannot connect to ZeroNet")
+            if (!this.reconnecting) {
                 this.reconnecting = true
                 setTimeout(() => {
                     this.createWebSocket(zeroNetHost, secureWs)
@@ -31,8 +31,8 @@ module.exports = class ZeroWs {
         }
 
         this.ws.onclose = () => {
-            log("warning", "zeronet", "Connection to ZeroNet has been closed")
-            if(!this.reconnecting) {
+            log.warning("Connection to ZeroNet has been closed")
+            if (!this.reconnecting) {
                 this.reconnecting = true
                 setTimeout(() => {
                     this.createWebSocket(zeroNetHost, secureWs)
@@ -48,11 +48,11 @@ module.exports = class ZeroWs {
             if (cmd === "response" && this.waiting_cb[message.to] != null)
                 return this.waiting_cb[message.to](message.result)
             else
-                log("info", "zeronet", "Message from ZeroNet", message)
+                log.info("Message from ZeroNet", message)
         }
 
         this.ws.onopen = () => {
-            log("info", "zeronet", `ZeroNet websocket connected - Pending messages: ${this.message_queue.length}`)
+            log.info(`ZeroNet websocket connected - Pending messages: ${this.message_queue.length}`)
             let i, len, message, ref
             ref = this.message_queue
             for (i = 0, len = ref.length; i < len; i++) {

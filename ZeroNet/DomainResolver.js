@@ -13,7 +13,7 @@ function loadDomains(force = false) {
     if (zeroNameContentJson.modified > modified || !global.domainMapObj || force) {
         global.domainMapObj = JSON.parse(fs.readFileSync(domainNameJsonPath, "utf8"))
         if(!global.domainMapObj){
-            log("error", "zeronet", `Domain map is null`)
+            log.error(`Domain map is null`)
         }
     }
     modified = zeroNameContentJson.modified

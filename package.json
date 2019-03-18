@@ -18,6 +18,7 @@
     "require-dir-all": "^0.4.15",
     "sqlite": "^3.0.2",
     "sqlite3": "^4.0.6",
+    "tracer": "^0.9.8",
     "websocket": "^1.0.28"
   },
   "scripts": {

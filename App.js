@@ -23,9 +23,9 @@ async function waitAndGetAdmin() {
         try {
             SitesJson.reloadJson()
             admin = new Admin()
-            log("info", "zeronet", "Connected to admin site")
+            log.info("Connected to admin site")
         } catch (e) {
-            log("error", "zeronet", "Cannot connect to admin site: Possibly ZeroHello is not downloaded", e)
+            log.error("Cannot connect to admin site: Possibly ZeroHello is not downloaded: %j", e)
         }
         if (!admin) {
             try {
@@ -35,8 +35,8 @@ async function waitAndGetAdmin() {
                     followRedirect: false
                 })
             } catch (e) {
-                log("error", "zeronet", "An error occurred while sending a request to ZeroHello", e)
-                log("info", "spider", "Wait a while and send a request again")
+                log.error("An error occurred while sending a request to ZeroHello: %j", e)
+                log.info("Wait a while and send a request again")
                 await delay(process.env.mainLoopInterval)
             }
         } else
@@ -45,7 +45,7 @@ async function waitAndGetAdmin() {
 }
 
 function bootstrapCrawling() {
-    log("info", "spider", "Adding bootstrap sites")
+    log.info("Adding bootstrap sites")
     admin.addSites([
         "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D",
         "1Name2NXVi1RDPDgf5617UoW7xA6YrhM9F"
@@ -58,7 +58,7 @@ function bootstrapCrawling() {
     }
     if (Date.now() - lastAddDomain > 12 * 60 * 60 * 1000) {
         DomainResolver.loadDomains()
-        log("info", "zeronet", `Adding ${Object.keys(global.domainMapObj).length} sites from ZeroName`)
+        log.info(`Adding ${Object.keys(global.domainMapObj).length} sites from ZeroName`)
         for (let domain in global.domainMapObj)
             if (global.domainMapObj[domain])
                 admin.addSites([global.domainMapObj[domain]])
@@ -68,29 +68,29 @@ function bootstrapCrawling() {
 
 async function crawlASite(site) {
     try {
-        log("info", "spider", `Started crawling site ${site.address}`)
+        log.info(`Started crawling site ${site.address}`)
 
         let dbSchema = SiteMeta.getDBJson(site.address)
         let siteObj = await DataBase.getSite(site.address)
         let siteDB = await SiteDB.getSiteDataBase(site.address)
 
         if (!siteObj) { // Site not found, create one
-            log("info", "spider", `Discovered a brand new site ${site.address}`)
+            log.info(`Discovered a brand new site ${site.address}`)
             siteObj = DataBase.genNewSite(site) // Init with siteInfo
         }
 
         if (new Date() - siteObj.runtimeInfo.lastCrawl.siteInfo > process.env.siteInfoUpdateInterval || 3600000) {
-            log("info", "spider", `Updated siteInfo for ${site.address}`)
+            log.info(`Updated siteInfo for ${site.address}`)
             siteObj.setSiteInfo(site)
         }
 
         function* promiseGenerator() {
             for (let crawler in modules) {
                 if (modules[crawler] && modules[crawler].crawl)
-                    log("info", "spider", `Started crawler ${crawler} for ${site.address}`)
+                    log.info(`Started crawler ${crawler} for ${site.address}`)
                 yield (async () => {
                     await modules[crawler].crawl(dbSchema, siteDB, siteObj)
-                    log("info", "spider", `Finished crawler ${crawler} for ${site.address}`)
+                    log.info(`Finished crawler ${crawler} for ${site.address}`)
                 })()
             }
         }
@@ -99,9 +99,9 @@ async function crawlASite(site) {
         await pool.start()
 
         await siteObj.save()
-        log("info", "spider", `Saved site ${site.address}`)
+        log.info(`Saved site ${site.address}`)
     } catch (e) {
-        log("error", "spider", `Unknown error in ${site.address}`, e)
+        log.error(`Unknown error in ${site.address}`, e)
     }
 }
 
@@ -110,7 +110,7 @@ async function extractSitesAndAdd() {
     let perPageCount = 500
     let skip = 0
     let arr
-    log("info", "spider", "Adding sites of extracted links to ZeroNet")
+    log.info("Adding sites of extracted links to ZeroNet")
     while (true) {
         arr = await DataBase.link.find({added: {$ne: true}}).limit(perPageCount).skip(skip).sort("site").select("site").exec()
         skip += perPageCount
@@ -154,7 +154,7 @@ waitAndGetAdmin().then(() => {
                 if (exiting)
                     process.exit()
                 await extractSitesAndAdd()
-                log("info", "spider", `Sleeping for next loop`)
+                log.info(`Sleeping for next loop`)
                 await delay(process.env.mainLoopInterval)
             }
         })
@@ -165,7 +165,7 @@ waitAndGetAdmin().then(() => {
 })
 
 function exitHandler() {
-    log("warning", "spider", "Received signal, gracefully shutting down...")
+    log.warning("Received signal, gracefully shutting down...")
     exiting = true
 }
 
@@ -173,5 +173,5 @@ process.on("SIGINT", exitHandler)
 process.on("SIGTERM", exitHandler)
 
 process.on("exit", () => {
-    log("warning", "spider", "Exited")
+    log.warning("Exited")
 })

@@ -129,7 +129,7 @@ siteSchema.methods.setSiteInfo = function (siteInfoObj) {
             this.basicInfo.extra[key] = siteInfoObj.content[key]
     this.runtimeInfo.lastCrawl.siteInfo = new Date()
     this.markModified("basicInfo.extra")
-    log("info", "spider", `Updated site info for ${this.basicInfo.address}`)
+    log.info(`Updated site info for ${this.basicInfo.address}`)
 }
 
 siteSchema.methods.addFeeds = async function (feeds, name) {
@@ -171,10 +171,10 @@ module.exports = {
         mongoose.connect("mongodb://localhost:27017/horizon", {
             useNewUrlParser: true
         }).then(() => {
-            log("info", "spider", "Successfully connected database")
+            log.info("Successfully connected database")
             event.emit("connected")
         }).catch(err => {
-            log("error", "spider", "Cannot connect to database", err)
+            log.error("Cannot connect to database", err)
             event.emit("error", err)
         })
     },
