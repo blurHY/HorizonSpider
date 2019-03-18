@@ -24,6 +24,7 @@ module.exports = class ZeroWs {
             if (!this.reconnecting) {
                 this.reconnecting = true
                 setTimeout(() => {
+                    this.reconnecting = false
                     this.createWebSocket(wrapper_key, zeroNetHost, secureWs)
                 }, 3000)
             }
@@ -34,6 +35,7 @@ module.exports = class ZeroWs {
             if (!this.reconnecting) {
                 this.reconnecting = true
                 setTimeout(() => {
+                    this.reconnecting = false
                     this.createWebSocket(wrapper_key, zeroNetHost, secureWs)
                 }, 3000)
             }
