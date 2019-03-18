@@ -1,18 +1,17 @@
 const W3CWebSocket = require("websocket").w3cwebsocket
 const EventEmitter = require("events")
-const signale = require('signale');
+const signale = require("signale")
 
 
 module.exports = class ZeroWs {
     constructor(wrapper_key, zeroNetHost = "localhost:43110", secureWs = false) {
-        if (!wrapper_key) {
+        if (!wrapper_key)
             throw "No wrapper_key"
-        }
         this.Event = new EventEmitter()
-        this.createWebSocket(zeroNetHost, secureWs)
+        this.createWebSocket(wrapper_key, zeroNetHost, secureWs)
     }
 
-    createWebSocket(zeroNetHost = "localhost:43110", secureWs = false) {
+    createWebSocket(wrapper_key, zeroNetHost = "localhost:43110", secureWs = false) {
         signale.info("Creating websocket connection")
         this.ws = new W3CWebSocket(`ws${secureWs ? "s" : ""}://${zeroNetHost}/Websocket?wrapper_key=${wrapper_key}`)
 
