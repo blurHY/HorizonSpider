@@ -9,16 +9,17 @@ module.exports = class AdminZite extends Zite {
     }
 
     async reloadSiteList() {
-        signale.info("Reloading sites list")
+        signale.await("Reloading sites list")
         this.siteList = await this.cmdp("siteList", [])
         this.siteAddrs = this.siteList.map(s => s.address)
+        signale.success("Site list loaded")
     }
 
     async updateAll() {
-        signale.info("Updating all sites")
+        signale.await("Updating all sites")
         await this.reloadSiteList()
         for (let site of this.siteList)
-            this.cmdp("siteUpdate", site.address).then(res => signale.info(`${res}: ${site.address}`))
+            this.cmdp("siteUpdate", site.address).then(res => signale.complete(`Site updated ${res}: ${site.address}`))
     }
 
     addSites(siteAddrs) {

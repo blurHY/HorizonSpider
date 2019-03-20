@@ -67,7 +67,8 @@ function bootstrapCrawling() {
 
 async function crawlASite(site) {
     try {
-        signale.info(`Started crawling site ${site.address}`)
+        signale.start(`Started crawling site ${site.address}`)
+        signale.time(site.address)
 
         let dbSchema = SiteMeta.getDBJson(site.address)
         let siteObj = await DataBase.getSite(site.address)
@@ -79,18 +80,22 @@ async function crawlASite(site) {
         }
 
         if (new Date() - siteObj.runtimeInfo.lastCrawl.siteInfo > process.env.siteInfoUpdateInterval || 3600000) {
-            signale.info(`Updated siteInfo for ${site.address}`)
             siteObj.setSiteInfo(site)
         }
 
         function* promiseGenerator() {
             for (let crawler in modules) {
-                if (modules[crawler] && modules[crawler].crawl)
-                    signale.info(`Started crawler ${crawler} for ${site.address}`)
-                yield (async () => {
-                    await modules[crawler].crawl(dbSchema, siteDB, siteObj)
-                    signale.info(`Finished crawler ${crawler} for ${site.address}`)
-                })()
+                if (modules[crawler] && modules[crawler].crawl) {
+                    signale.start(`Started crawler ${crawler} for ${site.address}`)
+                    yield (async () => {
+                        try {
+                            await modules[crawler].crawl(dbSchema, siteDB, siteObj)
+                            signale.complete(`Finished crawler ${crawler} for ${site.address}`)
+                        }catch (e) {
+                            signale.error(`An error appeared in ${crawler}`)
+                        }
+                    })()
+                }
             }
         }
 
@@ -99,6 +104,8 @@ async function crawlASite(site) {
 
         await siteObj.save()
         signale.info(`Saved site ${site.address}`)
+
+        signale.timeEnd(site.address)
     } catch (e) {
         signale.error(`Unknown error in ${site.address}`, e)
     }
@@ -109,7 +116,7 @@ async function extractSitesAndAdd() {
     let perPageCount = 500
     let skip = 0
     let arr
-    signale.info("Adding sites of extracted links to ZeroNet")
+    signale.await("Adding sites of extracted links to ZeroNet")
     while (true) {
         arr = await DataBase.link.find({added: {$ne: true}}).limit(perPageCount).skip(skip).sort("site").select("site").exec()
         skip += perPageCount
@@ -162,7 +169,7 @@ waitAndGetAdmin().then(() => {
                 if (exiting)
                     process.exit()
                 await extractSitesAndAdd()
-                signale.info(`Sleeping for next loop`)
+                signale.await(`Sleeping for next loop`)
                 await delay(process.env.mainLoopInterval)
                 await admin.reloadSiteList()
             }

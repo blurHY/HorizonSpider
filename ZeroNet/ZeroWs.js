@@ -1,4 +1,4 @@
-const W3CWebSocket = require("websocket").w3cwebsocket
+const WebsocketClient = require("websocket").client
 const EventEmitter = require("events")
 const signale = require("signale")
 
@@ -11,12 +11,19 @@ module.exports = class ZeroWs {
         this.wrapper_key = wrapper_key
         this.zeroNetHost = zeroNetHost
         this.secureWs = secureWs
+        this.waiting_cb = {}
+        this.message_queue = []
+        this.next_message_id = 1
         signale.info("Creating websocket connection")
+
+        this.ws = new WebsocketClient({maxReceivedMessageSize: 83886080, maxReceivedFrameSize: 83886080})
+        this.ws.on("connect", x => this.onOpen(x))
+        this.ws.on("connectFailed", x => this.onError(x))
         this.connect()
     }
 
-    onError() {
-        signale.error("Cannot connect to ZeroNet")
+    onError(e) {
+        signale.error("Cannot connect to ZeroNet", e)
         if (!this.reconnecting) {
             this.reconnecting = true
             setTimeout(() => {
@@ -26,8 +33,8 @@ module.exports = class ZeroWs {
         }
     }
 
-    onClose() {
-        signale.warn("Connection to ZeroNet has been closed")
+    onClose(e) {
+        signale.warn("Connection to ZeroNet has been closed", e)
         if (!this.reconnecting) {
             this.reconnecting = true
             setTimeout(() => {
@@ -39,17 +46,30 @@ module.exports = class ZeroWs {
     }
 
     onMsg(e) {
-        let cmd, message
-        message = JSON.parse(e.data)
-        cmd = message.cmd
-        if (cmd === "response" && this.waiting_cb[message.to] != null)
-            return this.waiting_cb[message.to](message.result)
-        else
-            signale.info("Message from ZeroNet", message)
+        try {
+            let cmd, message
+            message = JSON.parse(e.utf8Data)
+            cmd = message.cmd
+            if (cmd === "response" && this.waiting_cb[message.to] != null)
+                return this.waiting_cb[message.to](message.result)
+            else if (cmd === "ping")
+                this.response(message.id, "pong")
+            else
+                signale.info("Message from ZeroNet", message)
+        } catch (err) {
+            signale.error("Failed to parse message", err)
+        }
     }
 
-    onOpen() {
-        signale.info(`ZeroNet websocket connected`)
+    onOpen(conn) {
+        signale.success(`ZeroNet websocket connected`)
+
+        conn.on("error", (x) => this.onError(x))
+        conn.on("close", (x) => this.onClose(x))
+        conn.on("message", (x) => this.onMsg(x))
+
+        this.conn = conn
+
         let i, len, message, ref
         ref = this.message_queue
         for (i = 0, len = ref.length; i < len; i++) {
@@ -61,20 +81,14 @@ module.exports = class ZeroWs {
     }
 
     connect() {
-        this.ws = new W3CWebSocket(`ws${this.secureWs ? "s" : ""}://${this.zeroNetHost}/Websocket?wrapper_key=${this.wrapper_key}`)
+        let uri = `ws${this.secureWs ? "s" : ""}://${this.zeroNetHost}/Websocket?wrapper_key=${this.wrapper_key}`
+        signale.debug(uri)
 
-        this.waiting_cb = {}
-        this.next_message_id = 1
-        this.message_queue = []
-
-        this.ws.onmessage = () => this.onMsg()
-        this.ws.onopen = () => this.onOpen()
-        this.ws.onerror = () => this.onError()
-        this.ws.onclose = () => this.onClose()
+        this.ws.connect(uri, null, null, null, {})
     }
 
     get connected() {
-        return this.ws && this.ws.readyState === this.ws.OPEN
+        return this.conn && this.conn.connected
     }
 
     cmd(cmd, params = {}, cb = null) { // params can b both obj or array
@@ -101,10 +115,14 @@ module.exports = class ZeroWs {
             this.next_message_id++
         }
         if (this.connected)
-            this.ws.send(JSON.stringify(message))
+            this.conn.sendUTF(JSON.stringify(message))
         else
             this.message_queue.push(message)
         if (cb)
             return this.waiting_cb[message.id] = cb
+    }
+
+    response(to, result) {
+        this.send({"cmd": "response", "to": to, "result": result})
     }
 }

@@ -24,5 +24,18 @@
   "scripts": {
     "crawl": "node App.js",
     "serve": "node Server.js"
+  },
+  "signale": {
+    "displayScope": true,
+    "displayBadge": true,
+    "displayDate": true,
+    "displayFilename": false,
+    "displayLabel": true,
+    "displayTimestamp": false,
+    "underlineLabel": true,
+    "underlineMessage": false,
+    "underlinePrefix": false,
+    "underlineSuffix": false,
+    "uppercaseLabel": false
   }
 }
