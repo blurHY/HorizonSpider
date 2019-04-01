@@ -4,3 +4,4 @@ dist
 /.vs
 .idea
 *.env
+lastAddDomain
