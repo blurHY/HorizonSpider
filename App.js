@@ -18,6 +18,22 @@ const rp = require("request-promise"),
 let admin = null
 let exiting = false
 
+
+function exitHandler() {
+    if (!global.foreaching)
+        process.exit()
+    signale.warn("Received signal, gracefully shutting down...")
+    exiting = true
+}
+
+process.on("SIGINT", exitHandler)
+process.on("SIGTERM", exitHandler)
+
+process.on("exit", () => {
+    signale.warn("Exited")
+})
+
+
 // ZeroHello won't be downloaded without requesting
 async function waitAndGetAdmin() {
     let id
@@ -92,7 +108,7 @@ async function crawlASite(site) {
                         try {
                             await modules[crawler].crawl(dbSchema, siteDB, siteObj)
                             signale.complete(`Finished crawler ${crawler} for ${site.address}`)
-                        }catch (e) {
+                        } catch (e) {
                             signale.error(`An error appeared in ${crawler}`)
                         }
                     })()
@@ -162,6 +178,7 @@ waitAndGetAdmin().then(() => {
             return
         DataBase.connect()
         DataBase.event.on("connected", async () => { // Main loop
+            signale.debug(`Database connected`)
             if (global.loopStarted || exiting)
                 return
             global.loopStarted = true
@@ -169,30 +186,15 @@ waitAndGetAdmin().then(() => {
             if (!process.env.DryRun)
                 bootstrapCrawling()
             while (true) {
+                if (!process.env.DryRun)
+                    await extractSitesAndAdd()
                 await admin.reloadSiteList()
                 await forEachSite()
                 if (exiting)
                     process.exit()
-                if (!process.env.DryRun)
-                    await extractSitesAndAdd()
                 signale.info(`Sleeping for next loop`)
                 await delay(process.env.mainLoopInterval)
             }
         })
     })
-})
-
-
-function exitHandler() {
-    if (!global.foreaching)
-        process.exit()
-    signale.warn("Received signal, gracefully shutting down...")
-    exiting = true
-}
-
-process.on("SIGINT", exitHandler)
-process.on("SIGTERM", exitHandler)
-
-process.on("exit", () => {
-    signale.warn("Exited")
 })
