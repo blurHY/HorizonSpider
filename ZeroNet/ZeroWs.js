@@ -40,6 +40,8 @@ module.exports = class ZeroWs {
 
     onMsg(e) {
         let cmd, message
+        if (!e)
+            return
         message = JSON.parse(e.data)
         cmd = message.cmd
         if (cmd === "response" && this.waiting_cb[message.to] != null)
@@ -67,10 +69,10 @@ module.exports = class ZeroWs {
         this.next_message_id = 1
         this.message_queue = []
 
-        this.ws.onmessage = () => this.onMsg()
-        this.ws.onopen = () => this.onOpen()
-        this.ws.onerror = () => this.onError()
-        this.ws.onclose = () => this.onClose()
+        this.ws.onmessage = e => this.onMsg(e)
+        this.ws.onopen = e => this.onOpen(e)
+        this.ws.onerror = e => this.onError(e)
+        this.ws.onclose = e => this.onClose(e)
     }
 
     get connected() {
