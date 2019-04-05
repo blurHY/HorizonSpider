@@ -1,6 +1,6 @@
 const ContentDB = require("../ZeroNet/ContentDB")
 const basename = require("path").basename
-const signale = require('signale');
+const signale = require("signale")
 
 async function updateOptionalFiles(dbSchema, siteDB, siteObj) {
     if (!siteDB)
@@ -14,6 +14,7 @@ async function updateOptionalFiles(dbSchema, siteDB, siteObj) {
     }
 
     let maxDate = siteObj.runtimeInfo.lastCrawl.optional.itemDate
+
     if ((siteObj.runtimeInfo.lastCrawl.optional.full > new Date() - process.env.optionalFull_Period) && maxDate > 0) {
         if (siteObj.runtimeInfo.lastCrawl.optional.check < new Date() - process.env.optionalCheck_Peroid) { // New feeds only
             siteObj.runtimeInfo.lastCrawl.optional.check = new Date()
@@ -23,6 +24,7 @@ async function updateOptionalFiles(dbSchema, siteDB, siteObj) {
     } else {
         siteObj.optionalFiles.splice(0) // Clear old data and re-query all optionalFiles, but leave records
         siteObj.runtimeInfo.lastCrawl.optional.full = new Date()
+        maxDate = null
     }
 
     await pagingQuery(siteDB, siteObj, count, 3000, 0, maxDate > 0 ? maxDate : null)

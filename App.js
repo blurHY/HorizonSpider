@@ -141,6 +141,7 @@ async function extractSitesAndAdd() {
             break
         for (let link of arr) {
             let addr = link.site
+            console.log(addr)
             try {
                 addr = DomainResolver.resolveDomain(addr)
             } catch {
@@ -186,12 +187,12 @@ waitAndGetAdmin().then(() => {
             if (!process.env.DryRun)
                 bootstrapCrawling()
             while (true) {
-                if (!process.env.DryRun)
-                    await extractSitesAndAdd()
                 await admin.reloadSiteList()
                 await forEachSite()
                 if (exiting)
                     process.exit()
+                if (!process.env.DryRun)
+                    await extractSitesAndAdd()
                 signale.info(`Sleeping for next loop`)
                 await delay(process.env.mainLoopInterval)
             }

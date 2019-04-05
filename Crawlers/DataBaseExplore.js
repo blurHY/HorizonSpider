@@ -1,4 +1,5 @@
-const linksExtractor = require("./LinksExtractor")
+const linksExtractor = require("./LinksExtractor"),
+    signale = require("signale")
 
 module.exports.crawl = async function explore(dbSchema, siteDB, siteObj) {
     if (!siteDB)
@@ -10,6 +11,7 @@ module.exports.crawl = async function explore(dbSchema, siteDB, siteObj) {
 }
 
 async function pagingCrawl(siteDB, siteObj, table_name, start = 0, count = 300) {
+    signale.debug(`Scanning ${siteObj.basicInfo.address} db ${start}-${start + count}`)
     let rows = await siteDB.all(`SELECT * from ${table_name} limit ${count} offset ${start}`)
     if (rows.length > 0) {
         for (let row of rows) {

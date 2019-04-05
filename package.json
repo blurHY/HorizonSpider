@@ -31,11 +31,11 @@
     "displayDate": true,
     "displayFilename": false,
     "displayLabel": true,
-    "displayTimestamp": false,
+    "displayTimestamp": true,
     "underlineLabel": true,
     "underlineMessage": false,
     "underlinePrefix": false,
     "underlineSuffix": false,
-    "uppercaseLabel": false
+    "uppercaseLabel": true
   }
 }
