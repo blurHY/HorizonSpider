@@ -22,8 +22,7 @@
     "websocket": "^1.0.28"
   },
   "scripts": {
-    "crawl": "node App.js",
-    "serve": "node Server.js"
+    "crawl": "node App.js  --inspect"
   },
   "signale": {
     "displayScope": true,
