@@ -17,7 +17,7 @@ module.exports = {
     getDBJson: (siteAddr) => new Promise((res, rej) => {
         fs.readFile(join(process.env.ZeronetDataPath, siteAddr, "dbschema.json"), "utf8", (err, data) => {
             if (err) {
-                signale.debug(`No dbschema.json for${siteAddr}`)
+                signale.debug(`No dbschema.json for ${siteAddr}`)
                 res(null)
             } else
                 res(JSON.parse(data))
