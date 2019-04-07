@@ -1,6 +1,6 @@
 const ZeroWs = require("./ZeroWs")
 const Settings = require("./SettingsLoader")
-const getWrapperKey = require("./SitesJson").getWrapperKey
+const getWrapperKey = require("./SiteMeta").getWrapperKey
 const signale = require('signale');
 
 

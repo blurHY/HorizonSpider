@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 const ObjectId = mongoose.Schema.Types.ObjectId
-const signale = require('signale');
+const signale = require("signale")
 const events = require("events")
 
 let feedSchema = new mongoose.Schema({
@@ -57,7 +57,8 @@ let siteSchema = new mongoose.Schema({
         peers: Number,
         added: Number,
         size: Number,
-        size_optional: Number
+        size_optional: Number,
+        zeronet_version: String
     },
     feedsQueried: [{
         name: String,
@@ -90,45 +91,51 @@ let siteSchema = new mongoose.Schema({
 })
 
 siteSchema.methods.setSiteInfo = function (siteInfoObj) {
+    siteInfoObj = {files: {}, files_optional: {}, ...siteInfoObj}
     this.basicInfo = {
-        files: siteInfoObj.content.files,
-        files_optional: siteInfoObj.content.files_optional,
-        domain: siteInfoObj.content.domain,
-        description: siteInfoObj.content.description,
-        title: siteInfoObj.content.title,
-        cloned_from: siteInfoObj.content.cloned_from,
-        address: siteInfoObj.content.address,
-        cloneable: siteInfoObj.content.cloneable,
+        files: Object.keys(siteInfoObj.files).length,
+        files_optional: Object.keys(siteInfoObj.files_optional).length,
+        domain: siteInfoObj.domain,
+        description: siteInfoObj.description,
+        title: siteInfoObj.title,
+        cloned_from: siteInfoObj.cloned_from,
+        address: siteInfoObj.address,
+        cloneable: siteInfoObj.cloneable,
         extra: {},                                  // Non-standard key-values in content.json
-        modified: siteInfoObj.content.modified,     // This modified field is signed by the owner and located in the content.json
-        backgroundColor: siteInfoObj.content["background-color"],
-        peers: siteInfoObj.settings.peers,
-        added: siteInfoObj.settings.added,
-        size: siteInfoObj.settings.size,
-        size_optional: siteInfoObj.settings.size_optional
+        modified: siteInfoObj.modified,     // This modified field is signed by the owner and located in the content.json
+        backgroundColor: siteInfoObj["background-color"],
+        peers: siteInfoObj.peers,
+        added: siteInfoObj.added,
+        size: siteInfoObj.size,
+        size_optional: siteInfoObj.size_optional,
+        zeronet_version: siteInfoObj.zeronet_version
     }
     // Extra keys such as 'settings'
-    for (let key in siteInfoObj.content)
-        if (["files",
-            "domain",
-            "description",
-            "cloned_from",
-            "address",
-            "includes",
-            "cloneable",
-            "inner_path",
-            "files_optional",
-            "title",
-            "signs_required",
-            "modified",
-            "ignore",
-            "zeronet_version",
-            "postmessage_nonce_security",
-            "address_index",
-            "background-color"].indexOf(key) < 0)
-            this.basicInfo.extra[key] = siteInfoObj.content[key]
-    this.runtimeInfo.lastCrawl.siteInfo = new Date()
+    try {
+        for (let key in siteInfoObj)
+            if (["files",
+                "domain",
+                "description",
+                "cloned_from",
+                "address",
+                "includes",
+                "cloneable",
+                "inner_path",
+                "files_optional",
+                "title",
+                "signs_required",
+                "modified",
+                "ignore",
+                "zeronet_version",
+                "postmessage_nonce_security",
+                "address_index",
+                "background-color"].indexOf(key) < 0 && !/[.$]/.test(key))
+                this.basicInfo.extra[key] = siteInfoObj[key]
+    } catch (e) {
+        signale.warn(e)
+    }
     this.markModified("basicInfo.extra")
+    this.runtimeInfo.lastCrawl.siteInfo = new Date()
     signale.info(`Updated site info for ${this.basicInfo.address}`)
 }
 

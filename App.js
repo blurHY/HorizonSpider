@@ -2,14 +2,13 @@ require("dotenv").config()
 
 const rp = require("request-promise"),
     fs = require("fs"),
-    Admin = require("./ZeroNet/AdminZite"),
     delay = require("delay"),
     signale = require("signale"),
-    DataBase = require("./DataBase"),
-    SiteDB = require("./ZeroNet/SiteDataBase"),
-    SiteMeta = require("./ZeroNet/SiteMeta"),
-    SitesJson = require("./ZeroNet/SitesJson"),
     PromisePool = require("es6-promise-pool"),
+
+    Admin = require("./ZeroNet/AdminZite"),
+    DataBase = require("./DataBase"),
+    SiteMeta = require("./ZeroNet/SiteMeta"),
     SettingsLoader = require("./ZeroNet/SettingsLoader"),
     DomainResolver = require("./ZeroNet/DomainResolver"),
 
@@ -18,9 +17,13 @@ const rp = require("request-promise"),
 let admin = null
 let exiting = false
 
+const blocked = require("blocked-at")
+blocked((time, stack) => {
+    console.log(`Blocked for ${time / 1000}s, operation started here:`, stack)
+}, {threshold: 30000})
 
 function exitHandler() {
-    if (!global.foreaching)
+    if (exiting)
         process.exit()
     signale.warn("Received signal, gracefully shutting down...")
     exiting = true
@@ -33,13 +36,10 @@ process.on("exit", () => {
     signale.warn("Exited")
 })
 
-
 // ZeroHello won't be downloaded without requesting
 async function waitAndGetAdmin() {
-    let id
     while (true) {
         try {
-            SitesJson.reloadJson()
             admin = new Admin()
         } catch (e) {
             signale.fatal("Cannot connect to admin site", e)
@@ -70,7 +70,6 @@ function bootstrapCrawling() {
     try {
         lastAddDomain = parseInt(fs.readFileSync("./lastAddDomain", "utf8"))
     } catch {
-
     }
     if (Date.now() - lastAddDomain > 12 * 60 * 60 * 1000) {
         DomainResolver.loadDomains()
@@ -84,12 +83,12 @@ function bootstrapCrawling() {
 
 async function crawlASite(site) {
     try {
-        signale.start(`Started crawling site ${site.address}`)
+        signale.start(`Started crawling site ${site.address} id:${global.tempSiteId[site.address]} total:${global.sitesCount}`)
         signale.time(site.address)
 
-        let dbSchema = SiteMeta.getDBJson(site.address)
-        let siteObj = await DataBase.getSite(site.address)
-        let siteDB = await SiteDB.getSiteDataBase(site.address)
+        let dbSchema = SiteMeta.getDBJson(site.address),
+            siteObj = await DataBase.getSite(site.address),
+            siteDB = await SiteMeta.getSiteDataBase(site.address)
 
         if (!siteObj) { // Site not found, create one
             signale.info(`Discovered a brand new site ${site.address}`)
@@ -103,11 +102,11 @@ async function crawlASite(site) {
         function* promiseGenerator() {
             for (let crawler in modules) {
                 if (modules[crawler] && modules[crawler].crawl) {
-                    signale.start(`Started crawler ${crawler} for ${site.address}`)
+                    signale.start(`Started crawler ${crawler} for ${site.address} ${global.tempSiteId[site.address]}/${global.sitesCount}`)
                     yield (async () => {
                         try {
                             await modules[crawler].crawl(dbSchema, siteDB, siteObj)
-                            signale.complete(`Finished crawler ${crawler} for ${site.address}`)
+                            signale.complete(`Finished crawler ${crawler} for ${site.address} ${global.tempSiteId[site.address]}/${global.sitesCount}`)
                         } catch (e) {
                             signale.error(`An error appeared in ${crawler}`)
                         }
@@ -120,7 +119,7 @@ async function crawlASite(site) {
         await pool.start()
 
         await siteObj.save()
-        signale.info(`Saved site ${site.address}`)
+        signale.info(`Saved site ${site.address} id:${global.tempSiteId[site.address]} total:${global.sitesCount}`)
 
         signale.timeEnd(site.address)
     } catch (e) {
@@ -155,47 +154,56 @@ async function extractSitesAndAdd() {
 }
 
 // Crawl every site in siteList
-async function forEachSite() {
-    global.foreaching = true
+async function forEachSite(siteList) {
+    global.tempSiteId = {}
+    global.sitesCount = siteList.length
 
+    let n = 0
 
     function* promiseGenerator() {
-        for (let site of admin.siteList) {
-            if (exiting) // The minimal unit is a single site.
+        for (let site of siteList) {
+            if (exiting)
                 return
+            global.tempSiteId[site.address] = n
             yield crawlASite(site)
+            n++
         }
     }
 
     let pool = new PromisePool(promiseGenerator, parseInt(process.env.Concurrency) || 3)
     await pool.start()
-
-    global.foreaching = false
 }
 
-waitAndGetAdmin().then(() => {
-    admin.Event.on("wsOpen", async () => {
-        if (exiting)
-            return
-        DataBase.connect()
-        DataBase.event.on("connected", async () => { // Main loop
-            signale.debug(`Database connected`)
-            if (global.loopStarted || exiting)
-                return
-            global.loopStarted = true
-            signale.debug(`Started main loop {DryRun:${process.env.DryRun}}`)
-            if (!process.env.DryRun)
+function syncWithZeroNet() {
+    waitAndGetAdmin().then(() => {
+        admin.Event.on("wsOpen", async () => {
+            while (!exiting) {
                 bootstrapCrawling()
-            while (true) {
-                await admin.reloadSiteList()
-                await forEachSite()
-                if (exiting)
-                    process.exit()
-                if (!process.env.DryRun)
-                    await extractSitesAndAdd()
-                signale.info(`Sleeping for next loop`)
+                await extractSitesAndAdd()
+                await admin.updateAll()
                 await delay(process.env.mainLoopInterval)
             }
         })
     })
-})
+}
+
+function standaloneCrawl() {
+    signale.info("Standalone crawler started")
+    DataBase.connect()
+    DataBase.event.on("connected", async () => { // Main loop
+        signale.debug(`Database connected`)
+        signale.debug(`Started main loop {DryRun:${process.env.DryRun}}`)
+        while (!exiting) {
+            await SiteMeta.reloadSitesJson()
+            let list = await SiteMeta.asWsSiteList()
+            signale.info(`Sites to crawl: ${list.length}`)
+            await forEachSite(list)
+            signale.info(`Sleeping for next loop`)
+            await delay(process.env.mainLoopInterval)
+        }
+    })
+}
+
+standaloneCrawl()
+if (!process.env.DryRun)
+    syncWithZeroNet()

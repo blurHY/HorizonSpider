@@ -6,12 +6,14 @@ module.exports.crawl = async function explore(dbSchema, siteDB, siteObj) {
         return
     let tables = await siteDB.all("SELECT name FROM sqlite_master WHERE type='table'")
     for (let table of tables) {
+        if (table.name === "sqlite_sequence")
+            continue
         await pagingCrawl(siteDB, siteObj, table.name)
     }
 }
 
 async function pagingCrawl(siteDB, siteObj, table_name, start = 0, count = 300) {
-    signale.debug(`Scanning ${siteObj.basicInfo.address} db ${start}-${start + count}`)
+    signale.debug(`Scanning ${siteObj.basicInfo.address} db ${start}-${start + count} table: ${table_name}`)
     let rows = await siteDB.all(`SELECT * from ${table_name} limit ${count} offset ${start}`)
     if (rows.length > 0) {
         for (let row of rows) {
