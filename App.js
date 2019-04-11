@@ -20,7 +20,7 @@ let exiting = false
 const blocked = require("blocked-at")
 blocked((time, stack) => {
     console.log(`Blocked for ${time / 1000}s, operation started here:`, stack)
-}, {threshold: 30000})
+}, { threshold: 30000 })
 
 function exitHandler() {
     if (exiting)
@@ -48,7 +48,7 @@ async function waitAndGetAdmin() {
             try {
                 await rp({
                     url: `http://${SettingsLoader.ZeroNetHost}`,
-                    headers: {"Accept": "text/html"},
+                    headers: { "Accept": "text/html" },
                     followRedirect: false
                 })
             } catch {
@@ -134,7 +134,7 @@ async function extractSitesAndAdd() {
     let arr
     signale.await("Adding sites of extracted links to ZeroNet")
     while (true) {
-        arr = await DataBase.link.find({added: {$ne: true}}).limit(perPageCount).skip(skip).sort("site").select("site").exec()
+        arr = await DataBase.link.find({ added: { $ne: true } }).limit(perPageCount).skip(skip).sort("site").select("site").exec()
         skip += perPageCount
         if (!arr || arr.length === 0)
             break
@@ -176,7 +176,7 @@ async function forEachSite(siteList) {
 
 function syncWithZeroNet() {
     waitAndGetAdmin().then(() => {
-        admin.Event.on("wsOpen", async () => {
+        admin.on("wsOpen", async () => {
             while (!exiting) {
                 bootstrapCrawling()
                 await extractSitesAndAdd()

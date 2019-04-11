@@ -3,11 +3,11 @@ const EventEmitter = require("events")
 const signale = require("signale")
 
 
-module.exports = class ZeroWs {
+module.exports = class ZeroWs extends EventEmitter {
     constructor(wrapper_key, zeroNetHost = "localhost:43110", secureWs = false) {
         if (!wrapper_key)
             throw "No wrapper_key"
-        this.Event = new EventEmitter()
+        super()
         this.wrapper_key = wrapper_key
         this.zeroNetHost = zeroNetHost
         this.secureWs = secureWs
@@ -16,7 +16,7 @@ module.exports = class ZeroWs {
         this.next_message_id = 1
         signale.info("Creating websocket connection")
 
-        this.ws = new WebsocketClient({maxReceivedMessageSize: 83886080, maxReceivedFrameSize: 83886080})
+        this.ws = new WebsocketClient({ maxReceivedMessageSize: 83886080, maxReceivedFrameSize: 83886080 })
         this.ws.on("connect", x => this.onOpen(x))
         this.ws.on("connectFailed", x => this.onError(x))
         this.connect()
@@ -42,7 +42,7 @@ module.exports = class ZeroWs {
                 this.connect()
             }, 2000)
         }
-        this.Event.emit("wsClose")
+        this.emit("wsClose")
     }
 
     onMsg(e) {
@@ -77,7 +77,7 @@ module.exports = class ZeroWs {
             this.ws.send(JSON.stringify(message))
         }
         this.message_queue = []
-        this.Event.emit("wsOpen")
+        this.emit("wsOpen")
     }
 
     connect() {
@@ -123,6 +123,6 @@ module.exports = class ZeroWs {
     }
 
     response(to, result) {
-        this.send({"cmd": "response", "to": to, "result": result})
+        this.send({ "cmd": "response", "to": to, "result": result })
     }
 }

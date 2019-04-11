@@ -27,8 +27,7 @@ module.exports = class AdminZite extends Zite {
         if (count > 1)
             signale.info(`Adding ${count} sites to zeronet`)
         for (let addr of siteAddrs)
-            this.cmdp("siteAdd", addr).catch((e) => {
-            })
+            this.cmdp("siteAdd", addr).catch((e) => {})
     }
 
     isSiteExisted(siteAddr) {

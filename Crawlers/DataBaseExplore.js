@@ -12,16 +12,14 @@ module.exports.crawl = async function explore(dbSchema, siteDB, siteObj) {
     }
 }
 
-async function pagingCrawl(siteDB, siteObj, table_name, start = 0, count = 300) {
+async function pagingCrawl(siteDB, siteObj, table_name, start = 0, count = 3000) {
     signale.debug(`Scanning ${siteObj.basicInfo.address} db ${start}-${start + count} table: ${table_name}`)
     let rows = await siteDB.all(`SELECT * from ${table_name} limit ${count} offset ${start}`)
-    if (rows.length > 0) {
-        for (let row of rows) {
-            for (let field_name in row) {
-                if (typeof row[field_name] === "string")
-                    await linksExtractor.findLinksAndSave(row[field_name], siteObj._id, "site")
-            }
-        }
-        await pagingCrawl(siteDB, siteObj, table_name, start + count, count)
-    }
+    if (rows.length === 0)
+        return
+    for (let row of rows)
+        for (let field_name in row)
+            if (typeof row[field_name] === "string")
+                await linksExtractor.findLinksAndSave(row[field_name], siteObj._id, "site")
+    await pagingCrawl(siteDB, siteObj, table_name, start + count, count)
 }

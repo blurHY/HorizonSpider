@@ -9,8 +9,8 @@ let feedSchema = new mongoose.Schema({
     title: String,
     body: String,
     url: String,
-    site: {type: ObjectId, ref: "site"},
-    linksExtracted: {type: Boolean, default: false}
+    site: { type: ObjectId, ref: "site" },
+    linksExtracted: { type: Boolean, default: false }
 })
 
 let feed = mongoose.model("feed", feedSchema)
@@ -22,7 +22,7 @@ let opfileSchema = new mongoose.Schema({ // https://zeronet.io/docs/site_develop
     peer: Number,
     time_added: Number,
     extra: {},
-    site: {type: ObjectId, ref: "site"}
+    site: { type: ObjectId, ref: "site" }
 })
 
 let opfile = mongoose.model("opfile", opfileSchema)
@@ -31,7 +31,7 @@ let linkSchema = new mongoose.Schema({
     site: String,
     path: String,
     date: Date,
-    fromObj: {type: ObjectId, refPath: "fromType"},
+    fromObj: { type: ObjectId, refPath: "fromType" },
     fromType: {
         type: String,
         enum: ["feed", "site", "opfile"]
@@ -49,7 +49,7 @@ let siteSchema = new mongoose.Schema({
         description: String,
         title: String,
         cloned_from: String,
-        address: {type: String, unique: true},
+        address: { type: String, unique: true },
         cloneable: Boolean,
         extra: Object,
         modified: Number, // Keep original format to reduce bugs
@@ -62,14 +62,14 @@ let siteSchema = new mongoose.Schema({
     },
     feedsQueried: [{
         name: String,
-        result: [{type: ObjectId, ref: "feed"}]
+        result: [{ type: ObjectId, ref: "feed" }]
     }],
     optionalFiles: [
-        {type: ObjectId, ref: "opfile"}
+        { type: ObjectId, ref: "opfile" }
     ],
     runtimeInfo: {
         lastCrawl: {
-            siteInfo: {type: Date, default: Date.now},
+            siteInfo: { type: Date, default: Date.now },
             feeds: {
                 check: Date, // Only compare last row and add new stuff
                 full: Date, // Check old rows
@@ -91,7 +91,7 @@ let siteSchema = new mongoose.Schema({
 })
 
 siteSchema.methods.setSiteInfo = function (siteInfoObj) {
-    siteInfoObj = {files: {}, files_optional: {}, ...siteInfoObj}
+    siteInfoObj = { files: {}, files_optional: {}, ...siteInfoObj }
     this.basicInfo = {
         files: Object.keys(siteInfoObj.files).length,
         files_optional: Object.keys(siteInfoObj.files_optional).length,
@@ -139,29 +139,47 @@ siteSchema.methods.setSiteInfo = function (siteInfoObj) {
     signale.info(`Updated site info for ${this.basicInfo.address}`)
 }
 
-siteSchema.methods.addFeeds = async function (feeds, name) {
-    let feedCategory = this.feedsQueried.find(f => f.name === name)
-    if (!feedCategory) {
-        feedCategory = {name, result: []}
-        this.feedsQueried.push(feedCategory)
-    }
-    for (let f of feeds) {
-        f._id = new mongoose.Types.ObjectId()
-        f.site = this._id
-        let feedObj = new feed(f)
-        feedCategory.result.push(f._id)
-        await feedObj.save()
-    }
+siteSchema.methods.addFeeds = function (feeds, name) {
+    return new Promise((res, rej) => {
+        let feedCategory = this.feedsQueried.find(f => f.name === name) // Find the corresponding category
+        if (!feedCategory) { // Or create one
+            feedCategory = { name, result: [] }
+            this.feedsQueried.push(feedCategory)
+        }
+        let feedObjs = []
+        for (let f of feeds) {
+            f._id = new mongoose.Types.ObjectId()
+            f.site = this._id
+            let feedObj = new feed(f)
+            feedCategory.result.push(f._id)
+            feedObjs.push(feedObj)
+        }
+        feed.collection.insert(feedObjs, (err, docs) => {
+            if (!err)
+                res(docs)
+            else
+                rej(err)
+        })
+    })
 }
 
-siteSchema.methods.addOptionalFiles = async function (optionals) {
-    for (let o of optionals) {
-        o._id = new mongoose.Types.ObjectId()
-        o.site = this._id
-        let oObj = new opfile(o)
-        this.optionalFiles.push(oObj._id)
-        await oObj.save()
-    }
+siteSchema.methods.addOptionalFiles = function (optionals) {
+    return new Promise((res, rej) => {
+        let oObjs = []
+        for (let o of optionals) {
+            o._id = new mongoose.Types.ObjectId()
+            o.site = this._id
+            let oObj = new opfile(o)
+            this.optionalFiles.push(oObj._id)
+            oObjs.push(oObj)
+        }
+        opfile.collection.insert(oObjs, (err, docs) => {
+            if (!err)
+                res(docs)
+            else
+                rej(err)
+        })
+    })
 }
 
 let siteModel = mongoose.model("site", siteSchema)
@@ -213,9 +231,9 @@ module.exports = {
 // })
 
 // event.on("connected", async () => {
-//     // for (let x = 0; x < 100; x++) {
-//     //     //     await (new link({site: x, added: Boolean(x % 2)})).save()
-//     //     // }
+// for (let x = 0; x < 100; x++) {
+//     await(new link({ site: x, added: Boolean(x % 2) })).save()
+// }
 //     let arr = await module.exports.link.find({added: false}).limit(10).skip(10).select("site").exec()
 //     console.log(arr)
 // })

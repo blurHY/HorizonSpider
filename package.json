@@ -23,7 +23,7 @@
     "websocket": "^1.0.28"
   },
   "scripts": {
-    "crawl": "node --inspect App.js "
+    "crawl": "nodemon --inspect App.js "
   },
   "signale": {
     "displayScope": true,
@@ -39,6 +39,7 @@
     "uppercaseLabel": true
   },
   "devDependencies": {
-    "@types/node": "^11.13.0"
+    "@types/node": "^11.13.0",
+    "nodemon": "^1.18.11"
   }
 }
