@@ -13,7 +13,7 @@ module.exports = {
                 res(JSON.parse(data))
         })
     }),
-    mergeContentJsonWithSiteList: async obj => ({...(await module.exports.getContentJson(obj.address)), ...obj}),
+    mergeContentJsonWithSiteList: async obj => ({ ...(await module.exports.getContentJson(obj.address)), ...obj }),
     getDBJson: (siteAddr) => new Promise((res, rej) => {
         fs.readFile(join(process.env.ZeronetDataPath, siteAddr, "dbschema.json"), "utf8", (err, data) => {
             if (err) {
@@ -23,7 +23,7 @@ module.exports = {
                 res(JSON.parse(data))
         })
     }),
-    reloadSitesJson: (siteAddr) => new Promise((res, rej) => {
+    reloadSitesJson: () => new Promise((res, rej) => {
         fs.readFile(join(process.env.ZeronetDataPath, "sites.json"), "utf8", (err, data) => {
             if (err) {
                 rej(err)
@@ -33,15 +33,15 @@ module.exports = {
         })
     }),
     getWrapperKey(site_addr) {
-        module.exports.getSitesList()
+        await module.exports.getSitesList()
         if (global.sitesJson && global.sitesJson[site_addr])
             return global.sitesJson[site_addr].wrapper_key
         else
             throw `No wrapper_key for ${site_addr}`
     },
-    getSitesList() {
+    async getSitesList() {
         if (!global.sitesJson)
-            module.exports.reloadSitesJson()
+            await module.exports.reloadSitesJson()
         return global.sitesJson
     },
     async asWsSiteList() {
@@ -49,7 +49,7 @@ module.exports = {
         let arr = []
         for (let address in sites)
             try {
-                arr.push(await module.exports.mergeContentJsonWithSiteList({address, ...sites[address]}))
+                arr.push(await module.exports.mergeContentJsonWithSiteList({ address, ...sites[address] }))
             } catch {
             }
         return arr
