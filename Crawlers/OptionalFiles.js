@@ -50,7 +50,6 @@ async function pagingQuery(siteDB, siteObj, addiCount, count = 3000, start = 0, 
                 if (addiCount)
                     obj.extra = await siteDB.each(`select * from file where file_name=? limit 1`, basename(row.inner_path))
             } catch {
-
             }
             rowsToAdd.push(obj)
         }
@@ -60,4 +59,4 @@ async function pagingQuery(siteDB, siteObj, addiCount, count = 3000, start = 0, 
     await pagingQuery(siteDB, siteObj, addiCount, count, start + count)
 }
 
-module.exports = {crawl: updateOptionalFiles}
+module.exports = { crawl: updateOptionalFiles }

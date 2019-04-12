@@ -1,4 +1,4 @@
-const signale = require('signale');
+const signale = require("signale")
 const DataBase = require("../DataBase")
 
 async function updateFeeds(dbSchema, siteDB, siteObj) {
@@ -8,14 +8,12 @@ async function updateFeeds(dbSchema, siteDB, siteObj) {
     signale.info(`Feeds available for ${siteObj.basicInfo.address}`)
 
     let query, func = s => s,
-        maxDate = siteObj.runtimeInfo.lastCrawl.feeds.itemDate,
         now = new Date()
 
-    if ((siteObj.runtimeInfo.lastCrawl.feeds.full > now - process.env.feedFull_Period) && maxDate > 0) {
-        if (siteObj.runtimeInfo.lastCrawl.feeds.check < now - process.env.feedCheck_Peroid) { // New feeds only
+    if (siteObj.runtimeInfo.lastCrawl.feeds.full > now - process.env.feedFull_Period) { // Not too outdated 
+        if (siteObj.runtimeInfo.lastCrawl.feeds.check < now - process.env.feedCheck_Peroid && siteObj.runtimeInfo.lastCrawl.feeds.check) { // New feeds only
+            func = s => `SELECT * FROM (${s}) where date_added > ${siteObj.runtimeInfo.lastCrawl.feeds.check.getTime() / 1000}` // Not needed to add the outer where clause to inner, because of the sqlite optimization
             siteObj.runtimeInfo.lastCrawl.feeds.check = now
-            siteObj.runtimeInfo.lastCrawl.feeds.itemDate = await siteDB.each(`select * from (${dbSchema.feeds[name]}) order by date_added desc limit 1`)
-            func = s => `SELECT * FROM (${s}) where date_added > ${maxDate}` // Not needed to add the outer where clause to inner, because of the sqlite optimization
         } else
             signale.info(`Stored feeds are up to date ${siteObj.basicInfo.address}`)
     } else {
@@ -33,10 +31,10 @@ async function updateFeeds(dbSchema, siteDB, siteObj) {
 
 async function pagingFeedQuery(query, siteDB, siteObj, name, count = 3000, start = 0) {
     let ori_query = query
-    query = `select * from (${query}) order by date_added limit ${count} offset ${start}` // Sqlite has powerful optimization, so we have do it like this.
+    query = `select * from (${query}) order by date_added limit ${count} offset ${start}`
     let rows = await siteDB.all(query)
     if (!(rows instanceof Array)) {
-        signale.error("An error occurred during a feed query", err)
+        signale.error("An error occurred during a feed query", rows)
     } else if (rows.length > 0) {
         let renamedRows = []
         for (let row of rows) {

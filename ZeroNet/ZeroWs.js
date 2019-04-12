@@ -5,13 +5,13 @@ const signale = require("signale")
 
 module.exports = class ZeroWs extends EventEmitter {
     constructor(...args) {
-        if (!wrapper_key)
-            throw "No wrapper_key"
         super()
         this.init(...args)
     }
 
     init(wrapper_key, zeroNetHost = "localhost:43110", secureWs = false) {
+        if (!wrapper_key)
+            throw "No wrapper_key"
         this.wrapper_key = wrapper_key
         this.zeroNetHost = zeroNetHost
         this.secureWs = secureWs
@@ -66,7 +66,7 @@ module.exports = class ZeroWs extends EventEmitter {
     }
 
     onOpen(conn) {
-        signale.success(`ZeroNet websocket connected`)
+        signale.success("ZeroNet websocket connected")
 
         conn.on("error", (x) => this.onError(x))
         conn.on("close", (x) => this.onClose(x))

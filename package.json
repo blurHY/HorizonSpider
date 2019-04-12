@@ -23,7 +23,8 @@
     "websocket": "^1.0.28"
   },
   "scripts": {
-    "crawl": "nodemon --inspect App.js "
+    "crawl": "node App.js",
+    "dev": "nodemon --inspect App.js"
   },
   "signale": {
     "displayScope": true,
@@ -40,6 +41,8 @@
   },
   "devDependencies": {
     "@types/node": "^11.13.0",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^13.1.0",
     "nodemon": "^1.18.11"
   }
 }
