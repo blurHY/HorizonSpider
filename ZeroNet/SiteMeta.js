@@ -32,7 +32,7 @@ module.exports = {
                 res(global.sitesJson = JSON.parse(data))
         })
     }),
-    getWrapperKey(site_addr) {
+    async getWrapperKey(site_addr) {
         await module.exports.getSitesList()
         if (global.sitesJson && global.sitesJson[site_addr])
             return global.sitesJson[site_addr].wrapper_key
