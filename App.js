@@ -131,13 +131,14 @@ async function crawlASite(site) {
 async function extractSitesAndAdd() {
     let perPageCount = 500
     let skip = 0
-    let arr
+    let arr, resolved
     signale.await("Adding sites of extracted links to ZeroNet")
     while (true) {
         arr = await DataBase.link.find({ added: { $ne: true } }).limit(perPageCount).skip(skip).sort("site").select("site").exec()
         skip += perPageCount
         if (!arr || arr.length === 0)
             break
+        resolved = new Set()
         for (let link of arr) {
             let addr = link.site
             console.log(addr)
@@ -145,11 +146,13 @@ async function extractSitesAndAdd() {
                 addr = DomainResolver.resolveDomain(addr)
             } catch {
             }
-            if (!admin.isSiteExisted(addr))
-                admin.addSites([addr])
+            if (arr)
+                if (!admin.isSiteExisted(addr))
+                    resolved.add(addr)
             link.added = true
             await link.save()
         }
+        admin.addSites([...resolved])
     }
 }
 

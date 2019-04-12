@@ -40,7 +40,7 @@ module.exports = class ZeroWs extends EventEmitter {
             setTimeout(() => {
                 this.reconnecting = false
                 this.connect()
-            }, 2000)
+            }, 20000)
         }
         this.emit("wsClose")
     }
