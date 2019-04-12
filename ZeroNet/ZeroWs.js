@@ -4,10 +4,14 @@ const signale = require("signale")
 
 
 module.exports = class ZeroWs extends EventEmitter {
-    constructor(wrapper_key, zeroNetHost = "localhost:43110", secureWs = false) {
+    constructor(...args) {
         if (!wrapper_key)
             throw "No wrapper_key"
         super()
+        this.init(...args)
+    }
+
+    init(wrapper_key, zeroNetHost = "localhost:43110", secureWs = false) {
         this.wrapper_key = wrapper_key
         this.zeroNetHost = zeroNetHost
         this.secureWs = secureWs
