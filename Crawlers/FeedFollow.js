@@ -10,7 +10,7 @@ async function updateFeeds(dbSchema, siteDB, siteObj) {
     let query, func = s => s,
         now = new Date()
 
-    if (siteObj.runtimeInfo.lastCrawl.feeds.full > now - process.env.feedFull_period) { // Not too outdated 
+    if (siteObj.runtimeInfo.lastCrawl.feeds && siteObj.runtimeInfo.lastCrawl.feeds.full > now - process.env.feedFull_period) { // Not too outdated 
         if (siteObj.runtimeInfo.lastCrawl.feeds.check < now - process.env.feedCheck_period && siteObj.runtimeInfo.lastCrawl.feeds.check) { // New feeds only
             func = s => `SELECT * FROM (${s}) where date_added > ${siteObj.runtimeInfo.lastCrawl.feeds.check.getTime() / 1000}` // Not needed to add the outer where clause to inner, because of the sqlite optimization
             siteObj.runtimeInfo.lastCrawl.feeds.check = now
@@ -19,6 +19,11 @@ async function updateFeeds(dbSchema, siteDB, siteObj) {
     } else {
         if (!siteObj.feedsQueried)
             siteObj.feedsQueried = []
+        if (!siteObj.runtimeInfo.lastCrawl.feeds)
+            siteObj.runtimeInfo.lastCrawl.feeds = {}
+        signale.info(`Re-crawl all feeds for ${siteObj.basicInfo.address}`)
+        if (!siteObj.runtimeInfo.lastCrawl.feeds || siteObj.runtimeInfo.lastCrawl.feeds.full === 0)
+            signale.info("lastCrawl.optional.full is 0")
         siteObj.feedsQueried.splice(0) // Clear old data and re-query all feeds
         siteObj.runtimeInfo.lastCrawl.feeds.full = now
     }
@@ -28,7 +33,6 @@ async function updateFeeds(dbSchema, siteDB, siteObj) {
             query = func(dbSchema.feeds[name])
             await pagingFeedQuery(query, siteDB, siteObj, name)
         }
-    signale.info(`Updated feeds for ${siteObj.basicInfo.address}`)
 }
 
 async function pagingFeedQuery(query, siteDB, siteObj, name, count = 3000, start = 0) {

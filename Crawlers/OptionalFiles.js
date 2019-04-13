@@ -6,22 +6,24 @@ async function updateOptionalFiles(dbSchema, siteDB, siteObj) {
     if (!siteDB)
         return
 
-    let maxDate = siteObj.runtimeInfo.lastCrawl.optional.itemDate
+    let lastDate = 0
 
-    if ((siteObj.runtimeInfo.lastCrawl.optional.full > new Date() - process.env.optionalFull_period) && maxDate > 0) {
+    if ((siteObj.runtimeInfo.lastCrawl.optional.full > new Date() - process.env.optionalFull_period)) {
         if (siteObj.runtimeInfo.lastCrawl.optional.check < new Date() - process.env.optionalCheck_period) { // New files only
             signale.info(`Checking for new optional files ${siteObj.basicInfo.address}`)
+            lastDate = siteObj.runtimeInfo.lastCrawl.optional.check
             siteObj.runtimeInfo.lastCrawl.optional.check = new Date()
-            siteObj.runtimeInfo.lastCrawl.optional.itemDate = await ContentDB.getLastItemDate(siteObj.basicInfo.address)
         } else
             signale.info(`Stored optional files are up to date ${siteObj.basicInfo.address}`)
     } else {
+        signale.info("Re-crawl all optional files for " + siteObj.basicInfo.address)
+        if (siteObj.runtimeInfo.lastCrawl.optional.full === 0)
+            signale.info("lastCrawl.optional.full is 0")
         siteObj.optionalFiles.splice(0) // Clear old data and re-query all optionalFiles, but leave records
         siteObj.runtimeInfo.lastCrawl.optional.full = new Date()
-        maxDate = null
     }
 
-    await pagingQuery(siteDB, siteObj, 3000, 0, maxDate > 0 ? maxDate : null)
+    await pagingQuery(siteDB, siteObj, 3000, 0, lastDate)
 }
 
 

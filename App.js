@@ -113,7 +113,7 @@ async function crawlASite(siteInfo) {
                             await modules[crawler].crawl(dbSchema, siteDB, siteObj)
                             signale.complete(`Finished crawler ${crawler} for ${siteInfo.address} ${global.tempSiteId[siteInfo.address]}/${global.sitesCount}  Remaining:${--balance}`)
                         } catch (e) {
-                            signale.error(`An error appeared in ${crawler}`)
+                            signale.error(`An error appeared in ${crawler}`, e)
                         }
                     })()
                 }
@@ -122,9 +122,9 @@ async function crawlASite(siteInfo) {
         await (new PromisePool(promiseGenerator, parseInt(process.env.Concurrency) || 3)).start()
 
         if (isNewSite)
-            DataBase.saveSite(siteObj)
+            await DataBase.saveSite(siteObj)
         else
-            DataBase.updateSite(siteObj)
+            await DataBase.updateSite(siteObj)
 
         signale.timeEnd(siteInfo.address)
     } catch (e) {
@@ -230,3 +230,7 @@ if (args.length === 0) {
     })
     DataBase.connect()
 }
+
+/* Known Problems:
+
+*/
