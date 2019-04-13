@@ -6,7 +6,8 @@ const signale = require("signale")
 module.exports = class ZeroWs extends EventEmitter {
     constructor(...args) {
         super()
-        this.init(...args)
+        if (args.length > 0)
+            this.init(...args)
     }
 
     init(wrapper_key, zeroNetHost = "localhost:43110", secureWs = false) {

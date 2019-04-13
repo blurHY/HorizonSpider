@@ -4,12 +4,15 @@ const linksExtractor = require("./LinksExtractor"),
 module.exports.crawl = async function explore(dbSchema, siteDB, siteObj) {
     if (!siteDB)
         return
+    if (siteObj.runtimeInfo.lastCrawl.databaseScan > new Date - (process.env.databaseScan_period || 7200000))
+        return
     let tables = await siteDB.all("SELECT name FROM sqlite_master WHERE type='table'")
     for (let table of tables) {
         if (table.name === "sqlite_sequence")
             continue
         await pagingCrawl(siteDB, siteObj, table.name)
     }
+    siteObj.runtimeInfo.lastCrawl.databaseScan = new Date()
 }
 
 async function pagingCrawl(siteDB, siteObj, table_name, start = 0, count = 3000) {

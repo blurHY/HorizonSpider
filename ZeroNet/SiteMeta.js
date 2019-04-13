@@ -45,7 +45,7 @@ module.exports = {
         return global.sitesJson
     },
     async asWsSiteList() {
-        let sites = module.exports.getSitesList()
+        let sites = await module.exports.getSitesList()
         let arr = []
         for (let address in sites)
             try {
@@ -54,15 +54,13 @@ module.exports = {
             }
         return arr
     },
-    async getSiteDataBase(siteAddr) {
-        let dbSchema
-        try {
-            dbSchema = await module.exports.getDBJson(siteAddr)
-        } catch {
-            return null
-        }
+    async getSiteDataBase(siteAddr, dbSchema = null) {
         if (!dbSchema)
-            return null
+            try {
+                dbSchema = await module.exports.getDBJson(siteAddr)
+            } catch {
+                return null
+            }
         let joined = path.resolve(process.env.ZeronetDataPath, siteAddr, dbSchema.db_file)
         if (!joined.startsWith(path.resolve(process.env.ZeronetDataPath, siteAddr)))
             throw Error("Path disallowed: " + joined)

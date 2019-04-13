@@ -10,8 +10,8 @@ async function updateFeeds(dbSchema, siteDB, siteObj) {
     let query, func = s => s,
         now = new Date()
 
-    if (siteObj.runtimeInfo.lastCrawl.feeds.full > now - process.env.feedFull_Period) { // Not too outdated 
-        if (siteObj.runtimeInfo.lastCrawl.feeds.check < now - process.env.feedCheck_Peroid && siteObj.runtimeInfo.lastCrawl.feeds.check) { // New feeds only
+    if (siteObj.runtimeInfo.lastCrawl.feeds.full > now - process.env.feedFull_period) { // Not too outdated 
+        if (siteObj.runtimeInfo.lastCrawl.feeds.check < now - process.env.feedCheck_period && siteObj.runtimeInfo.lastCrawl.feeds.check) { // New feeds only
             func = s => `SELECT * FROM (${s}) where date_added > ${siteObj.runtimeInfo.lastCrawl.feeds.check.getTime() / 1000}` // Not needed to add the outer where clause to inner, because of the sqlite optimization
             siteObj.runtimeInfo.lastCrawl.feeds.check = now
         } else
@@ -47,11 +47,7 @@ async function pagingFeedQuery(query, siteDB, siteObj, name, count = 3000, start
             })
         }
 
-        let refreshedSiteObj = await DataBase.getSite(siteObj.basicInfo.address) // Refresh model
-        if (refreshedSiteObj)
-            siteObj = refreshedSiteObj
-
-        await siteObj.addFeeds(renamedRows, name)
+        await DataBase.addFeeds(siteObj, renamedRows, name)
 
         signale.info(`Imported ${rows.length} feeds from ${siteObj.basicInfo.address}`)
         await pagingFeedQuery(ori_query, siteDB, siteObj, name, count, start + count) // Query and store next page

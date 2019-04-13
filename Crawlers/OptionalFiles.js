@@ -15,8 +15,8 @@ async function updateOptionalFiles(dbSchema, siteDB, siteObj) {
 
     let maxDate = siteObj.runtimeInfo.lastCrawl.optional.itemDate
 
-    if ((siteObj.runtimeInfo.lastCrawl.optional.full > new Date() - process.env.optionalFull_Period) && maxDate > 0) {
-        if (siteObj.runtimeInfo.lastCrawl.optional.check < new Date() - process.env.optionalCheck_Peroid) { // New feeds only
+    if ((siteObj.runtimeInfo.lastCrawl.optional.full > new Date() - process.env.optionalFull_period) && maxDate > 0) {
+        if (siteObj.runtimeInfo.lastCrawl.optional.check < new Date() - process.env.optionalCheck_period) { // New feeds only
             siteObj.runtimeInfo.lastCrawl.optional.check = new Date()
             siteObj.runtimeInfo.lastCrawl.optional.itemDate = await ContentDB.getLastItemDate(siteObj.basicInfo.address)
         } else
@@ -54,7 +54,7 @@ async function pagingQuery(siteDB, siteObj, addiCount, count = 3000, start = 0, 
             rowsToAdd.push(obj)
         }
     }
-    await siteObj.addOptionalFiles(rowsToAdd)
+    await siteObj.addOptionalFiles(siteObj, rowsToAdd)
     signale.info(`Imported ${rowsToAdd.length} rows of optional file info`)
     await pagingQuery(siteDB, siteObj, addiCount, count, start + count)
 }

@@ -1,239 +1,120 @@
-const mongoose = require("mongoose")
-const ObjectId = mongoose.Schema.Types.ObjectId
+const Mongo = require("mongodb"),
+    MongoClient = Mongo.MongoClient;
 const signale = require("signale")
-const events = require("events")
+const EventEmitter = require("events").EventEmitter
 
-let feedSchema = new mongoose.Schema({
-    itemType: String,
-    date_added: Number,
-    title: String,
-    body: String,
-    url: String,
-    site: { type: ObjectId, ref: "site" },
-    linksExtracted: { type: Boolean, default: false }
-})
-
-let feed = mongoose.model("feed", feedSchema)
-
-let opfileSchema = new mongoose.Schema({ // https://zeronet.io/docs/site_development/zeroframe_api_reference/#optionalfilelist
-    inner_path: String,
-    hash_id: Number,
-    size: Number,
-    peer: Number,
-    time_added: Number,
-    extra: {},
-    site: { type: ObjectId, ref: "site" }
-})
-
-let opfile = mongoose.model("opfile", opfileSchema)
-
-let linkSchema = new mongoose.Schema({
-    site: String,
-    path: String,
-    date: Date,
-    fromObj: { type: ObjectId, refPath: "fromType" },
-    fromType: {
-        type: String,
-        enum: ["feed", "site", "opfile"]
-    },
-    added: Boolean // Whether added to zeronet pending sites list
-})
-
-let link = mongoose.model("link", linkSchema)
-
-let siteSchema = new mongoose.Schema({
-    basicInfo: {
-        files: Number,
-        files_optional: Number,
-        domain: String,
-        description: String,
-        title: String,
-        cloned_from: String,
-        address: { type: String, unique: true },
-        cloneable: Boolean,
-        extra: Object,
-        modified: Number, // Keep original format to reduce bugs
-        backgroundColor: String,
-        peers: Number,
-        added: Number,
-        size: Number,
-        size_optional: Number,
-        zeronet_version: String
-    },
-    feedsQueried: [{
-        name: String,
-        result: [{ type: ObjectId, ref: "feed" }]
-    }],
-    optionalFiles: [
-        { type: ObjectId, ref: "opfile" }
-    ],
-    runtimeInfo: {
-        lastCrawl: {
-            siteInfo: { type: Date, default: Date.now },
-            feeds: {
-                check: Date, // Only compare last row and add new stuff
-                full: Date, // Check old rows
-                itemDate: Number // Date of latest item checked
-            },
-            optional: {
-                check: Date,
-                full: Date,
-                itemDate: Number
-            }
-        },
-        error: [] // Errors occurred while crawling
-    },
-    json: [{
-        json_id: Number,
-        directory: String,
-        cert_user_id: String
-    }]
-})
-
-siteSchema.methods.setSiteInfo = function (siteInfoObj) {
-    siteInfoObj = { files: {}, files_optional: {}, ...siteInfoObj }
-    this.basicInfo = {
-        files: Object.keys(siteInfoObj.files).length,
-        files_optional: Object.keys(siteInfoObj.files_optional).length,
-        domain: siteInfoObj.domain,
-        description: siteInfoObj.description,
-        title: siteInfoObj.title,
-        cloned_from: siteInfoObj.cloned_from,
-        address: siteInfoObj.address,
-        cloneable: siteInfoObj.cloneable,
-        extra: {},                                  // Non-standard key-values in content.json
-        modified: siteInfoObj.modified,     // This modified field is signed by the owner and located in the content.json
-        backgroundColor: siteInfoObj["background-color"],
-        peers: siteInfoObj.peers,
-        added: siteInfoObj.added,
-        size: siteInfoObj.size,
-        size_optional: siteInfoObj.size_optional,
-        zeronet_version: siteInfoObj.zeronet_version
+class DataBase extends EventEmitter {
+    async connect() {
+        const url = "mongodb://localhost:27017/horizon";
+        this.client = new MongoClient(url);
+        try {
+            await this.client.connect();
+        } catch (err) {
+            signale.error(err)
+            return
+        }
+        this.db = this.client.db("horizon")
+        this.feeds = this.db.collection("feeds")
+        this.opfiles = this.db.collection("opfiles")
+        this.sites = this.db.collection("sites")
+        this.links = this.db.collection("links")
+        this.emit("connected")
     }
-    // Extra keys such as 'settings'
-    try {
-        for (let key in siteInfoObj)
-            if (["files",
-                "domain",
-                "description",
-                "cloned_from",
-                "address",
-                "includes",
-                "cloneable",
-                "inner_path",
-                "files_optional",
-                "title",
-                "signs_required",
-                "modified",
-                "ignore",
-                "zeronet_version",
-                "postmessage_nonce_security",
-                "address_index",
-                "background-color"].indexOf(key) < 0 && !/[.$]/.test(key))
-                this.basicInfo.extra[key] = siteInfoObj[key]
-    } catch (e) {
-        signale.warn(e)
-    }
-    this.markModified("basicInfo.extra")
-    this.runtimeInfo.lastCrawl.siteInfo = new Date()
-    signale.info(`Updated site info for ${this.basicInfo.address}`)
-}
-
-siteSchema.methods.addFeeds = function (feeds, name) {
-    return new Promise((res, rej) => {
-        let feedCategory = this.feedsQueried.find(f => f.name === name) // Find the corresponding category
+    async addFeeds(site, feeds, name) {
+        if (feeds.length <= 0 || !site)
+            return
+        let feedCategory = site.feedsQueried.find(f => f.name === name) // Find the corresponding category
         if (!feedCategory) { // Or create one
             feedCategory = { name, result: [] }
-            this.feedsQueried.push(feedCategory)
+            site.feedsQueried.push(feedCategory)
         }
         let feedObjs = []
         for (let f of feeds) {
-            f._id = new mongoose.Types.ObjectId()
-            f.site = this._id
-            let feedObj = new feed(f)
+            f._id = new Mongo.ObjectId()
+            f.site = site._id
+            let feedObj = {
+                ...f,
+                linksExtracted: false
+            }
             feedCategory.result.push(f._id)
             feedObjs.push(feedObj)
         }
-        feed.collection.insert(feedObjs, (err, docs) => {
-            if (!err)
-                res(docs)
-            else
-                rej(err)
-        })
-    })
-}
-
-siteSchema.methods.addOptionalFiles = function (optionals) {
-    return new Promise((res, rej) => {
+        await this.feeds.insertMany(feedObjs)
+    }
+    async addOptionalFiles(site, optionals) {
+        if (optionals.length <= 0 || !site)
+            return
         let oObjs = []
         for (let o of optionals) {
-            o._id = new mongoose.Types.ObjectId()
-            o.site = this._id
-            let oObj = new opfile(o)
-            this.optionalFiles.push(oObj._id)
+            o._id = new Mongo.ObjectId()
+            o.site = site._id
+            let oObj = { ...o }
+            site.optionalFiles.push(oObj._id)
             oObjs.push(oObj)
         }
-        opfile.collection.insert(oObjs, (err, docs) => {
-            if (!err)
-                res(docs)
-            else
-                rej(err)
-        })
-    })
-}
-
-let siteModel = mongoose.model("site", siteSchema)
-let event = new events.EventEmitter()
-
-module.exports = {
+        await this.opfiles.insertMany(oObjs)
+    }
     genNewSite(siteInfo) { // Generate a site obj with siteInfo
-        let site = new siteModel()
-        site.setSiteInfo(siteInfo)
+        let site = {
+            runtimeInfo: {
+                lastCrawl: {
+                    optional: {},
+                    feeds: {},
+                    siteInfo: 0
+                }
+            },
+            optionalFiles: [],
+            feedsQueried: [],
+            json: [],
+            _id: new Mongo.ObjectId()
+        }
+        site = this.setSiteInfo(site, siteInfo)
         site.runtimeInfo.lastCrawl.siteInfo = Date.now()
         return site
-    },
-    connect() {
-        mongoose.connect("mongodb://localhost:27017/horizon", {
-            useNewUrlParser: true
-        }).then(() => {
-            signale.info("Successfully connected database")
-            event.emit("connected")
-        }).catch(err => {
-            signale.error("Cannot connect to database", err)
-            event.emit("error", err)
-        })
-    },
-    async getSite(addr) {
-        return await siteModel.findOne({
-            "basicInfo.address": addr
-        })
-    },
-    event,
-    siteModel,
-    async addLink(obj) {
-        await (new link(obj)).save()
-    },
-    feed, opfile, link
+    }
+    setSiteInfo(site, siteInfoObj) {
+        siteInfoObj = { files: {}, files_optional: {}, ...siteInfoObj }
+        site.basicInfo = {
+            files: Object.keys(siteInfoObj.files).length,
+            files_optional: Object.keys(siteInfoObj.files_optional).length,
+            domain: siteInfoObj.domain,
+            description: siteInfoObj.description,
+            title: siteInfoObj.title,
+            cloned_from: siteInfoObj.cloned_from,
+            address: siteInfoObj.address,
+            cloneable: siteInfoObj.cloneable,
+            modified: siteInfoObj.modified,     // This modified field is signed by the owner and located in the content.json
+            backgroundColor: siteInfoObj["background-color"],
+            peers: siteInfoObj.peers,
+            added: siteInfoObj.added,
+            size: siteInfoObj.size,
+            size_optional: siteInfoObj.size_optional,
+            zeronet_version: siteInfoObj.zeronet_version
+        }
+
+        site.runtimeInfo.lastCrawl.siteInfo = new Date()
+        signale.info(`Updated site info for ${site.basicInfo.address}`)
+        return site
+    }
+    async saveSite(site) {
+        await this.sites.insert(site)
+    }
+    async updateSite(site) {
+        await this.sites.updateOne({ "basicInfo.address": site.basicInfo.address }, { $set: site })
+    }
+    async getSite(address) {
+        return await this.sites.findOne({ "basicInfo.address": address })
+    }
+    async addLinks(objs) {
+        if (objs.length > 0)
+            await this.links.insertMany(objs)
+    }
 }
 
-// module.exports.connect()
-// event.on("connected", async () => {
-//     let siteId = new mongoose.Types.ObjectId()
-//     let feedId = new mongoose.Types.ObjectId()
-//     let feedObj = new feed({title: "234", _id: feedId})
-//     await feedObj.save()
-//     let site = new siteModel({address: "123123", _id: siteId})
-//     site.feedsQueried.push({name: "a", result: [feedId]})
-//     await site.save()
-
-//     let x = await siteModel.findOne({}).populate("feedsQueried.result").exec()
-//     console.log(x)
+// let db = new DataBase()
+// db.on("connected", async () => {
+//     console.log(await db.getSite("asdads"))
 // })
+// db.connect()
 
-// event.on("connected", async () => {
-// for (let x = 0; x < 100; x++) {
-//     await(new link({ site: x, added: Boolean(x % 2) })).save()
-// }
-//     let arr = await module.exports.link.find({added: false}).limit(10).skip(10).select("site").exec()
-//     console.log(arr)
-// })
+module.exports = new DataBase()
