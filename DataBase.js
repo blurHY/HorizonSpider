@@ -8,7 +8,7 @@ class DataBase extends EventEmitter {
         const url = "mongodb://localhost:27017/horizon";
         this.client = new MongoClient(url);
         try {
-            await this.client.connect();
+            await this.client.connect()
         } catch (err) {
             signale.error(err)
             return
@@ -23,6 +23,8 @@ class DataBase extends EventEmitter {
     async addFeeds(site, feeds, name) {
         if (feeds.length <= 0 || !site)
             return
+        if (!site.feedsQueried)
+            site.feedsQueried = []
         let feedCategory = site.feedsQueried.find(f => f.name === name) // Find the corresponding category
         if (!feedCategory) { // Or create one
             feedCategory = { name, result: [] }
@@ -97,9 +99,11 @@ class DataBase extends EventEmitter {
         return site
     }
     async saveSite(site) {
-        await this.sites.insert(site)
+        signale.debug(`DB operation: Save site ${site.basicInfo.address}`)
+        await this.sites.insertOne(site)
     }
     async updateSite(site) {
+        signale.debug(`DB operation: Update site ${site.basicInfo.address}`)
         await this.sites.updateOne({ "basicInfo.address": site.basicInfo.address }, { $set: site })
     }
     async getSite(address) {

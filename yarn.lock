@@ -446,6 +446,11 @@ chardet@^0.4.0:
   resolved "http://registry.npm.taobao.org/chardet/download/chardet-0.4.2.tgz#b5473b33dc97c424e5d98dc87d55d4d8a29c8bf2"
   integrity sha1-tUc7M9yXxCTl2Y3IfVXU2KKci/I=
 
+chillout@^4.0.2:
+  version "4.0.2"
+  resolved "http://registry.npm.taobao.org/chillout/download/chillout-4.0.2.tgz#da960f1f78c168b6d8728dbc2d710cfd22d63206"
+  integrity sha1-2pYPH3jBaLbYco28LXEM/SLWMgY=
+
 chokidar@^2.1.5:
   version "2.1.5"
   resolved "http://registry.npm.taobao.org/chokidar/download/chokidar-2.1.5.tgz#0ae8434d962281a5f56c72869e79cb6d9d86ad4d"
@@ -2664,6 +2669,11 @@ sshpk@^1.7.0:
     safer-buffer "^2.0.2"
     tweetnacl "~0.14.0"
 
+stackback@0.0.2:
+  version "0.0.2"
+  resolved "http://registry.npm.taobao.org/stackback/download/stackback-0.0.2.tgz#1ac8a0d9483848d1695e418b6d031a3c3ce68e3b"
+  integrity sha1-Gsig2Ug4SNFpXkGLbQMaPDzmjjs=
+
 static-extend@^0.1.1:
   version "0.1.2"
   resolved "http://registry.npm.taobao.org/static-extend/download/static-extend-0.1.2.tgz#60809c39cbff55337226fd5e0b520f341f1fb5c6"
@@ -3002,6 +3012,13 @@ which@^1.2.9:
   integrity sha1-pFBD1U9YBTFtqNYvn1CRjT2nCwo=
   dependencies:
     isexe "^2.0.0"
+
+why-is-node-running@^2.1.0:
+  version "2.1.0"
+  resolved "http://registry.npm.taobao.org/why-is-node-running/download/why-is-node-running-2.1.0.tgz#e71a9816a32ca4d4f759aabe90edd1007d805f48"
+  integrity sha1-5xqYFqMspNT3Waq+kO3RAH2AX0g=
+  dependencies:
+    stackback "0.0.2"
 
 wide-align@^1.1.0:
   version "1.1.3"

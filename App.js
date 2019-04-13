@@ -5,7 +5,7 @@ const rp = require("request-promise"),
     fs = require("fs"),
     delay = require("delay"),
     signale = require("signale"),
-    PromisePool = require("es6-promise-pool"),
+    PromisePool = require('es6-promise-pool'),
 
     Admin = require("./ZeroNet/AdminZite"),
     DataBase = require("./DataBase"),
@@ -14,18 +14,20 @@ const rp = require("request-promise"),
     DomainResolver = require("./ZeroNet/DomainResolver"),
 
     modules = require("require-dir-all")("Crawlers")
-
 let admin = null
-let exiting = false
+let exiting = false,
+    args = process.argv.slice(2);
 
-const blocked = require("blocked-at")
+const blocked = require("blocked-at"),
+    whyHanging = require('why-is-node-running')
 blocked((time, stack) => {
     signale.warn(`Blocked for ${time / 1000}s, operation started here:`, stack)
-}, { threshold: 10000 })
+}, { threshold: 1000 })
 
 function exitHandler() {
     if (exiting)
         process.exit()
+    whyHanging()
     signale.warn("Received signal, gracefully shutting down...")
     exiting = true
 }
@@ -97,19 +99,19 @@ async function crawlASite(siteInfo) {
             siteObj = DataBase.genNewSite(siteInfo) // Init with siteInfo
             isNewSite = true
         } else if (new Date() - siteObj.runtimeInfo.lastCrawl.siteInfo > process.env.siteInfoUpdateInterval || 3600000) { // Update siteInfo
-            signale.info(`Updated siteInfo for ${siteInfo.address}`)
             DataBase.setSiteInfo(siteObj, siteInfo)
         }
 
-        // Run all crawlers in parallel
+        let balance = 0
         function* promiseGenerator() {
             for (let crawler in modules) {
                 if (modules[crawler] && modules[crawler].crawl) {
                     signale.start(`Started crawler ${crawler} for ${siteInfo.address} ${global.tempSiteId[siteInfo.address]}/${global.sitesCount}`)
+                    balance++
                     yield (async () => {
                         try {
                             await modules[crawler].crawl(dbSchema, siteDB, siteObj)
-                            signale.complete(`Finished crawler ${crawler} for ${siteInfo.address} ${global.tempSiteId[siteInfo.address]}/${global.sitesCount}`)
+                            signale.complete(`Finished crawler ${crawler} for ${siteInfo.address} ${global.tempSiteId[siteInfo.address]}/${global.sitesCount}  Remaining:${--balance}`)
                         } catch (e) {
                             signale.error(`An error appeared in ${crawler}`)
                         }
@@ -117,16 +119,13 @@ async function crawlASite(siteInfo) {
                 }
             }
         }
-
-        let pool = new PromisePool(promiseGenerator, parseInt(process.env.Concurrency) || 3) // Start crawlers in parallel
-        await pool.start()
+        await (new PromisePool(promiseGenerator, parseInt(process.env.Concurrency) || 3)).start()
 
         if (isNewSite)
             DataBase.saveSite(siteObj)
         else
             DataBase.updateSite(siteObj)
 
-        signale.info(`Saved site ${siteInfo.address} id:${global.tempSiteId[siteInfo.address]} total:${global.sitesCount}`)
         signale.timeEnd(siteInfo.address)
     } catch (e) {
         signale.error(`Unknown error in ${siteInfo.address}`, e)
@@ -167,7 +166,6 @@ async function forEachSite(siteList) {
     global.sitesCount = siteList.length
 
     let n = 0
-
     function* promiseGenerator() {
         for (let site of siteList) {
             if (exiting)
@@ -177,10 +175,7 @@ async function forEachSite(siteList) {
             n++
         }
     }
-
-    let pool = new PromisePool(promiseGenerator, parseInt(process.env.Concurrency) || 3)
-    pool.addEventListener("rejected", ev => signale.error("Promise pool item rejected:", ev))
-    await pool.start()
+    await (new PromisePool(promiseGenerator, parseInt(process.env.Concurrency) || 3)).start()
 }
 
 function syncWithZeroNet() {
@@ -214,6 +209,24 @@ function standaloneCrawl() {
     DataBase.connect()
 }
 
-standaloneCrawl()
-if (!process.env.DryRun)
-    syncWithZeroNet()
+if (args.length === 0) {
+    standaloneCrawl()
+    if (!process.env.DryRun)
+        syncWithZeroNet()
+} else {
+    signale.info(`Crawl ${args[0]}`)
+    DataBase.on("connected", async () => {
+        signale.debug(`Database connected`)
+        await SiteMeta.reloadSitesJson()
+        global.tempSiteId = { [args[0]]: 0 }
+        global.sitesCount = 1
+        let siteInfoArr = (await SiteMeta.asWsSiteList()).filter(x => x.address === args[0])
+        if (siteInfoArr.length === 0) {
+            signale.warn("Site not found")
+        }
+        else {
+            await crawlASite(siteInfoArr[0])
+        }
+    })
+    DataBase.connect()
+}

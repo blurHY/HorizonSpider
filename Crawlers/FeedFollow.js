@@ -17,6 +17,8 @@ async function updateFeeds(dbSchema, siteDB, siteObj) {
         } else
             signale.info(`Stored feeds are up to date ${siteObj.basicInfo.address}`)
     } else {
+        if (!siteObj.feedsQueried)
+            siteObj.feedsQueried = []
         siteObj.feedsQueried.splice(0) // Clear old data and re-query all feeds
         siteObj.runtimeInfo.lastCrawl.feeds.full = now
     }

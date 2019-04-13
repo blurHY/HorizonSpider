@@ -1,49 +1,51 @@
 {
-  "name": "HorizonSpider",
-  "version": "0.1.0",
-  "main": "index.js",
-  "repository": "https://github.com/blurHY/HorizonSpider.git",
-  "author": "blurHY <blurhy@outlook.com>",
-  "license": "GPL",
-  "dependencies": {
-    "blocked-at": "^1.1.3",
-    "capitalize": "^2.0.0",
-    "chalk": "^2.4.2",
-    "delay": "^4.1.0",
-    "dotenv": "^6.2.0",
-    "es6-promise-pool": "^2.5.0",
-    "ini": "^1.3.5",
-    "mongodb": "^3.2.3",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.4",
-    "require-dir-all": "^0.4.15",
-    "signale": "^1.4.0",
-    "sqlite": "^3.0.2",
-    "sqlite3": "^4.0.6",
-    "websocket": "^1.0.28"
-  },
-  "scripts": {
-    "crawl": "node App.js",
-    "dev": "nodemon --inspect App.js"
-  },
-  "signale": {
-    "displayScope": true,
-    "displayBadge": true,
-    "displayDate": true,
-    "displayFilename": false,
-    "displayLabel": true,
-    "displayTimestamp": true,
-    "underlineLabel": true,
-    "underlineMessage": false,
-    "underlinePrefix": false,
-    "underlineSuffix": false,
-    "uppercaseLabel": true
-  },
-  "devDependencies": {
-    "@types/node": "^11.13.0",
-    "babel-eslint": "^10.0.1",
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "nodemon": "^1.18.11"
-  }
+    "name": "HorizonSpider",
+    "version": "0.1.0",
+    "main": "index.js",
+    "repository": "https://github.com/blurHY/HorizonSpider.git",
+    "author": "blurHY <blurhy@outlook.com>",
+    "license": "GPL",
+    "dependencies": {
+        "blocked-at": "^1.1.3",
+        "capitalize": "^2.0.0",
+        "chalk": "^2.4.2",
+        "chillout": "^4.0.2",
+        "delay": "^4.1.0",
+        "dotenv": "^6.2.0",
+        "es6-promise-pool": "^2.5.0",
+        "ini": "^1.3.5",
+        "mongodb": "^3.2.3",
+        "request": "^2.88.0",
+        "request-promise": "^4.2.4",
+        "require-dir-all": "^0.4.15",
+        "signale": "^1.4.0",
+        "sqlite": "^3.0.2",
+        "sqlite3": "^4.0.6",
+        "websocket": "^1.0.28",
+        "why-is-node-running": "^2.1.0"
+    },
+    "scripts": {
+        "crawl": "node App.js",
+        "dev": "nodemon --inspect App.js"
+    },
+    "signale": {
+        "displayScope": true,
+        "displayBadge": true,
+        "displayDate": true,
+        "displayFilename": false,
+        "displayLabel": true,
+        "displayTimestamp": true,
+        "underlineLabel": true,
+        "underlineMessage": false,
+        "underlinePrefix": false,
+        "underlineSuffix": false,
+        "uppercaseLabel": true
+    },
+    "devDependencies": {
+        "@types/node": "^11.13.0",
+        "babel-eslint": "^10.0.1",
+        "eslint": "^4.19.1",
+        "eslint-config-airbnb-base": "^13.1.0",
+        "nodemon": "^1.18.11"
+    }
 }

@@ -1,5 +1,6 @@
 const linksExtractor = require("./LinksExtractor"),
-    signale = require("signale")
+    signale = require("signale"),
+    chillout = require('chillout')
 
 module.exports.crawl = async function explore(dbSchema, siteDB, siteObj) {
     if (!siteDB)
@@ -20,9 +21,10 @@ async function pagingCrawl(siteDB, siteObj, table_name, start = 0, count = 3000)
     let rows = await siteDB.all(`SELECT * from ${table_name} limit ${count} offset ${start}`)
     if (rows.length === 0)
         return
-    for (let row of rows)
+    await chillout.forEach(rows, async row => {
         for (let field_name in row)
             if (typeof row[field_name] === "string")
                 await linksExtractor.findLinksAndSave(row[field_name], siteObj._id, "site")
+    })
     await pagingCrawl(siteDB, siteObj, table_name, start + count, count)
 }
