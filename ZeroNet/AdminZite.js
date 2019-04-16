@@ -4,7 +4,7 @@ const signale = require("signale")
 module.exports = class AdminZite extends Zite {
     constructor() {
         super("1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D")
-        this.siteList = []
+        this.siteList = {}
         this.siteAddrs = []
     }
 
@@ -18,16 +18,20 @@ module.exports = class AdminZite extends Zite {
     async updateAll() {
         signale.await("Updating all sites")
         await this.reloadSiteList()
-        for (let site of this.siteList)
-            this.cmdp("siteUpdate", site.address).then(res => signale.complete(`Site updated ${res}: ${site.address}`))
+        for (let site of this.siteList) {
+            await this.cmdp("siteUpdate", site.address).then(() => signale.complete(`Site updated ${site.address}`))
+            signale.start("Update site: " + site.address)
+        }
     }
 
-    addSites(siteAddrs) {
+    async addSites(siteAddrs) {
         let count = siteAddrs.length
         if (count > 1)
-            signale.info(`Adding ${count} sites to zeronet`)
+            signale.info(` -- Adding ${count} sites to zeronet --`)
+        else
+            signale.debug("Add site: " + siteAddrs[0])
         for (let addr of siteAddrs)
-            this.cmdp("siteAdd", addr).catch(() => { })
+            await this.cmdp("siteAdd", addr).catch(() => { })
     }
 
     isSiteExisted(siteAddr) {

@@ -3,7 +3,7 @@ const db = require("../DataBase")
 module.exports = {
     async extractLinksForNewFeeds() { // Extract links to other zeronet site
         while (true) {
-            let feed = await db.feed.findOne({ linksExtracted: { $ne: true } })
+            let feed = await db.feeds.findOne({ linksExtracted: { $ne: true } })
             if (!feed)
                 break
             await module.exports.findLinksAndSave(feed.title, feed._id, "feed")

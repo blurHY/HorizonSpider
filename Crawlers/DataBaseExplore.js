@@ -3,9 +3,7 @@ const linksExtractor = require("./LinksExtractor"),
     chillout = require('chillout')
 
 module.exports.crawl = async function explore(dbSchema, siteDB, siteObj) {
-    if (!siteDB)
-        return
-    if (siteObj.runtimeInfo.lastCrawl.databaseScan > new Date - (process.env.databaseScan_period || 7200000))
+    if (!siteDB || siteObj.runtimeInfo.lastCrawl.databaseScan > new Date - (process.env.DataBaseScanInterval || 7200000))
         return
     let tables = await siteDB.all("SELECT name FROM sqlite_master WHERE type='table'")
     for (let table of tables) {

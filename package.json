@@ -17,12 +17,14 @@
         "mongodb": "^3.2.3",
         "request": "^2.88.0",
         "request-promise": "^4.2.4",
+        "request-promise-native": "^1.0.7",
         "require-dir-all": "^0.4.15",
         "signale": "^1.4.0",
         "sqlite": "^3.0.2",
         "sqlite3": "^4.0.6",
         "websocket": "^1.0.28",
-        "why-is-node-running": "^2.1.0"
+        "why-is-node-running": "^2.1.0",
+        "yargs": "^13.2.2"
     },
     "scripts": {
         "crawl": "node App.js",

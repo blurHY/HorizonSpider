@@ -54,6 +54,10 @@ module.exports = {
             }
         return arr
     },
+    async getWsSiteInfo(address) {
+        let sites = await module.exports.getSitesList()
+        return await module.exports.mergeContentJsonWithSiteList({ address, ...sites[address] })
+    },
     async getSiteDataBase(siteAddr, dbSchema = null) {
         if (!dbSchema)
             try {

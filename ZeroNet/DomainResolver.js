@@ -1,29 +1,24 @@
 const path = require("path")
 const fs = require("fs")
-const signale = require('signale');
+const signale = require("signale")
 
 let domainNameJsonPath = path.join(process.env.ZeronetDataPath, "1Name2NXVi1RDPDgf5617UoW7xA6YrhM9F/data/names.json")
-let modified = 0
-
-let zeroNameContentJson = path.join(process.env.ZeronetDataPath, "1Name2NXVi1RDPDgf5617UoW7xA6YrhM9F/content.json")
 global.domainMapObj = null
+global.lastReloadDomain = 0
 
-function loadDomains(force = false) {
-    zeroNameContentJson = JSON.parse(fs.readFileSync(zeroNameContentJson, "utf8"))
-    if (zeroNameContentJson.modified > modified || !global.domainMapObj || force) {
+function loadDomains() {
+    if (Date.now() - global.lastReloadDomain > 1500000 || !global.domainMapObj) {
+        signale.warn("Loading domains")
         global.domainMapObj = JSON.parse(fs.readFileSync(domainNameJsonPath, "utf8"))
-        if(!global.domainMapObj){
-            signale.error(`Domain map is null`)
-        }
+        global.lastReloadDomain = Date.now()
     }
-    modified = zeroNameContentJson.modified
 }
 
 function resolveDomain(address) {
     loadDomains()
     if (!(address in global.domainMapObj))
-        throw "Unresolved domain"
+        return address
     return global.domainMapObj[address]
 }
 
-module.exports = {resolveDomain, loadDomains}
+module.exports = { resolveDomain, loadDomains }

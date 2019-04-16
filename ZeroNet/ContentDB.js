@@ -1,5 +1,6 @@
 const sqlite = require("sqlite")
-const path = require("path")
+const path = require("path"),
+    signale = require("signale")
 
 let contentDB = null
 
@@ -12,7 +13,12 @@ async function getContentDB() {
 
 async function getOptionalFiles(site_addr, count, start, dateAfter = null) {
     await getContentDB()
-    return await contentDB.all(`select * from file_optional where site_id=(select site_id from site where address = ?) ${dateAfter ? `and time_added > ${dateAfter}` : ""} order by time_added limit ? offset ?`, site_addr, count, start)
+    let query = `select * from file_optional where site_id=(select site_id from site where address = ?) ${dateAfter ? `and time_added > ${dateAfter}` : ""} order by time_added limit ? offset ?`
+    try {
+        return await contentDB.all(query, site_addr, count, start)
+    } catch (e) {
+        signale.error(`Error: ${query}`, e)
+    }
 }
 
 async function getLastItemDate(site_addr) {
@@ -20,4 +26,4 @@ async function getLastItemDate(site_addr) {
     return await parseInt(contentDB.each(`select * from file_optional where site_id=(select site_id from site where address = ?) order by time_added desc limit 1`), site_addr)
 }
 
-module.exports = {getContentDB, getOptionalFiles, getLastItemDate}
+module.exports = { getContentDB, getOptionalFiles, getLastItemDate }

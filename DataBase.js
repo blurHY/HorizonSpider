@@ -6,18 +6,27 @@ const EventEmitter = require("events").EventEmitter
 class DataBase extends EventEmitter {
     async connect() {
         const url = "mongodb://localhost:27017/horizon";
-        this.client = new MongoClient(url);
+        this.client = new MongoClient(url, { useNewUrlParser: true });
         try {
             await this.client.connect()
         } catch (err) {
             signale.error(err)
             return
         }
+
         this.db = this.client.db("horizon")
         this.feeds = this.db.collection("feeds")
         this.opfiles = this.db.collection("opfiles")
         this.sites = this.db.collection("sites")
         this.links = this.db.collection("links")
+        try {
+            await this.links.createIndex({ fromObj: 1, site: 1 }, { unique: true })
+            await this.sites.createIndex({ "basicInfo.address": 1 }, { unique: true })
+        } catch (e) {
+            signale.error(e)
+            process.exit(1)
+        }
+
         this.emit("connected")
     }
     async addFeeds(site, feeds, name) {
@@ -110,8 +119,12 @@ class DataBase extends EventEmitter {
         return await this.sites.findOne({ "basicInfo.address": address })
     }
     async addLinks(objs) {
-        if (objs.length > 0)
-            await this.links.insertMany(objs)
+        try {
+            if (objs.length > 0)
+                await this.links.insertMany(objs, { ordered: false })
+        } catch (e) {
+            // BulkWriteError is expected
+        }
     }
 }
 
