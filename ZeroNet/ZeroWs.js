@@ -39,7 +39,7 @@ module.exports = class ZeroWs extends EventEmitter {
     }
 
     onClose(e) {
-        signale.warn("Connection to ZeroNet has been closed", e)
+        signale.fatal("Connection to ZeroNet has been closed", e)
         if (!this.reconnecting) {
             this.reconnecting = true
             setTimeout(() => {

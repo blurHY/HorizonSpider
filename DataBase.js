@@ -51,6 +51,7 @@ class DataBase extends EventEmitter {
             feedObjs.push(feedObj)
         }
         await this.feeds.insertMany(feedObjs)
+        signale.star(`DB operation: Added ${feedObjs.length} feeds`)
     }
     async addOptionalFiles(site, optionals) {
         if (optionals.length <= 0 || !site)
@@ -64,6 +65,7 @@ class DataBase extends EventEmitter {
             oObjs.push(oObj)
         }
         await this.opfiles.insertMany(oObjs)
+        signale.star(`DB operation: Added ${oObjs.length} optional files`)
     }
     genNewSite(siteInfo) { // Generate a site obj with siteInfo
         let site = {
@@ -120,8 +122,10 @@ class DataBase extends EventEmitter {
     }
     async addLinks(objs) {
         try {
-            if (objs.length > 0)
+            if (objs.length > 0) {
                 await this.links.insertMany(objs, { ordered: false })
+                signale.star(`DB operation: Added ${objs.length} links`)
+            }
         } catch (e) {
             // BulkWriteError is expected
         }

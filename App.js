@@ -58,7 +58,7 @@ async function waitAndGetAdmin() {
                     followRedirect: false
                 })
             } catch {
-                signale.info("Sent request to trigger ZeroHello downloading.")
+                signale.note("Sent request to trigger ZeroHello downloading.")
                 await delay(process.env.mainLoopInterval)
             }
         } else
@@ -93,7 +93,7 @@ async function crawlASite(siteInfo) {
             isNewSite = false
 
         if (!siteObj) { // Site not found, create one
-            signale.santa(`Discovered a brand new site ${siteInfo.address}`)
+            signale.fav(`Discovered a brand new site ${siteInfo.address}`)
             siteObj = DataBase.genNewSite(siteInfo) // Init with siteInfo
             isNewSite = true
         } else if (new Date() - siteObj.runtimeInfo.lastCrawl.siteInfo > process.env.siteInfoUpdateInterval || 3600000) { // Update siteInfo

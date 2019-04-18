@@ -20,9 +20,10 @@ async function pagingCrawl(siteDB, siteObj, table_name, start = 0, count = 3000)
     if (rows.length === 0)
         return
     await chillout.forEach(rows, async row => {
-        for (let field_name in row)
-            if (typeof row[field_name] === "string")
-                await linksExtractor.findLinksAndSave(row[field_name], siteObj._id, "site")
+        await chillout.forEach(row, async (val) => {
+            if (typeof val === "string")
+                await linksExtractor.findLinksAndSave(val, siteObj._id, "site")
+        })
     })
     await pagingCrawl(siteDB, siteObj, table_name, start + count, count)
 }

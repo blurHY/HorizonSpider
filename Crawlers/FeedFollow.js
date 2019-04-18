@@ -5,20 +5,18 @@ async function updateFeeds(dbSchema, siteDB, siteObj) {
     if (!(siteDB && dbSchema && dbSchema.feeds))
         return
 
-    signale.info(`Feeds available for ${siteObj.basicInfo.address}`)
+    signale.note(`Feeds available for ${siteObj.basicInfo.address}`)
 
-    let query, func = s => s,
-        now = new Date(),
+    let now = new Date(),
         lastDate = 0
 
     if (siteObj.runtimeInfo.lastCrawl.feeds && siteObj.runtimeInfo.lastCrawl.feeds.full > now - (process.env.FeedRecrawlInterval || 7200000)) { // Not too outdated 
         if (!siteObj.runtimeInfo.lastCrawl.feeds.check || siteObj.runtimeInfo.lastCrawl.feeds.check < now - (process.env.FeedCheckInterval || 3600000)) { // New feeds only
-            func = s => `SELECT * FROM (${s}) where date_added > ${siteObj.runtimeInfo.lastCrawl.feeds.check.getTime() / 1000}` // Not needed to add the outer where clause to inner, because of the sqlite optimization
-            signale.info(`Check feeds for ${siteObj.basicInfo.address}`)
+            signale.note(`Check feeds for ${siteObj.basicInfo.address}`)
             lastDate = siteObj.runtimeInfo.lastCrawl.feeds.check
             siteObj.runtimeInfo.lastCrawl.feeds.check = now
         } else {
-            signale.info(`Stored feeds are up to date ${siteObj.basicInfo.address}`)
+            signale.note(`Stored feeds are up to date ${siteObj.basicInfo.address}`)
             return
         }
     } else {
@@ -28,7 +26,7 @@ async function updateFeeds(dbSchema, siteDB, siteObj) {
             siteObj.runtimeInfo.lastCrawl.feeds = {}
         signale.info(`Re-crawl all feeds for ${siteObj.basicInfo.address}`)
         if (!siteObj.runtimeInfo.lastCrawl.feeds || siteObj.runtimeInfo.lastCrawl.feeds.full === 0)
-            signale.info("lastCrawl.optional.full is 0")
+            signale.note("lastCrawl.optional.full is 0")
         await DataBase.feeds.deleteMany({ site: siteObj._id })
         siteObj.feedsQueried.splice(0) // Clear old data and re-query all feeds
         siteObj.runtimeInfo.lastCrawl.feeds.full = now
@@ -36,10 +34,8 @@ async function updateFeeds(dbSchema, siteDB, siteObj) {
     }
 
     for (let name in dbSchema.feeds)
-        if (name) {
-            query = func(dbSchema.feeds[name])
-            await pagingFeedQuery(query, siteDB, siteObj, name, 3000, 0, lastDate ? lastDate.getTime() / 1000 : 0)
-        }
+        if (name)
+            await pagingFeedQuery(dbSchema.feeds[name], siteDB, siteObj, name, 3000, 0, lastDate ? lastDate.getTime() / 1000 : 0)
 }
 
 async function pagingFeedQuery(query, siteDB, siteObj, name, count = 3000, start = 0, dateAfter = null) {
@@ -65,7 +61,7 @@ async function pagingFeedQuery(query, siteDB, siteObj, name, count = 3000, start
             await pagingFeedQuery(ori_query, siteDB, siteObj, name, count, start + count, dateAfter) // Query and store next page
         }
     } catch (e) {
-        signale.error(query, `An error appeared in query ${query}`)
+        signale.error(query, e)
     }
 }
 
