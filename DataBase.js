@@ -13,15 +13,18 @@ class DataBase extends EventEmitter {
             signale.error(err)
             return
         }
-
         this.db = this.client.db("horizon")
         this.feeds = this.db.collection("feeds")
         this.opfiles = this.db.collection("opfiles")
         this.sites = this.db.collection("sites")
         this.links = this.db.collection("links")
         try {
+            signale.info("Creating indexes, including full text search")
             await this.links.createIndex({ fromObj: 1, site: 1 }, { unique: true })
             await this.sites.createIndex({ "basicInfo.address": 1 }, { unique: true })
+            await this.feeds.createIndex({ body: "text", title: "text", url: "text" })
+            await this.sites.createIndex({ "$**": "text" })
+            await this.opfiles.createIndex({ "$**": "text" })
         } catch (e) {
             signale.error(e)
             process.exit(1)
