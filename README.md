@@ -8,9 +8,9 @@ The spider crawls each site in `siteList` and submit crawled links to zeronet.
 
 Then zeronet processes them, and downloads those zites.
 
-The crawler continues to traversal `siteList` and crawls newly downloaded sites to get more links
+It continues to traversal `siteList` and crawls newly downloaded sites to get more links
 
-It will store data in mongodb as cache for faster access.
+Currently **I'm refactoring it** to completely move it to Elasticsearch
 
 ## Usage
 
