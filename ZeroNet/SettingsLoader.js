@@ -6,16 +6,18 @@ global.ZeroNetConfObj = null
 
 function reloadConf() { // Reloading zeronet conf file
     signale.info("Reloading configuration file of zeronet")
-    global.ZeroNetConfObj  = parse(readFileSync(join(process.env.ZeroNetPath, "zeronet.conf"), "utf-8"))
+    global.ZeroNetConfObj = parse(readFileSync(join(process.env.ZeroNetPath, "zeronet.conf"), "utf-8"))
 }
 
 module.exports = {
     get ZeroNetHost() {
-        return `${this.settingsObj.global.ui_ip || "127.0.0.1"}:${this.settingsObj.global.ui_port || "43110"}`
+        if (this.settingsObj.global)
+            return `${this.settingsObj.global.ui_ip || "127.0.0.1"}:${this.settingsObj.global.ui_port || "43110"}`
+        return "127.0.0.1:43110"
     },
     get settingsObj() {
-        if (!global.ZeroNetConfObj ) reloadConf()
-        return global.ZeroNetConfObj 
+        if (!global.ZeroNetConfObj) reloadConf()
+        return global.ZeroNetConfObj
     },
     reloadConf
 }
