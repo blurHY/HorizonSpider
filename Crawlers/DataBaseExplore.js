@@ -1,4 +1,4 @@
-const linksExtractor = require("./LinksExtractor"),
+const linksExtractor = require("../Utils/LinksExtractor"),
     signale = require("signale"),
     chillout = require('chillout'),
     DataBase = require("../DataBase"),
