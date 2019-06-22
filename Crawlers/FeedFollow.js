@@ -1,68 +1,57 @@
 const signale = require("signale"),
     DataBase = require("../DataBase")
+const defaultFeedRecrawlInterval = 1000 * 60 * 60 * 24 * 7,
+    defaultFeedCheckInterval = 1000 * 60 * 30
 
-async function updateFeeds(dbSchema, siteDB, siteObj) {
-    if (!(siteDB && dbSchema && dbSchema.feeds))
-        return
-
-    signale.note(`Feeds available for ${siteObj.basicInfo.address}`)
-
-    let now = new Date(),
-        lastDate = 0
-
-    if (siteObj.runtimeInfo.lastCrawl.feeds && siteObj.runtimeInfo.lastCrawl.feeds.full > now - (process.env.FeedRecrawlInterval || 7200000)) { // Not too outdated 
-        if (!siteObj.runtimeInfo.lastCrawl.feeds.check || siteObj.runtimeInfo.lastCrawl.feeds.check < now - (process.env.FeedCheckInterval || 3600000)) { // New feeds only
-            signale.note(`Check feeds for ${siteObj.basicInfo.address}`)
-            lastDate = siteObj.runtimeInfo.lastCrawl.feeds.check
-            siteObj.runtimeInfo.lastCrawl.feeds.check = now
-        } else {
-            signale.note(`Stored feeds are up to date ${siteObj.basicInfo.address}`)
-            return
+module.exports = class FeedFollowCrawler {
+    constructor(params) {
+        Object.assign(this, params)
+        this.interval = {
+            recrawl: parseInt(process.env.FeedRecrawlInterval) || defaultFeedRecrawlInterval,
+            check: parseInt(process.env.FeedCheckInterval) || defaultFeedCheckInterval
         }
-    } else {
-        if (!siteObj.feedsQueried)
-            siteObj.feedsQueried = []
-        if (!siteObj.runtimeInfo.lastCrawl.feeds)
-            siteObj.runtimeInfo.lastCrawl.feeds = {}
-        signale.info(`Re-crawl all feeds for ${siteObj.basicInfo.address}`)
-        if (!siteObj.runtimeInfo.lastCrawl.feeds || siteObj.runtimeInfo.lastCrawl.feeds.full === 0)
-            signale.note("lastCrawl.optional.full is 0")
-        await DataBase.feeds.deleteMany({ site: siteObj._id })
-        siteObj.feedsQueried.splice(0) // Clear old data and re-query all feeds
-        siteObj.runtimeInfo.lastCrawl.feeds.full = now
-        siteObj.runtimeInfo.lastCrawl.feeds.check = now
+        this.crawl = this.updateFeeds
     }
 
-    for (let name in dbSchema.feeds)
-        if (name)
-            await pagingFeedQuery(dbSchema.feeds[name], siteDB, siteObj, name, 3000, 0, lastDate ? lastDate.getTime() / 1000 : 0)
-}
-
-async function pagingFeedQuery(query, siteDB, siteObj, name, count = 3000, start = 0, dateAfter = null) {
-    let ori_query = query
-    query = `select * from (${query}) ${dateAfter ? `where date_added > ${dateAfter}` : ""} order by date_added limit ${count} offset ${start}`
-    try {
-        let rows = await siteDB.all(query)
-        if (!(rows instanceof Array)) {
-            throw "Rows are an array"
-        } else if (rows.length > 0) {
-            let renamedRows = []
-            for (let row of rows) {
-                renamedRows.push({
-                    itemType: row.type,
-                    date_added: row.date_added,
-                    title: row.title,
-                    body: row.body,
-                    url: row.url
-                })
+    async updateFeeds() {
+        let now = new Date(),
+            prevDate = 0,
+            modification = { runtime: { feeds: {} } }
+        if (this.siteObj.runtime.feeds.last_refresh > now - this.interval.recrawl) { // Still not needed to refresh
+            if (!this.siteObj.runtime.feeds.last_check || this.siteObj.runtime.feeds.last_check < now - this.interval.check) { // Add New feeds only
+                prevDate = this.siteObj.runtime.feeds.last_check // Save previous checking date for site database querying
+                signale.note(`Checking feeds for ${this.address}, date after ${prevDate}`)
+                modification.runtime.feeds.last_check = now
+            } else {
+                signale.note(`Stored feeds are up to date ${this.address}`)
+                return
             }
-            await DataBase.addFeeds(siteObj, renamedRows, name)
-            signale.info(`Imported ${rows.length} feeds from ${siteObj.basicInfo.address}`)
-            await pagingFeedQuery(ori_query, siteDB, siteObj, name, count, start + count, dateAfter) // Query and store next page
+        } else {
+            signale.info(`Crawl all feeds for ${this.address}`)
+            await DataBase.clearFeeds(this.address)     // Delete all outdated content
+            modification.runtime.feeds = { last_check: now, last_refresh: now }
         }
-    } catch (e) {
-        signale.error(query, e)
+        for (let name in this.dbSchema.feeds)
+            if (name)
+                await this.pagingFeedQuery(this.dbSchema.feeds[name], name, 3000, 0, prevDate ? (prevDate.getTime() / 1000) : 0) // Convert prevDate to linux time
+        await DataBase.updateSite(modification, this.address)
     }
-}
 
-module.exports = { crawl: updateFeeds }
+    async pagingFeedQuery(query, category, count = 3000, start = 0, dateAfter = null) { // TODO: Suspicious query may slow down the spider
+        let ori_query = query
+        query = `select * from (${query}) ${dateAfter ? `where date_added > ${dateAfter}` : ""} order by date_added limit ${count} offset ${start}`
+        try {
+            let rows = await this.siteDB.all(query)
+            if (!(rows instanceof Array)) {
+                throw "Rows are not an array"
+            } else if (rows.length > 0) {
+                await DataBase.addFeeds(this.address, rows.map(r => ({ ...r, item_type: r.type, type: undefined, category })))
+                signale.info(`Imported ${rows.length} feeds from ${this.address}`)
+                await this.pagingFeedQuery(ori_query, category, count, start + count, dateAfter) // Query and store next page
+            }
+        } catch (e) {
+            signale.error(query, e)
+        }
+    }
+
+}

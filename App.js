@@ -2,7 +2,6 @@
 require("dotenv").config()
 
 const rp = require("request-promise-native"),
-    fs = require("fs"),
     delay = require("delay"),
     signale = require("signale"),
     PromisePool = require('es6-promise-pool'),
@@ -15,15 +14,20 @@ const rp = require("request-promise-native"),
     DomainResolver = require("./ZeroNet/DomainResolver"),
 
     modules = requireAll("./Crawlers"),
-    utils = requireAll("./Utils")
-let admin = null
-let exiting = false
+    utils = requireAll("./Utils"),
+    NAError = require("./Crawlers/Errors/NAError")
+
+let admin = null,
+    exiting = false
 
 const blocked = require("blocked-at"),
     whyHanging = require('why-is-node-running')
+
 blocked((time, stack) => {
     signale.warn(`Blocked for ${time / 1000}s, operation started here:`, stack)
 }, { threshold: 1000 })
+
+global.addrsSet = new Set()
 
 function exitHandler() {
     if (exiting)
@@ -39,7 +43,6 @@ process.on("SIGUSR2", whyHanging)
 process.on("exit", () => {
     signale.warn("Exited")
 })
-
 
 // ZeroHello won't be downloaded without requesting
 async function waitAndGetAdmin() {
@@ -85,7 +88,6 @@ async function bootstrapCrawling() {
 async function crawlASite(siteInfo) {
     try {
         signale.info(`Started crawling site ${siteInfo.address} ${global.tempSiteId[siteInfo.address]}/${global.sitesCount}`)
-        signale.time(siteInfo.address)
 
         let dbSchema = await SiteMeta.getDBJson(siteInfo.address),
             siteObj = await DataBase.getSite(siteInfo.address),
@@ -100,17 +102,16 @@ async function crawlASite(siteInfo) {
             DataBase.setSiteInfo(siteObj, siteInfo)
         }
 
-        // let balance = 0
         function* promiseGenerator() {
             for (let crawler in modules) {
                 if (modules[crawler] && modules[crawler].crawl) {
-                    // signale.start(`Started crawler ${crawler} for ${siteInfo.address} ${global.tempSiteId[siteInfo.address]}/${global.sitesCount}`)
-                    // balance++
                     yield (async () => {
                         try {
-                            await modules[crawler].crawl(dbSchema, siteDB, siteObj)
-                            // signale.complete(`Finished crawler ${crawler} for ${siteInfo.address} ${global.tempSiteId[siteInfo.address]}/${global.sitesCount}  Remaining:${--balance}`)
+                            let crawler = new modules[crawler](dbSchema, siteDB, siteObj)
+                            await crawler.crawl()
                         } catch (e) {
+                            if (e instanceof NAError) // Not applicable stands for parameters not enough
+                                return
                             signale.error(`An error appeared in ${crawler}`, e)
                         }
                     })()
@@ -127,33 +128,9 @@ async function crawlASite(siteInfo) {
         } catch (e) {
             signale.error(`Failed to save site ${siteObj.basicInfo.address}`, e)
         }
-        signale.timeEnd(siteInfo.address)
     } catch (e) {
         signale.error(`Unknown error in ${siteInfo.address}`, e)
     }
-}
-
-// Add found sites
-async function extractSitesAndAdd() {
-    signale.await("Adding sites of extracted links to ZeroNet")
-    let stop = false
-    async function ResolveOne() {
-        try {
-            let link = await DataBase.links.findOneAndUpdate({ added: { $ne: true } }, { $set: { added: true } }),
-                addr
-            if (!link.value || !link.value.site) { // No links left
-                stop = true
-                return
-            }
-            addr = DomainResolver.resolveDomain(link.value.site)
-            if (!admin.isSiteExisted(addr))
-                await admin.addSites([addr])
-        }
-        catch (e) {
-            signale.error("An error occurred while adding links to zeronet", e)
-        }
-    }
-    await (new PromisePool(() => { if (!stop) return ResolveOne() }, 10)).start()
 }
 
 // Crawl every site in siteList
@@ -182,7 +159,7 @@ function syncWithZeroNet() {
                 for (let func in utils)
                     await utils[func](admin)
                 await bootstrapCrawling()
-                await extractSitesAndAdd()
+                await admin.addSites([...global.addrsSet])
                 await admin.updateAll()
                 signale.info(`Sleeping for next loop to sync with zeronet`)
                 await delay(1000 * 60 * 60)
