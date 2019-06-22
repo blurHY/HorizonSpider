@@ -56,7 +56,7 @@ async function waitAndGetAdmin() {
             signale.fatal("Cannot connect to admin site", e)
             await delay(process.env.mainLoopInterval || defaultMainLoopInterval)
         }
-        if (!admin) {
+        if (!(admin && admin.inited)) {
             try {
                 await rp({
                     url: `http://${SettingsLoader.ZeroNetHost}`,

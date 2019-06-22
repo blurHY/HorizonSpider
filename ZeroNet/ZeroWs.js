@@ -4,6 +4,7 @@ const signale = require("signale")
 
 
 module.exports = class ZeroWs extends EventEmitter {
+    inited = false
     constructor(...args) {
         super()
         if (args.length > 0)
@@ -25,6 +26,7 @@ module.exports = class ZeroWs extends EventEmitter {
         this.ws.on("connect", x => this.onOpen(x))
         this.ws.on("connectFailed", x => this.onError(x))
         this.connect()
+        this.inited = true
     }
 
     onError(e) {
