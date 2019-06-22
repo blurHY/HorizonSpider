@@ -2,7 +2,8 @@ require("dotenv").config()
 
 const Admin = require("./ZeroNet/AdminZite"),
     SiteMeta = require("./ZeroNet/SiteMeta"),
-    DomainResolver = require("./ZeroNet/DomainResolver")
+    DomainResolver = require("./ZeroNet/DomainResolver"),
+    DataBase = require("./DataBase")
 
 let admin = null
 require('yargs')
@@ -42,13 +43,13 @@ require('yargs')
     .command("resolve <domain>", "Resolve a domain", () => { }, (argv) => {
         console.log(DomainResolver.resolveDomain(argv.domain))
     })
-    // .command("resetLinks", "Reset links to non-added status", () => { }, async () => {
-    //     DataBase.on("connected", async () => { // Main loop
-    //         console.log((await DataBase.links.updateMany({ added: true }, { $set: { added: false } })).result)
-    //         process.exit()
-    //     })
-    //     DataBase.connect()
-    // })
+    .command("resetDataBase", "Clear the database", () => { }, async () => {
+        DataBase.on("connected", async () => {
+            console.log("OK")
+            process.exit()
+        })
+        DataBase.connect(true)
+    })
     .demandCommand(1, "")
     .help("h")
     .alias("h", "help")
