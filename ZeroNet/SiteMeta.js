@@ -71,8 +71,3 @@ module.exports = {
         return await sqlite.open(joined)
     }
 }
-
-process.env.ZeronetDataPath = "/mnt/d/ZeroNet/data"
-module.exports.getWsSiteInfo("1TaLkFrMwvbNsooF4ioKAY9EuxTBTjipT").then(d => {
-    fs.writeFileSync("./wsSiteList.json", JSON.stringify(d, null, 4))
-})
