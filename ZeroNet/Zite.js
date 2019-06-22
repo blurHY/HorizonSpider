@@ -11,6 +11,8 @@ module.exports = class Zite extends ZeroWs {
         super()
         getWrapperKey(site_addr).then(key => {
             super.init(key, Settings.ZeroNetHost)
+        }).catch(res => {
+            throw res
         })
     }
 }
