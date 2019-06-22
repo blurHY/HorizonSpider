@@ -30,10 +30,4 @@ Create `.env` file and add configs as follows:
 ```
 ZeroNetPath=D:/ZeroNet
 ZeronetDataPath=D:/ZeroNet/Data
-feedFull_period=7200000 
-feedCheck_period=1800000
-optionalFull_period=7200000
-optionalCheck_period=1800000
-mainLoopInterval=60000
-Concurrency=1
 ```

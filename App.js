@@ -62,7 +62,7 @@ async function waitAndGetAdmin() {
                 })
             } catch {
                 signale.note("Sent request to trigger ZeroHello downloading.")
-                await delay(process.env.mainLoopInterval)
+                await delay(process.env.mainLoopInterval || 1000 * 60 * 3)
             }
         } else
             break
