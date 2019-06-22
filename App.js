@@ -44,6 +44,8 @@ process.on("exit", () => {
     signale.warn("Exited")
 })
 
+const defaultMainLoopInterval = 1000 * 60 * 3
+
 // ZeroHello won't be downloaded without requesting
 async function waitAndGetAdmin() {
     while (true) {
@@ -52,6 +54,7 @@ async function waitAndGetAdmin() {
             admin = new Admin()
         } catch (e) {
             signale.fatal("Cannot connect to admin site", e)
+            await delay(process.env.mainLoopInterval || defaultMainLoopInterval)
         }
         if (!admin) {
             try {
@@ -62,7 +65,7 @@ async function waitAndGetAdmin() {
                 })
             } catch {
                 signale.note("Sent request to trigger ZeroHello downloading.")
-                await delay(process.env.mainLoopInterval || 1000 * 60 * 3)
+                await delay(process.env.mainLoopInterval || defaultMainLoopInterval)
             }
         } else
             break
