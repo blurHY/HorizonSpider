@@ -4,9 +4,9 @@ const delay = require("delay"),
     getWrapperKey = require("./SiteMeta").getWrapperKey,
     signale = require("signale")
 
+const defaultRetryInterval = 1000 * 60 * 5
 
 module.exports = class Zite extends ZeroWs {
-    static defaultRetryInterval = 1000 * 60 * 5
     constructor(site_addr) {
         signale.info("Getting wrapper key for " + site_addr)
         signale.info(`ZeroNetHost: ${Settings.ZeroNetHost}`)
@@ -18,7 +18,7 @@ module.exports = class Zite extends ZeroWs {
             await getWrapperKey(site_addr)
         } catch (e) {
             console.log(e)
-            await delay(ZeroWs.defaultRetryInterval)
+            await delay(defaultRetryInterval)
             await this.getKeyAndInit(site_addr)
         }
     }
