@@ -1,18 +1,25 @@
-const ZeroWs = require("./ZeroWs")
-const Settings = require("./SettingsLoader")
-const getWrapperKey = require("./SiteMeta").getWrapperKey
-const signale = require("signale")
+const delay = require("delay"),
+    ZeroWs = require("./ZeroWs"),
+    Settings = require("./SettingsLoader"),
+    getWrapperKey = require("./SiteMeta").getWrapperKey,
+    signale = require("signale")
 
 
 module.exports = class Zite extends ZeroWs {
+    static defaultRetryInterval = 1000 * 60 * 5
     constructor(site_addr) {
         signale.info("Getting wrapper key for " + site_addr)
         signale.info(`ZeroNetHost: ${Settings.ZeroNetHost}`)
         super()
-        getWrapperKey(site_addr).then(key => {
-            super.init(key, Settings.ZeroNetHost)
-        }).catch(res => {
-            throw res
-        })
+        this.getKeyAndInit(site_addr)
+    }
+    async getKeyAndInit(site_addr) {
+        try {
+            await getWrapperKey(site_addr)
+        } catch (e) {
+            console.log(e)
+            await delay(ZeroWs.defaultRetryInterval)
+            await this.getKeyAndInit(site_addr)
+        }
     }
 }
