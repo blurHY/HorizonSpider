@@ -313,7 +313,12 @@ class DataBase extends EventEmitter {
         await this.client.update({ index: "site", type: "_doc", id: address, body: { doc: newDoc } })
     }
     async getSite(address) {
-        return await this.client.get({ index: "site", type: "_doc", id: address })
+        try {
+            return await this.client.get({ index: "site", type: "_doc", id: address })
+        }
+        catch (e) {
+            return null
+        }
     }
 }
 

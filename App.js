@@ -48,27 +48,37 @@ const defaultMainLoopInterval = 1000 * 60 * 3
 
 // ZeroHello won't be downloaded without requesting
 async function waitAndGetAdmin() {
-    while (true) {
+    let continue_ = true
+    while (continue_) {
         try {
+            continue_ = false
             signale.info("Connecting to zeronet ...")
             admin = new Admin()
         } catch (e) {
+            continue_ = true
             signale.fatal("Cannot connect to admin site", e)
-            await delay(process.env.mainLoopInterval || defaultMainLoopInterval)
         }
         if (!(admin && admin.inited)) {
+            continue_ = false
             try {
-                await rp({
+                signale.debug("Sent a request to zeronet")
+                let body = await rp({
                     url: `http://${SettingsLoader.ZeroNetHost}`,
-                    headers: { "Accept": "text/html" },
-                    followRedirect: false
+                    headers: { "Accept": "text/html", "Accept-Encoding": "gzip, deflate, br", "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36", "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7,pt;q=0.6,ru;q=0.5,ja;q=0.4,de;q=0.3" },
+                    followRedirect: true
                 })
-            } catch {
-                signale.note("Sent request to trigger ZeroHello downloading.")
-                await delay(process.env.mainLoopInterval || defaultMainLoopInterval)
+                try {
+                    signale.info(/\<title\>[^<>]+\<\/title\>/g.exec(body)[0])
+                } catch{
+                    signale.info(body)
+                }
+            } catch (e) {
+                signale.warn(e)
+                continue_ = true
             }
-        } else
-            break
+        }
+        if (continue_)
+            await delay(process.env.mainLoopInterval || defaultMainLoopInterval)
     }
 }
 
@@ -125,7 +135,7 @@ async function crawlASite(siteInfo) {
 
         try {
             if (isNewSite)
-                await DataBase.saveSite(siteObj)
+                await DataBase.addSite(siteObj)
             else
                 await DataBase.updateSite(siteObj)
         } catch (e) {
@@ -156,6 +166,7 @@ async function forEachSite(siteList) {
 
 function syncWithZeroNet() {
     waitAndGetAdmin().then(() => {
+        signale.wait("Waiting for ws open")
         admin.on("wsOpen", async () => {
             while (!exiting) {
                 signale.info("== Send requests to zeronet")
