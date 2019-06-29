@@ -334,7 +334,7 @@ class DataBase extends EventEmitter {
                         }
                     }
                 }
-            })).hits.hits[0]
+            })).hits.hits[0]["_source"]
         }
         catch (e) {
             return null
