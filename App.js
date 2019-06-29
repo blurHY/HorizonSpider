@@ -105,16 +105,16 @@ async function crawlASite(siteInfo) {
         let dbSchema = await SiteMeta.getDBJson(siteInfo.address),
             doc = await DataBase.getSite(siteInfo.address),
             siteObj = null,
-            siteDB = dbSchema ? await SiteMeta.getSiteDataBase(siteInfo.address) : null,
-            isNewSite = false
+            siteDB = dbSchema ? await SiteMeta.getSiteDataBase(siteInfo.address) : null
         if (doc)
             siteObj = doc["_source"]
         if (!siteObj) { // Site not found, create one
             signale.fav(`Discovered a brand new site ${siteInfo.address}`)
             siteObj = DataBase.genNewSite(siteInfo) // Init with siteInfo
-            isNewSite = true
+            doc = await DataBase.addSite(siteObj)
         } else if ((Date.now() - siteObj.runtime.siteinfo) > (process.env.siteInfoUpdateInterval || 3600000)) { // Update siteInfo
             DataBase.setSiteInfo(siteObj, siteInfo)
+            await DataBase.updateSite(siteObj, doc["_id"])
         }
         function* promiseGenerator() {
             for (let crawler_name in modules) {
@@ -135,15 +135,6 @@ async function crawlASite(siteInfo) {
             }
         }
         await (new PromisePool(promiseGenerator, parseInt(process.env.Concurrency) || 3)).start()
-
-        try {
-            if (isNewSite)
-                await DataBase.addSite(siteObj)
-            else
-                await DataBase.updateSite(siteObj, doc["_id"])
-        } catch (e) {
-            signale.error(`Failed to save site ${siteInfo.address}`, e)
-        }
     } catch (e) {
         signale.error(`Unknown error in ${siteInfo.address}`, e)
     }
