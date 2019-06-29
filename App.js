@@ -172,7 +172,8 @@ function syncWithZeroNet() {
             while (!exiting) {
                 signale.info("== Send requests to zeronet")
                 for (let func in utils)
-                    await utils[func](admin)
+                    if (typeof utils[func] === "function") // Note: A util that exports a function is different from the one exports an object
+                        await utils[func](admin)
                 await bootstrapCrawling()
                 await admin.addSites([...global.addrsSet])
                 await admin.updateAll()
