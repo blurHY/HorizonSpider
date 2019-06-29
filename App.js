@@ -111,7 +111,7 @@ async function crawlASite(siteInfo) {
             signale.fav(`Discovered a brand new site ${siteInfo.address}`)
             siteObj = DataBase.genNewSite(siteInfo) // Init with siteInfo
             isNewSite = true
-        } else if (new Date() - siteObj.runtime.siteinfo > process.env.siteInfoUpdateInterval || 3600000) { // Update siteInfo
+        } else if ((Date.now() - siteObj.runtime.siteinfo) > (process.env.siteInfoUpdateInterval || 3600000)) { // Update siteInfo
             DataBase.setSiteInfo(siteObj, siteInfo)
         }
 
