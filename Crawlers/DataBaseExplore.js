@@ -1,7 +1,6 @@
 const linksExtractor = require("../Utils/LinksExtractor"),
     signale = require("signale"),
     chillout = require('chillout'),
-    DataBase = require("../DataBase"),
     BaseCrawer = require("./BaseCrawler")
 const defaultDataBaseScanInterval = 1000 * 60 * 60 * 24 * 7
 

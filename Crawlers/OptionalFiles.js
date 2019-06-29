@@ -34,7 +34,7 @@ module.exports = class OptionalFilesCrawler extends BaseCrawer {
             modification.runtime.op_files.last_check = now
         }
 
-        await this.pagingQuery(3000, 0, lastDate ? lastDate.getTime() / 1000 : 0)
+        await this.pagingQuery(800, 0, lastDate ? lastDate.getTime() / 1000 : 0)
     }
 
 
