@@ -1,11 +1,12 @@
 const signale = require("signale"),
-    DataBase = require("../DataBase")
+    DataBase = require("../DataBase"),
+    BaseCrawer = require("./BaseCrawler")
 const defaultFeedRecrawlInterval = 1000 * 60 * 60 * 24 * 7,
     defaultFeedCheckInterval = 1000 * 60 * 30
 
-module.exports = class FeedFollowCrawler {
+module.exports = class FeedFollowCrawler extends BaseCrawer {
     constructor(params) {
-        Object.assign(this, params)
+        super(params)
         this.interval = {
             recrawl: parseInt(process.env.FeedRecrawlInterval) || defaultFeedRecrawlInterval,
             check: parseInt(process.env.FeedCheckInterval) || defaultFeedCheckInterval

@@ -116,18 +116,19 @@ async function crawlASite(siteInfo) {
         } else if ((Date.now() - siteObj.runtime.siteinfo) > (process.env.siteInfoUpdateInterval || 3600000)) { // Update siteInfo
             DataBase.setSiteInfo(siteObj, siteInfo)
         }
-
         function* promiseGenerator() {
-            for (let crawler in modules) {
-                if (modules[crawler] && modules[crawler].crawl) {
+            for (let crawler_name in modules) {
+                if (modules[crawler_name] && modules[crawler_name].crawl) {
                     yield (async () => {
                         try {
-                            let crawler = new modules[crawler]({ dbSchema, siteDB, siteObj, address: siteInfo.address })
+                            let crawler = new modules[crawler_name]({ dbSchema, siteDB, siteObj, address: siteInfo.address })
                             await crawler.crawl()
                         } catch (e) {
-                            if (e instanceof NAError) // Not applicable stands for parameters not enough
+                            if (e instanceof NAError) { // Not applicable stands for parameters not enough
+                                signale.debug(`${siteInfo.address} - ${crawler_name} NA`)
                                 return
-                            signale.error(`An error appeared in ${crawler}`, e)
+                            }
+                            signale.error(`An error appeared in ${crawler_name}`, e)
                         }
                     })()
                 }
