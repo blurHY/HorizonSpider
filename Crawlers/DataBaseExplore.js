@@ -13,7 +13,7 @@ module.exports = class DataBaseExplorer extends BaseCrawer {
         this.crawl = this.explore
         this.interval = parseInt(process.env.DataBaseScanInterval) || defaultDataBaseScanInterval
     }
-    async explore() {
+    async explore(modification) {
         if (this.siteObj.runtime.database_scan > Date.now() - this.interval)
             return
         let tables = await this.siteDB.all("SELECT name FROM sqlite_master WHERE type='table'")
@@ -22,7 +22,7 @@ module.exports = class DataBaseExplorer extends BaseCrawer {
                 continue
             await this.pagingCrawl(table.name)
         } // TODO: Ignore non-text fields
-        await DataBase.updateSite({ runtime: { database_scan: Date.now() } }, this.siteId)
+        modification.runtime.database_scan = Date.now()
     }
 
     async pagingCrawl(table_name, start = 0, count = 3000) {

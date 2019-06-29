@@ -116,13 +116,14 @@ async function crawlASite(siteInfo) {
             DataBase.setSiteInfo(siteObj, siteInfo)
             await DataBase.updateSite(siteObj, doc["_id"])
         }
+        let modification = { runtime: { feeds: {}, op_files: {} } }
         function* promiseGenerator() {
             for (let crawler_name in modules) {
                 if (modules[crawler_name] && modules[crawler_name].prototype instanceof modules["BaseCrawler"]) {
                     yield (async () => {
                         try {
                             let crawler = new modules[crawler_name]({ dbSchema, siteDB, siteObj, address: siteInfo.address, siteId: doc["_id"] })
-                            await crawler.crawl()
+                            await crawler.crawl(modification)
                         } catch (e) {
                             if (e instanceof NAError) { // Not applicable stands for parameters not enough
                                 signale.debug(`${siteInfo.address} - ${crawler_name} NA`)
@@ -135,6 +136,7 @@ async function crawlASite(siteInfo) {
             }
         }
         await (new PromisePool(promiseGenerator, parseInt(process.env.Concurrency) || 3)).start()
+        await DataBase.updateSite(modification, doc["_id"])
     } catch (e) {
         signale.error(`Unknown error in ${siteInfo.address}`, e)
     }

@@ -16,10 +16,9 @@ module.exports = class FeedFollowCrawler extends BaseCrawer {
         this.crawl = this.updateFeeds
     }
 
-    async updateFeeds() {
+    async updateFeeds(modification) {
         let now = Date.now(),
-            prevDate = 0,
-            modification = { runtime: { feeds: {} } }
+            prevDate = 0
         if (this.siteObj.runtime && this.siteObj.runtime.feeds && this.siteObj.runtime.feeds.last_refresh > now - this.interval.recrawl) { // Still not needed to refresh
             if (!this.siteObj.runtime.feeds.last_check || this.siteObj.runtime.feeds.last_check < now - this.interval.check) { // Add New feeds only
                 prevDate = this.siteObj.runtime.feeds.last_check // Save previous checking date for site database querying
@@ -37,7 +36,6 @@ module.exports = class FeedFollowCrawler extends BaseCrawer {
         for (let name in this.dbSchema.feeds)
             if (name)
                 await this.pagingFeedQuery(this.dbSchema.feeds[name], name, 3000, 0, prevDate ? (prevDate.getTime() / 1000) : 0) // Convert prevDate to linux time
-        await DataBase.updateSite(modification, this.siteId)
     }
 
     async pagingFeedQuery(query, category, count = 3000, start = 0, dateAfter = null) { // TODO: Suspicious query may slow down the spider
