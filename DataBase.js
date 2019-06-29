@@ -292,12 +292,12 @@ class DataBase extends EventEmitter {
             op_files_number: Object.keys(siteInfoObj.files_optional).length,
             domain: siteInfoObj.domain,
             description: siteInfoObj.description,
-            modified: siteInfoObj.modified,     // This modified field is signed by the owner and located in the content.json
+            modified: Math.floor(siteInfoObj.modified),     // This modified field is signed by the owner and located in the content.json
             cloneable: siteInfoObj.cloneable,
             cloned_from: siteInfoObj.cloned_from,
             background_color: siteInfoObj["background-color"],
             peers: siteInfoObj.peers,
-            added: siteInfoObj.added,
+            added: Math.floor(siteInfoObj.added),
             size: siteInfoObj.size,
             size_optional: siteInfoObj.size_optional,
             zeronet_version: siteInfoObj.zeronet_version,
