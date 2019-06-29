@@ -16,6 +16,7 @@ module.exports = class OptionalFilesCrawler extends BaseCrawer {
     async updateOptionalFiles(modification) {
         let lastDate = 0,
             now = Date.now()
+        this.modification = modification
         if (this.siteObj.runtime && this.siteObj.runtime.op_files && this.siteObj.runtime.op_files.last_refresh > now - this.interval) {
             if (!this.siteObj.runtime.op_files.last_check || this.siteObj.runtime.op_files.last_check < now - defaultDataBaseCheckInterval) { // New files only
                 lastDate = this.siteObj.runtime.op_files.last_check
@@ -57,7 +58,7 @@ module.exports = class OptionalFilesCrawler extends BaseCrawer {
             rowsToAdd.push(obj)
         }
 
-        await DataBase.addOptionalFiles(this.siteId, rowsToAdd)
+        await DataBase.addOptionalFiles(this.siteId, rowsToAdd, this.modification)
         await this.pagingQuery(count, start + count, dateAfter)
     }
 

@@ -242,7 +242,7 @@ class DataBase extends EventEmitter {
     async filterItemsToGetIds(siteId, indexName) {
         return (await this.filterItemsBySiteId(siteId, indexName)).hits.hits.map(v => v._id)
     }
-    async addFeeds(siteId, feeds) {
+    async addFeeds(siteId, feeds, modification) {
         if (feeds.length <= 0 || !siteId)
             return
         let operations = []
@@ -255,9 +255,9 @@ class DataBase extends EventEmitter {
         })
         if (res.errors)
             signale.error(res)
-        this.updateSite({ feeds: (await this.filterItemsToGetIds(siteId, "feed")) }, siteId)
+        modification.feeds = await this.filterItemsToGetIds(siteId, "feed")
     }
-    async addOptionalFiles(siteId, optionals) {
+    async addOptionalFiles(siteId, optionals, modification) {
         if (optionals.length <= 0 || !siteId)
             return
         let operations = []
@@ -270,7 +270,7 @@ class DataBase extends EventEmitter {
         })
         if (res.errors)
             signale.error(res)
-        this.updateSite({ op_files: (await this.filterItemsToGetIds(siteId, "op_file")) }, siteId)
+        modification.op_files = await this.filterItemsToGetIds(siteId, "op_file")
     }
     genNewSite(siteInfo) { // Generate a site obj with siteInfo 
         let site = {

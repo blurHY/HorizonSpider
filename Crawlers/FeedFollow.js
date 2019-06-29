@@ -19,6 +19,7 @@ module.exports = class FeedFollowCrawler extends BaseCrawer {
     async updateFeeds(modification) {
         let now = Date.now(),
             prevDate = 0
+        this.modification = modification
         if (this.siteObj.runtime && this.siteObj.runtime.feeds && this.siteObj.runtime.feeds.last_refresh > now - this.interval.recrawl) { // Still not needed to refresh
             if (!this.siteObj.runtime.feeds.last_check || this.siteObj.runtime.feeds.last_check < now - this.interval.check) { // Add New feeds only
                 prevDate = this.siteObj.runtime.feeds.last_check // Save previous checking date for site database querying
@@ -46,7 +47,7 @@ module.exports = class FeedFollowCrawler extends BaseCrawer {
             if (!(rows instanceof Array)) {
                 throw "Rows are not an array"
             } else if (rows.length > 0) {
-                await DataBase.addFeeds(this.siteId, rows.map(r => ({ ...r, item_type: r.type, type: undefined, category })))
+                await DataBase.addFeeds(this.siteId, rows.map(r => ({ ...r, item_type: r.type, type: undefined, category })), this.modification)
                 signale.info(`Imported ${rows.length} feeds from ${this.address}`)
                 await this.pagingFeedQuery(ori_query, category, count, start + count, dateAfter) // Query and store next page
             }
