@@ -262,7 +262,7 @@ class DataBase extends EventEmitter {
             return
         let operations = []
         optionals.forEach(f =>
-            operations.push({ index: { _index: 'op_files' } }, { ...f, siteId })
+            operations.push({ index: { _index: 'op_file' } }, { ...f, siteId })
         )
         const res = await this.client.bulk({
             refresh: true,
