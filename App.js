@@ -118,7 +118,7 @@ async function crawlASite(siteInfo) {
         }
         function* promiseGenerator() {
             for (let crawler_name in modules) {
-                if (modules[crawler_name] && modules[crawler_name] instanceof modules["BaseCrawler"]) {
+                if (modules[crawler_name] && modules[crawler_name].prototype instanceof modules["BaseCrawler"]) {
                     yield (async () => {
                         try {
                             let crawler = new modules[crawler_name]({ dbSchema, siteDB, siteObj, address: siteInfo.address })
