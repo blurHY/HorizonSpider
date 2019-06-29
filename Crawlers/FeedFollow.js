@@ -7,6 +7,8 @@ const defaultFeedRecrawlInterval = 1000 * 60 * 60 * 24 * 7,
 module.exports = class FeedFollowCrawler extends BaseCrawer {
     constructor(params) {
         super(params)
+        if (!this.dbSchema)
+            throw new this.NAError()
         this.interval = {
             recrawl: parseInt(process.env.FeedRecrawlInterval) || defaultFeedRecrawlInterval,
             check: parseInt(process.env.FeedCheckInterval) || defaultFeedCheckInterval
@@ -18,7 +20,7 @@ module.exports = class FeedFollowCrawler extends BaseCrawer {
         let now = Date.now(),
             prevDate = 0,
             modification = { runtime: { feeds: {} } }
-        if (this.siteObj.runtime.feeds.last_refresh > now - this.interval.recrawl) { // Still not needed to refresh
+        if (this.siteObj.runtime && this.siteObj.runtime.feeds && this.siteObj.runtime.feeds.last_refresh > now - this.interval.recrawl) { // Still not needed to refresh
             if (!this.siteObj.runtime.feeds.last_check || this.siteObj.runtime.feeds.last_check < now - this.interval.check) { // Add New feeds only
                 prevDate = this.siteObj.runtime.feeds.last_check // Save previous checking date for site database querying
                 signale.note(`Checking feeds for ${this.address}, date after ${prevDate}`)

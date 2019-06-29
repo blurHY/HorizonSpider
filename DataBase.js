@@ -307,8 +307,16 @@ class DataBase extends EventEmitter {
         if (!site.runtime)
             site.runtime = {}
         if (!site.runtime.feeds)
-            site.runtime.feeds = {}
-        site.runtime.feeds.last_refresh = Date.now()
+            site.runtime.feeds = {
+                last_check: 0,
+                last_refresh: 0
+            }
+        if (!site.runtime.op_files)
+            site.runtime.op_files = {
+                last_check: 0,
+                last_refresh: 0
+            }
+        site.runtime.database_scan = 0
         site.runtime.siteinfo = Date.now()
         signale.info(`Updated site info for ${siteInfoObj.address}`)
         return site
