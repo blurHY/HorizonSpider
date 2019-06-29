@@ -104,10 +104,11 @@ async function crawlASite(siteInfo) {
 
         let dbSchema = await SiteMeta.getDBJson(siteInfo.address),
             doc = await DataBase.getSite(siteInfo.address),
-            siteObj = doc["_source"],
+            siteObj = null,
             siteDB = dbSchema ? await SiteMeta.getSiteDataBase(siteInfo.address) : null,
             isNewSite = false
-
+        if (doc)
+            siteObj = doc["_source"]
         if (!siteObj) { // Site not found, create one
             signale.fav(`Discovered a brand new site ${siteInfo.address}`)
             siteObj = DataBase.genNewSite(siteInfo) // Init with siteInfo

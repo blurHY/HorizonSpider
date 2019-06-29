@@ -321,7 +321,7 @@ class DataBase extends EventEmitter {
     }
     async getSite(address) {
         try {
-            return (await this.client.search({
+            let hits = (await this.client.search({
                 index: "site",
                 body: {
                     "query": {
@@ -334,7 +334,11 @@ class DataBase extends EventEmitter {
                         }
                     }
                 }
-            })).hits.hits[0]
+            })).hits.hits
+            if (hits.length === 0)
+                return
+            else
+                return hits[0]
         }
         catch (e) {
             return null
