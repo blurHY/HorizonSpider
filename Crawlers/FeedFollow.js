@@ -15,7 +15,7 @@ module.exports = class FeedFollowCrawler extends BaseCrawer {
     }
 
     async updateFeeds() {
-        let now = new Date(),
+        let now = Date.now(),
             prevDate = 0,
             modification = { runtime: { feeds: {} } }
         if (this.siteObj.runtime.feeds.last_refresh > now - this.interval.recrawl) { // Still not needed to refresh

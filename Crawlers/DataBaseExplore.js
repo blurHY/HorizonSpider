@@ -14,7 +14,7 @@ module.exports = class DataBaseExplorer extends BaseCrawer {
         this.interval = parseInt(process.env.DataBaseScanInterval) || defaultDataBaseScanInterval
     }
     async explore() {
-        if (this.siteObj.runtime.database_scan > new Date() - this.interval)
+        if (this.siteObj.runtime.database_scan > Date.now() - this.interval)
             return
         let tables = await this.siteDB.all("SELECT name FROM sqlite_master WHERE type='table'")
         for (let table of tables) {

@@ -10,7 +10,7 @@ module.exports = {
             let link = {
                 site: result[1] || result[3],
                 path: result[2] || result[4],
-                date: new Date(),
+                date: Date.now(),
                 fromObj: fromObjId, fromType
             }
             let addr = DomainResolver.resolveDomain(link.site)
