@@ -103,7 +103,8 @@ async function crawlASite(siteInfo) {
         signale.info(`Started crawling site ${siteInfo.address} ${global.tempSiteId[siteInfo.address]}/${global.sitesCount}`)
 
         let dbSchema = await SiteMeta.getDBJson(siteInfo.address),
-            siteObj = await DataBase.getSite(siteInfo.address),
+            doc = await DataBase.getSite(siteInfo.address),
+            siteObj = doc["_source"],
             siteDB = dbSchema ? await SiteMeta.getSiteDataBase(siteInfo.address) : null,
             isNewSite = false
 
@@ -137,7 +138,7 @@ async function crawlASite(siteInfo) {
             if (isNewSite)
                 await DataBase.addSite(siteObj)
             else
-                await DataBase.updateSite(siteObj, siteInfo.address)
+                await DataBase.updateSite(siteObj, doc["_id"])
         } catch (e) {
             signale.error(`Failed to save site ${siteInfo.address}`, e)
         }
