@@ -21,9 +21,10 @@ class DataBase extends EventEmitter {
                 signale.debug("Deleted all indices")
                 await this.client.indices.create({ // Difference between original names and these: '_' instead of '-'
                     index: "site",
-                    body: { // Use site address as doc id
+                    body: {
                         "mappings": {
                             "properties": {
+                                "address": { "type": "keyword" },
                                 "title": {
                                     "type": "text",
                                     "analyzer": "ik_max_word",
@@ -85,6 +86,10 @@ class DataBase extends EventEmitter {
                                             }
                                         },
                                         "database_scan": {
+                                            "type": "date",
+                                            "format": "epoch_millis"
+                                        },
+                                        "siteinfo": {
                                             "type": "date",
                                             "format": "epoch_millis"
                                         }
@@ -280,7 +285,8 @@ class DataBase extends EventEmitter {
     }
     setSiteInfo(site, siteInfoObj) { // siteInfoObj example: https://blurhy.xyz/2019/05/24/Horizon%E6%95%B0%E6%8D%AE%E7%9A%84%E5%88%9D%E6%AD%A5%E5%A4%84%E7%90%86/
         siteInfoObj = { files: {}, files_optional: {}, ...siteInfoObj }
-        site.basicInfo = {
+        site = {
+            address: siteInfoObj.address,
             title: siteInfoObj.title,
             files_number: Object.keys(siteInfoObj.files).length,
             op_files_number: Object.keys(siteInfoObj.files_optional).length,
@@ -303,18 +309,32 @@ class DataBase extends EventEmitter {
         if (!site.runtime.feeds)
             site.runtime.feeds = {}
         site.runtime.feeds.last_refresh = new Date()
-        signale.info(`Updated site info for ${site.basicInfo.address}`)
+        site.runtime.siteinfo = new Date()
+        signale.info(`Updated site info for ${siteInfoObj.address}`)
         return site
     }
-    async addSite(doc, address) {
-        return await this.client.index({ index: "site", type: "_doc", id: address, body: doc })
+    async addSite(doc) {
+        return await this.client.index({ index: "site", type: "_doc", body: doc })
     }
     async updateSite(newDoc, address) { // Partial update
-        await this.client.update({ index: "site", type: "_doc", id: address, body: { doc: newDoc } })
+        await this.client.update({ index: "site", type: "_doc", address, body: { doc: newDoc } })
     }
     async getSite(address) {
         try {
-            return await this.client.get({ index: "site", type: "_doc", id: address })
+            return (await this.client.search({
+                index: "site",
+                body: {
+                    "query": {
+                        "constant_score": {
+                            "filter": {
+                                "term": {
+                                    address
+                                }
+                            }
+                        }
+                    }
+                }
+            })).hits.hits[0]
         }
         catch (e) {
             return null

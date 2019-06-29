@@ -3,6 +3,7 @@ const db = require("../DataBase")
 db.connect(true) // This will delete indices
 db.on("connected", async () => {
     let site = await db.genNewSite({
+        address: "1TaLkFrMwvbNsooF4ioKAY9EuxTBTjipT",
         "background_color": "#F5F5F5",
         "cloneable": true,
         "description": "Decentralized forum with ZeroID",
@@ -17,7 +18,7 @@ db.on("connected", async () => {
     })
     console.log("Site object generated")
     console.log(JSON.stringify(site, null, 2))
-    await db.addSite(site, "1TaLkFrMwvbNsooF4ioKAY9EuxTBTjipT")
+    await db.addSite(site)
     console.log("Added")
     console.log(JSON.stringify(await db.getSite("1TaLkFrMwvbNsooF4ioKAY9EuxTBTjipT"), null, 2))
     await db.updateSite({ cloneable: false }, "1TaLkFrMwvbNsooF4ioKAY9EuxTBTjipT")

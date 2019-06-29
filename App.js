@@ -111,7 +111,7 @@ async function crawlASite(siteInfo) {
             signale.fav(`Discovered a brand new site ${siteInfo.address}`)
             siteObj = DataBase.genNewSite(siteInfo) // Init with siteInfo
             isNewSite = true
-        } else if (new Date() - siteObj.runtimeInfo.lastCrawl.siteInfo > process.env.siteInfoUpdateInterval || 3600000) { // Update siteInfo
+        } else if (new Date() - siteObj.runtime.siteinfo > process.env.siteInfoUpdateInterval || 3600000) { // Update siteInfo
             DataBase.setSiteInfo(siteObj, siteInfo)
         }
 
@@ -137,9 +137,9 @@ async function crawlASite(siteInfo) {
             if (isNewSite)
                 await DataBase.addSite(siteObj)
             else
-                await DataBase.updateSite(siteObj)
+                await DataBase.updateSite(siteObj, siteInfo.address)
         } catch (e) {
-            signale.error(`Failed to save site ${siteObj.basicInfo.address}`, e)
+            signale.error(`Failed to save site ${siteInfo.address}`, e)
         }
     } catch (e) {
         signale.error(`Unknown error in ${siteInfo.address}`, e)
@@ -188,13 +188,12 @@ function standaloneCrawl() {
         signale.debug(`Database connected`)
         signale.debug(`Started main loop {DryRun:${process.env.DryRun}}`)
         while (!exiting) {
-            await delay(1000 * 60 * 3) // Let it sync with zeronet first
             await SiteMeta.reloadSitesJson()
             let list = await SiteMeta.asWsSiteList()
             signale.info(`Sites to crawl: ${list.length}`)
             await forEachSite(list)
             signale.info(`Sleeping for next main loop`)
-            await delay(process.env.mainLoopInterval)
+            await delay(process.env.mainLoopInterval || 1000 * 60 * 10)
         }
     })
     DataBase.connect()

@@ -4,11 +4,18 @@ const Admin = require("./ZeroNet/AdminZite"),
     SiteMeta = require("./ZeroNet/SiteMeta"),
     DomainResolver = require("./ZeroNet/DomainResolver"),
     DataBase = require("./DataBase")
-
 let admin = null
 require('yargs')
     .command('getInfo <siteAddr>', 'Get siteInfo for given site address', () => { }, async (argv) => {
         console.log(await SiteMeta.getWsSiteInfo(argv.siteAddr))
+    })
+    .command('getSite <siteAddr>', 'Get siteObj for given site address', () => { }, async (argv) => {
+        DataBase.on("connected", async () => {
+            console.log("Getting data for " + argv.siteAddr)
+            console.log(await DataBase.getSite(argv.siteAddr))
+            process.exit()
+        })
+        DataBase.connect()
     })
     .command('stats', "Get stats", () => { }, async () => {
         console.log(`Total sites in site.json: ${Object.keys(await SiteMeta.reloadSitesJson()).length}`)
@@ -43,7 +50,7 @@ require('yargs')
     .command("resolve <domain>", "Resolve a domain", () => { }, (argv) => {
         console.log(DomainResolver.resolveDomain(argv.domain))
     })
-    .command("resetDataBase", "Clear the database", () => { }, async () => {
+    .command("resetDatabase", "Clear the database", () => { }, async () => {
         DataBase.on("connected", async () => {
             console.log("OK")
             process.exit()
