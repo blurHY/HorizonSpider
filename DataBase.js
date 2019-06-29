@@ -317,7 +317,19 @@ class DataBase extends EventEmitter {
         return await this.client.index({ index: "site", type: "_doc", body: doc })
     }
     async updateSite(newDoc, address) { // Partial update
-        await this.client.update({ index: "site", type: "_doc", address, body: { doc: newDoc } })
+        await this.client.updateByQuery({
+            index: "site", type: "_doc", address, body: {
+                doc: newDoc, "query": {
+                    "constant_score": {
+                        "filter": {
+                            "term": {
+                                address
+                            }
+                        }
+                    }
+                }
+            }
+        })
     }
     async getSite(address) {
         try {
