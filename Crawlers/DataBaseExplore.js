@@ -22,7 +22,7 @@ module.exports = class DataBaseExplorer extends BaseCrawer {
                 continue
             await this.pagingCrawl(table.name)
         } // TODO: Ignore non-text fields
-        await DataBase.updateSite({ runtime: { database_scan: Date.now() } }, this.address)
+        await DataBase.updateSite({ runtime: { database_scan: Date.now() } }, this.siteId)
     }
 
     async pagingCrawl(table_name, start = 0, count = 3000) {

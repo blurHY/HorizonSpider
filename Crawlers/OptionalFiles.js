@@ -28,11 +28,11 @@ module.exports = class OptionalFilesCrawler extends BaseCrawer {
             }
         } else {
             signale.info("Crawl all optional files for " + this.address)
-            await DataBase.clearOpfiles(this.address)
+            await DataBase.clearOpfiles(this.siteId)
             modification.op_files = []
             modification.runtime.op_files.last_refresh = now
             modification.runtime.op_files.last_check = now
-            await DataBase.updateSite(modification, this.address)
+            await DataBase.updateSite(modification, this.siteId)
         }
 
         await this.pagingQuery(3000, 0, lastDate ? lastDate.getTime() / 1000 : 0)
@@ -59,7 +59,7 @@ module.exports = class OptionalFilesCrawler extends BaseCrawer {
             rowsToAdd.push(obj)
         }
 
-        await DataBase.addOptionalFiles(this.address, rowsToAdd)
+        await DataBase.addOptionalFiles(this.siteId, rowsToAdd)
         await this.pagingQuery(count, start + count, dateAfter)
     }
 

@@ -133,7 +133,7 @@ class DataBase extends EventEmitter {
                                     "analyzer": "ik_max_word",
                                     "search_analyzer": "ik_smart"
                                 },
-                                "address": {
+                                "siteId": {
                                     "type": "keyword"
                                 }
                             }
@@ -172,7 +172,7 @@ class DataBase extends EventEmitter {
                                     "analyzer": "ik_max_word",
                                     "search_analyzer": "ik_smart"
                                 },
-                                "address": {
+                                "siteId": {
                                     "type": "keyword"
                                 }
                             }
@@ -188,7 +188,7 @@ class DataBase extends EventEmitter {
         }
         this.emit("connected")
     }
-    async filterItemsByAddr(address, indexName, fullDoc) {
+    async filterItemsBySiteId(siteId, indexName, fullDoc) {
         return await this.client.search({
             index: indexName,
             body: {
@@ -197,7 +197,7 @@ class DataBase extends EventEmitter {
                     "constant_score": {
                         "filter": {
                             "term": {
-                                address
+                                siteId
                             }
                         }
                     }
@@ -205,7 +205,7 @@ class DataBase extends EventEmitter {
             }
         })
     }
-    async clearFeeds(address) {
+    async clearFeeds(siteId) {
         return await this.client.deleteByQuery({
             index: "feed",
             type: "_doc",
@@ -214,7 +214,7 @@ class DataBase extends EventEmitter {
                     "constant_score": {
                         "filter": {
                             "term": {
-                                address
+                                siteId
                             }
                         }
                     }
@@ -222,7 +222,7 @@ class DataBase extends EventEmitter {
             }
         })
     }
-    async clearOpfiles(address) {
+    async clearOpfiles(siteId) {
         return await this.client.deleteByQuery({
             index: "op_file",
             type: "_doc",
@@ -231,7 +231,7 @@ class DataBase extends EventEmitter {
                     "constant_score": {
                         "filter": {
                             "term": {
-                                address
+                                siteId
                             }
                         }
                     }
@@ -239,15 +239,15 @@ class DataBase extends EventEmitter {
             }
         })
     }
-    async filterItemsToGetIds(address, indexName) {
-        return (await this.filterItemsByAddr(address, indexName)).hits.hits.map(v => v._id)
+    async filterItemsToGetIds(siteId, indexName) {
+        return (await this.filterItemsBySiteId(siteId, indexName)).hits.hits.map(v => v._id)
     }
-    async addFeeds(address, feeds) {
-        if (feeds.length <= 0 || !address)
+    async addFeeds(siteId, feeds) {
+        if (feeds.length <= 0 || !siteId)
             return
         let operations = []
         feeds.forEach(f =>
-            operations.push({ index: { _index: 'feed' } }, { ...f, address })
+            operations.push({ index: { _index: 'feed' } }, { ...f, siteId })
         )
         const res = await this.client.bulk({
             refresh: true,
@@ -255,14 +255,14 @@ class DataBase extends EventEmitter {
         })
         if (res.errors)
             signale.error(res)
-        this.updateSite({ feeds: (await this.filterItemsToGetIds(address, "feed")) }, address)
+        this.updateSite({ feeds: (await this.filterItemsToGetIds(siteId, "feed")) }, siteId)
     }
-    async addOptionalFiles(address, optionals) {
-        if (optionals.length <= 0 || !address)
+    async addOptionalFiles(siteId, optionals) {
+        if (optionals.length <= 0 || !siteId)
             return
         let operations = []
         optionals.forEach(f =>
-            operations.push({ index: { _index: 'optional' } }, { ...f, address })
+            operations.push({ index: { _index: 'optional' } }, { ...f, siteId })
         )
         const res = await this.client.bulk({
             refresh: true,
@@ -270,7 +270,7 @@ class DataBase extends EventEmitter {
         })
         if (res.errors)
             signale.error(res)
-        this.updateSite({ op_files: (await this.filterItemsToGetIds(address, "op_file")) }, address)
+        this.updateSite({ op_files: (await this.filterItemsToGetIds(siteId, "op_file")) }, siteId)
     }
     genNewSite(siteInfo) { // Generate a site obj with siteInfo 
         let site = {

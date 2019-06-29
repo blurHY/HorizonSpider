@@ -29,13 +29,13 @@ module.exports = class FeedFollowCrawler extends BaseCrawer {
             }
         } else {
             signale.info(`Crawl all feeds for ${this.address}`)
-            await DataBase.clearFeeds(this.address)     // Delete all outdated content
+            await DataBase.clearFeeds(this.siteId)     // Delete all outdated content
             modification.runtime.feeds = { last_check: now, last_refresh: now }
         }
         for (let name in this.dbSchema.feeds)
             if (name)
                 await this.pagingFeedQuery(this.dbSchema.feeds[name], name, 3000, 0, prevDate ? (prevDate.getTime() / 1000) : 0) // Convert prevDate to linux time
-        await DataBase.updateSite(modification, this.address)
+        await DataBase.updateSite(modification, this.siteId)
     }
 
     async pagingFeedQuery(query, category, count = 3000, start = 0, dateAfter = null) { // TODO: Suspicious query may slow down the spider
@@ -46,7 +46,7 @@ module.exports = class FeedFollowCrawler extends BaseCrawer {
             if (!(rows instanceof Array)) {
                 throw "Rows are not an array"
             } else if (rows.length > 0) {
-                await DataBase.addFeeds(this.address, rows.map(r => ({ ...r, item_type: r.type, type: undefined, category })))
+                await DataBase.addFeeds(this.siteId, rows.map(r => ({ ...r, item_type: r.type, type: undefined, category })))
                 signale.info(`Imported ${rows.length} feeds from ${this.address}`)
                 await this.pagingFeedQuery(ori_query, category, count, start + count, dateAfter) // Query and store next page
             }

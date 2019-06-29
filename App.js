@@ -121,7 +121,7 @@ async function crawlASite(siteInfo) {
                 if (modules[crawler_name] && modules[crawler_name].prototype instanceof modules["BaseCrawler"]) {
                     yield (async () => {
                         try {
-                            let crawler = new modules[crawler_name]({ dbSchema, siteDB, siteObj, address: siteInfo.address })
+                            let crawler = new modules[crawler_name]({ dbSchema, siteDB, siteObj, address: siteInfo.address, siteId: doc["_id"] })
                             await crawler.crawl()
                         } catch (e) {
                             if (e instanceof NAError) { // Not applicable stands for parameters not enough
