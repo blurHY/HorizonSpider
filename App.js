@@ -115,6 +115,7 @@ async function crawlASite(siteInfo) {
         } else if ((Date.now() - siteObj.runtime.siteinfo) > (process.env.siteInfoUpdateInterval || 3600000)) { // Update siteInfo
             DataBase.setSiteInfo(siteObj, siteInfo)
             await DataBase.updateSite(siteObj, doc["_id"])
+            doc = await DataBase.getSite(siteInfo.address)
         }
         let modification = { runtime: { feeds: {}, op_files: {} } }
         function* promiseGenerator() {
