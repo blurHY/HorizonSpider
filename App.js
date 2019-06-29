@@ -122,7 +122,7 @@ async function crawlASite(siteInfo) {
                 if (modules[crawler] && modules[crawler].crawl) {
                     yield (async () => {
                         try {
-                            let crawler = new modules[crawler]({ dbSchema, siteDB, siteObj })
+                            let crawler = new modules[crawler]({ dbSchema, siteDB, siteObj, address: siteInfo.address })
                             await crawler.crawl()
                         } catch (e) {
                             if (e instanceof NAError) // Not applicable stands for parameters not enough
