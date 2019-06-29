@@ -15,7 +15,7 @@ module.exports = class Zite extends ZeroWs {
     }
     async getKeyAndInit(site_addr, retryIfFail) {
         try {
-            await getWrapperKey(site_addr)
+            this.init(await getWrapperKey(site_addr), Settings.ZeroNetHost)
         } catch (e) {
             signale.warn(e)
             if (retryIfFail) {

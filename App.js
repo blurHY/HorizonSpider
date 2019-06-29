@@ -61,7 +61,7 @@ async function waitAndGetAdmin() {
         if (!(admin && admin.inited)) {
             continue_ = false
             try {
-                signale.debug("Sent a request to zeronet")
+                signale.fatal("Failed to connect admin site. Sending a request to zeronet")
                 let body = await rp({
                     url: `http://${SettingsLoader.ZeroNetHost}`,
                     headers: { "Accept": "text/html", "Accept-Encoding": "gzip, deflate, br", "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36", "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7,pt;q=0.6,ru;q=0.5,ja;q=0.4,de;q=0.3" },
