@@ -202,8 +202,9 @@ function standaloneCrawl() {
     DataBase.connect()
 }
 
+standaloneCrawl()
 if (!process.env.DryRun)
     syncWithZeroNet()
 else
     signale.warn("DryRun mode enabled")
-standaloneCrawl()
+
