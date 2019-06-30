@@ -44,8 +44,6 @@ process.on("exit", () => {
     signale.warn("Exited")
 })
 
-const defaultMainLoopInterval = 1000 * 60 * 3
-
 // ZeroHello won't be downloaded without requesting
 async function waitAndGetAdmin() {
     let continue_ = true
@@ -78,7 +76,7 @@ async function waitAndGetAdmin() {
             }
         }
         if (continue_)
-            await delay(process.env.mainLoopInterval || defaultMainLoopInterval)
+            await delay(process.env.mainLoopInterval || 1000 * 60 * 3)
     }
 }
 
@@ -174,7 +172,7 @@ function syncWithZeroNet() {
                 await admin.addSites([...global.addrsSet])
                 await admin.updateAll()
                 signale.info(`Sleeping for next loop to sync with zeronet`)
-                await delay(1000 * 60 * 60)
+                await delay(1000 * 60 * 15)
             }
         })
     })
@@ -191,15 +189,16 @@ function standaloneCrawl() {
             signale.info(`Sites to crawl: ${list.length}`)
             await forEachSite(list)
             signale.info(`Sleeping for next main loop`)
-            await delay(process.env.mainLoopInterval || 1000 * 60 * 10)
+            await delay(process.env.mainLoopInterval || 1000 * 60 * 30)
         }
     })
     DataBase.connect()
 }
 
-standaloneCrawl()
 if (!process.env.DryRun)
     syncWithZeroNet()
 else
     signale.warn("DryRun mode enabled")
+standaloneCrawl()
+
 
