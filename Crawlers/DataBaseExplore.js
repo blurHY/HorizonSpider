@@ -2,7 +2,7 @@ const linksExtractor = require("../Utils/LinksExtractor"),
     signale = require("signale"),
     chillout = require('chillout'),
     BaseCrawer = require("./BaseCrawler")
-const defaultDataBaseScanInterval = 1000 * 60 * 60 * 24 * 7
+const defaultDataBaseScanInterval = 1000 * 60 * 60 * 24 * 30
 
 module.exports = class DataBaseExplorer extends BaseCrawer {
     constructor(params) {

@@ -2,8 +2,8 @@ const ContentDB = require("../ZeroNet/ContentDB"),
     DataBase = require("../DataBase"),
     signale = require("signale"),
     BaseCrawer = require("./BaseCrawler")
-const defaultDataBaseScanInterval = 1000 * 60 * 60 * 24 * 7,
-    defaultDataBaseCheckInterval = (parseInt(process.env.OptionalFilesCheckInterval) || 3600000)
+const defaultOpfileCrawlInterval = 1000 * 60 * 60 * 24 * 30,
+    defaultOpfileCheck = (parseInt(process.env.OptionalFilesCheckInterval) || 36000000)
 
 module.exports = class OptionalFilesCrawler extends BaseCrawer {
     constructor(params) {
@@ -11,14 +11,14 @@ module.exports = class OptionalFilesCrawler extends BaseCrawer {
         if (!this.siteDB)
             throw new this.NAError()
         this.crawl = this.updateOptionalFiles
-        this.interval = parseInt(process.env.DataBaseScanInterval) || defaultDataBaseScanInterval
+        this.interval = parseInt(process.env.OpfileCrawlInterval) || defaultOpfileCrawlInterval
     }
     async updateOptionalFiles(modification) {
         let lastDate = 0,
             now = Date.now()
         this.modification = modification
         if (this.siteObj.runtime && this.siteObj.runtime.op_files && this.siteObj.runtime.op_files.last_refresh > now - this.interval) {
-            if (!this.siteObj.runtime.op_files.last_check || this.siteObj.runtime.op_files.last_check < now - defaultDataBaseCheckInterval) { // New files only
+            if (!this.siteObj.runtime.op_files.last_check || this.siteObj.runtime.op_files.last_check < now - defaultOpfileCheck) { // New files only
                 lastDate = this.siteObj.runtime.op_files.last_check
                 signale.info(`Checking for new optional files ${this.address}, date after ${lastDate}`)
                 modification.runtime.op_files.last_check = now

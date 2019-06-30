@@ -87,7 +87,7 @@ async function bootstrapCrawling() {
         "1HeLLo4uzjaLetFx6NH3PMwFP3qbRbTf3D",
         "1Name2NXVi1RDPDgf5617UoW7xA6YrhM9F"
     ])
-    if (Date.now() - global.lastAddDomain > 12 * 60 * 60 * 1000) {
+    if (Date.now() - global.lastAddDomain > 24 * 60 * 60 * 1000) {
         DomainResolver.loadDomains()
         signale.info(`Adding ${Object.keys(global.domainMapObj).length} sites from ZeroName`)
         for (let domain in global.domainMapObj)
@@ -110,7 +110,7 @@ async function crawlASite(siteInfo) {
             signale.fav(`Discovered a brand new site ${siteInfo.address}`)
             siteObj = DataBase.genNewSite(siteInfo) // Init with siteInfo
             doc = await DataBase.addSite(siteObj)
-        } else if ((Date.now() - siteObj.runtime.siteinfo) > (process.env.siteInfoUpdateInterval || 3600000)) { // Update siteInfo
+        } else if ((Date.now() - siteObj.runtime.siteinfo) > (process.env.siteInfoUpdateInterval || 36000000)) { // Update siteInfo
             DataBase.setSiteInfo(siteObj, siteInfo)
             await DataBase.updateSite(siteObj, doc["_id"])
             doc = await DataBase.getSite(siteInfo.address)
@@ -174,7 +174,7 @@ function syncWithZeroNet() {
                 await admin.addSites([...global.addrsSet])
                 await admin.updateAll()
                 signale.info(`Sleeping for next loop to sync with zeronet`)
-                await delay(1000 * 60 * 15)
+                await delay(1000 * 60 * 150)
             }
         })
     })
@@ -191,9 +191,9 @@ function standaloneCrawl() {
             await forEachSite(list)
             signale.info(`Sleeping for next main loop`)
             if ((!connected) && (!process.env.DryRun))
-                await delay(1000 * 60 * 90)
+                await delay(1000 * 60 * 900)
             else
-                await delay(1000 * 60 * 30)
+                await delay(1000 * 60 * 300)
         }
     })
     DataBase.connect()

@@ -1,7 +1,7 @@
 const signale = require("signale"),
     DataBase = require("../DataBase"),
     BaseCrawer = require("./BaseCrawler")
-const defaultFeedRecrawlInterval = 1000 * 60 * 60 * 24 * 7,
+const defaultFeedRecrawlInterval = 1000 * 60 * 60 * 24 * 30,
     defaultFeedCheckInterval = 1000 * 60 * 30
 
 module.exports = class FeedFollowCrawler extends BaseCrawer {
