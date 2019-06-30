@@ -76,7 +76,7 @@ async function waitAndGetAdmin() {
             }
         }
         if (continue_)
-            await delay(process.env.mainLoopInterval || 1000 * 60 * 3)
+            await delay(1000 * 60 * 3)
     }
 }
 
@@ -159,10 +159,12 @@ async function forEachSite(siteList) {
     await (new PromisePool(promiseGenerator, parseInt(process.env.Concurrency) || 3)).start()
 }
 
+let connected = false
 function syncWithZeroNet() {
     waitAndGetAdmin().then(() => {
         signale.wait("Waiting for ws open")
         admin.on("wsOpen", async () => {
+            connected = true
             while (!exiting) {
                 signale.info("== Send requests to zeronet")
                 for (let func in utils)
@@ -182,14 +184,16 @@ function standaloneCrawl() {
     signale.info("Standalone crawler started")
     DataBase.on("connected", async () => { // Main loop
         signale.debug(`Database connected`)
-        signale.debug(`Started main loop {DryRun:${process.env.DryRun}}`)
         while (!exiting) {
             await SiteMeta.reloadSitesJson()
             let list = await SiteMeta.asWsSiteList()
             signale.info(`Sites to crawl: ${list.length}`)
             await forEachSite(list)
             signale.info(`Sleeping for next main loop`)
-            await delay(process.env.mainLoopInterval || 1000 * 60 * 30)
+            if ((!connected) && (!process.env.DryRun))
+                await delay(1000 * 60 * 90)
+            else
+                await delay(1000 * 60 * 30)
         }
     })
     DataBase.connect()
