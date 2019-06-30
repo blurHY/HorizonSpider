@@ -36,7 +36,7 @@ module.exports = class FeedFollowCrawler extends BaseCrawer {
         }
         for (let name in this.dbSchema.feeds)
             if (name)
-                await this.pagingFeedQuery(this.dbSchema.feeds[name], name, 800, 0, prevDate ? (prevDate.getTime() / 1000) : 0) // Convert prevDate to linux time
+                await this.pagingFeedQuery(this.dbSchema.feeds[name], name, 800, 0, prevDate ? (prevDate / 1000) : 0) // Convert prevDate to linux time
     }
 
     async pagingFeedQuery(query, category, count = 3000, start = 0, dateAfter = null) { // TODO: Suspicious query may slow down the spider
