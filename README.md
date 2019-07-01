@@ -10,20 +10,15 @@ Then zeronet processes them, and downloads those zites.
 
 It continues to traversal `siteList` and crawls newly downloaded sites to get more links
 
-Currently **I'm refactoring it** to completely move it to Elasticsearch
-
 ## Usage
 
 Clone this repo and:
 
 ```bash
 yarn
-yarn crawl
 ```
 
-![](./Horizon.svg)
-
-## Config
+### Config
 
 Create `.env` file and add configs as follows:
 
@@ -31,3 +26,10 @@ Create `.env` file and add configs as follows:
 ZeroNetPath=D:/ZeroNet
 ZeronetDataPath=D:/ZeroNet/Data
 ```
+
+# Run
+
+```bash
+yarn crawl
+```
+
